@@ -61,6 +61,12 @@ def _build_schema(defaults: dict[str, Any]) -> vol.Schema:
     appliance_opts = [
         selector.SelectOptionDict(value=k, label=v) for k, v in APPLIANCE_OPTIONS.items()
     ]
+    current_ai = str(defaults.get(CONF_AI_ENTITY) or "").strip()
+    ai_key = (
+        vol.Optional(CONF_AI_ENTITY, description={"suggested_value": current_ai})
+        if current_ai
+        else vol.Optional(CONF_AI_ENTITY)
+    )
     return vol.Schema(
         {
             vol.Optional(
@@ -97,10 +103,7 @@ def _build_schema(defaults: dict[str, Any]) -> vol.Schema:
                 CONF_BIMBY_FRIEND,
                 default=defaults.get(CONF_BIMBY_FRIEND, False),
             ): selector.BooleanSelector(),
-            vol.Optional(
-                CONF_AI_ENTITY,
-                default=defaults.get(CONF_AI_ENTITY, ""),
-            ): selector.EntitySelector(selector.EntitySelectorConfig(domain=["ai_task", "conversation"])),
+            ai_key: selector.EntitySelector(selector.EntitySelectorConfig(domain=["ai_task", "conversation"])),
             vol.Optional(
                 CONF_PRICE_TRACKING,
                 default=defaults.get(CONF_PRICE_TRACKING, True),
@@ -171,9 +174,11 @@ class PlanMyMealsConfigFlow(ConfigFlow, domain=DOMAIN):
             return self.async_abort(reason="single_instance_allowed")
 
         if user_input is not None:
+            data = dict(user_input)
+            data.setdefault(CONF_AI_ENTITY, "")
             return self.async_create_entry(
-                title=user_input.get(CONF_SIDEBAR_TITLE) or DEFAULT_SIDEBAR_TITLE,
-                data=user_input,
+                title=data.get(CONF_SIDEBAR_TITLE) or DEFAULT_SIDEBAR_TITLE,
+                data=data,
             )
 
         return self.async_show_form(step_id="user", data_schema=_build_schema({}))
@@ -192,7 +197,9 @@ class PlanMyMealsOptionsFlow(OptionsFlow):
 
     async def async_step_init(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         if user_input is not None:
-            return self.async_create_entry(title="", data=user_input)
+            data = dict(user_input)
+            data.setdefault(CONF_AI_ENTITY, "")
+            return self.async_create_entry(title="", data=data)
 
         current = {**self._entry.data, **self._entry.options}
         return self.async_show_form(step_id="init", data_schema=_build_schema(current))

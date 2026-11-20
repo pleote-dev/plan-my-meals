@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="icon.png" alt="Plan My Meals" width="128" />
+</p>
+
 # Plan My Meals for Home Assistant
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
