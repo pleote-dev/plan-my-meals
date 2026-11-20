@@ -1,0 +1,1623 @@
+[
+  {
+    "id": "r14",
+    "name": "Arroz de Pato no Forno",
+    "meal_type": "refeicao",
+    "category": "Aves",
+    "cuisine": "Portuguesa",
+    "time": "50 min",
+    "prepTime": "15 min",
+    "cookTime": "35 min",
+    "method": "Bimby + Bimby Friend e Forno",
+    "steps": "1. [Bimby] Coloque no copo 800 g de água, sal e o pato em pedaços com metade do chouriço e a casca de laranja. Programe 30 min / 100°C / Vel colher invertida.\n2. Retire o pato e o chouriço, deixe amornar, desfie o pato e corte o chouriço em rodelas. Coe o caldo e reserve.\n3. [Bimby Friend] Em simultâneo, coloque no copo do Bimby Friend a cebola e alho picados com 20 g de azeite, refogue 5 min / 100°C / Vel 1. Junte 200 g de arroz e envolva 2 min / 100°C / Vel colher invertida.\n4. Verta 400 g do caldo quente reservado no copo e cozinhe o arroz 15 min / 100°C / Vel colher invertida.\n5. Num tabuleiro de forno, disponha metade do arroz, cubra com o pato desfiado e tape com o restante arroz.\n6. Decore com rodelas de chouriço e leve ao forno pré-aquecido a 200°C por cerca de 15 minutos até tostar e dourar à superfície.",
+    "items": [
+      {
+        "name": "Pato",
+        "qty": 400,
+        "unit": "g"
+      },
+      {
+        "name": "Arroz",
+        "qty": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Chouriço",
+        "qty": 1,
+        "unit": "un"
+      },
+      {
+        "name": "Laranja",
+        "qty": 1,
+        "unit": "un"
+      }
+    ],
+    "nutrition": {
+      "kcal": 690,
+      "protein_g": 40,
+      "carbs_g": 64,
+      "fat_g": 29,
+      "fiber_g": 3
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/aves.svg",
+    "source": "starter"
+  },
+  {
+    "id": "r9",
+    "name": "Bacalhau à Brás com Salada Verde",
+    "meal_type": "refeicao",
+    "category": "Peixe",
+    "cuisine": "Portuguesa",
+    "time": "25 min",
+    "prepTime": "10 min",
+    "cookTime": "15 min",
+    "method": "Bimby + Bimby Friend (Salteado e envolvimento cremoso)",
+    "steps": "1. [Bimby] Coloque no copo 1 cebola cortada em quartos, 2 dentes de alho e 40 g de azeite. Pique 5 seg / Vel 5 e refogue 5 min / 120°C (Varoma) / Vel 1.\n2. Adicione 300 g de bacalhau desfiado bem escorrido e salteie 5 min / 100°C / Vel colher invertida.\n3. [Bimby Friend] Entretanto, bata 4 ovos com uma pitada de pimenta e salsa picada numa taça. Se desejar manter a mistura quente, transfira o refogado de bacalhau para o copo do Bimby Friend a 90°C / Vel 1 invertida.\n4. Junte 150 g de batata palha ao bacalhau, envolva delicadamente na espátula, verta os ovos batidos e mexa por 2-3 min em calor suave até os ovos ficarem cremosos (não secos).\n5. Polvilhe com azeitonas pretas e salsa fresca picada. Sirva de imediato acompanhado com a salada verde temperada a gosto.",
+    "items": [
+      {
+        "name": "Bacalhau desfiado",
+        "qty": 300.0,
+        "unit": "g"
+      },
+      {
+        "name": "Ovos",
+        "qty": 4.0,
+        "unit": "un"
+      },
+      {
+        "name": "Batata palha",
+        "qty": 150.0,
+        "unit": "g"
+      },
+      {
+        "name": "Cebola",
+        "qty": 1.0,
+        "unit": "un"
+      },
+      {
+        "name": "Salada",
+        "qty": 1.0,
+        "unit": "emb"
+      }
+    ],
+    "nutrition": {
+      "kcal": 620,
+      "protein_g": 39,
+      "carbs_g": 42,
+      "fat_g": 32,
+      "fiber_g": 5
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/peixe.svg",
+    "source": "starter"
+  },
+  {
+    "id": "r3",
+    "name": "Bife da Vazia com Salada e Arroz",
+    "meal_type": "refeicao",
+    "category": "Carne",
+    "cuisine": "Portuguesa",
+    "time": "30 min",
+    "prepTime": "10 min",
+    "cookTime": "20 min",
+    "method": "Fogão (grelhador) e Tacho",
+    "steps": "1. Coza o arroz num tacho com água a ferver, sal e um dente de alho esmagado durante 15 minutos.\n2. Lave e corte a alface e os tomates cherry para preparar a salada, temperando com um fio de azeite.\n3. Aqueça bem o grelhador no fogão até estar muito quente.\n4. Tempere os bifes com sal e pimenta e grelhe por 3 a 4 minutos de cada lado. Dica: Para um ponto médio, o bife deve apresentar-se firme ao toque mas com alguma elasticidade no centro.",
+    "items": [
+      {
+        "name": "Bife da vazia",
+        "qty": 350,
+        "unit": "g"
+      },
+      {
+        "name": "Salada",
+        "qty": 1,
+        "unit": "emb"
+      },
+      {
+        "name": "Arroz",
+        "qty": 160,
+        "unit": "g"
+      }
+    ],
+    "nutrition": {
+      "kcal": 610,
+      "protein_g": 44,
+      "carbs_g": 56,
+      "fat_g": 22,
+      "fiber_g": 4
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/carne.svg",
+    "source": "starter"
+  },
+  {
+    "id": "r7",
+    "name": "Caril de Grão-de-Bico com Arroz Basmati",
+    "meal_type": "refeicao",
+    "category": "Vegetariano",
+    "cuisine": "Indiana",
+    "time": "25 min",
+    "prepTime": "",
+    "cookTime": "",
+    "method": "",
+    "steps": "",
+    "items": [
+      {
+        "name": "Grão-de-bico",
+        "qty": 1,
+        "unit": "lata"
+      },
+      {
+        "name": "Leite de coco",
+        "qty": 200,
+        "unit": "ml"
+      },
+      {
+        "name": "Arroz basmati",
+        "qty": 160,
+        "unit": "g"
+      },
+      {
+        "name": "Caril",
+        "qty": 1,
+        "unit": "emb"
+      }
+    ],
+    "nutrition": {
+      "kcal": 540,
+      "protein_g": 18,
+      "carbs_g": 72,
+      "fat_g": 19,
+      "fiber_g": 12
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/vegetariano.svg",
+    "source": "starter"
+  },
+  {
+    "id": "r4",
+    "name": "Dourada no Forno com Batatinhas Assadas",
+    "meal_type": "refeicao",
+    "category": "Peixe",
+    "cuisine": "Portuguesa",
+    "time": "35 min",
+    "prepTime": "",
+    "cookTime": "",
+    "method": "",
+    "steps": "",
+    "items": [
+      {
+        "name": "Dourada",
+        "qty": 2,
+        "unit": "un"
+      },
+      {
+        "name": "Batatas",
+        "qty": 450,
+        "unit": "g"
+      },
+      {
+        "name": "Pimentos",
+        "qty": 1,
+        "unit": "un"
+      },
+      {
+        "name": "Limão",
+        "qty": 1,
+        "unit": "un"
+      }
+    ],
+    "nutrition": {
+      "kcal": 510,
+      "protein_g": 38,
+      "carbs_g": 46,
+      "fat_g": 18,
+      "fiber_g": 6
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/peixe.svg",
+    "source": "starter"
+  },
+  {
+    "id": "r11",
+    "name": "Esparguete à Bolonhesa",
+    "meal_type": "refeicao",
+    "category": "Carne",
+    "cuisine": "Italiana",
+    "time": "30 min",
+    "prepTime": "10 min",
+    "cookTime": "20 min",
+    "method": "Bimby + Bimby Friend em paralelo",
+    "steps": "1. [Bimby] Coloque no copo 1 cebola, 2 dentes de alho, 1 cenoura e 30 g de azeite. Pique 5 seg / Vel 5 e refogue 5 min / 120°C / Vel 1.\n2. Adicione 300 g de carne picada e sele 5 min / 100°C / Vel colher invertida.\n3. Adicione 250 ml de polpa de tomate, sal, orégãos e um fio de vinho branco (opcional). Programe 20 min / 100°C / Vel colher invertida.\n4. [Bimby Friend] Paralelamente, coloque 1000 g de água e sal no copo do Bimby Friend e aqueça 10 min / Varoma / Vel 1. Introduza 200 g de esparguete e cozinhe pelo tempo indicado na embalagem (~8 a 10 min) / 100°C / Vel colher invertida.\n5. Escorra a massa, sirva nos pratos com o molho à bolonhesa por cima e polvilhe generosamente com o queijo ralado.",
+    "items": [
+      {
+        "name": "Carne picada",
+        "qty": 300.0,
+        "unit": "g"
+      },
+      {
+        "name": "Esparguete",
+        "qty": 200.0,
+        "unit": "g"
+      },
+      {
+        "name": "Polpa de tomate",
+        "qty": 250.0,
+        "unit": "ml"
+      },
+      {
+        "name": "Cebola",
+        "qty": 1.0,
+        "unit": "un"
+      },
+      {
+        "name": "Queijo ralado",
+        "qty": 100.0,
+        "unit": "g"
+      }
+    ],
+    "nutrition": {
+      "kcal": 650,
+      "protein_g": 38,
+      "carbs_g": 70,
+      "fat_g": 24,
+      "fiber_g": 6
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/carne.svg",
+    "source": "starter"
+  },
+  {
+    "id": "r16",
+    "name": "Filetes de Pescada com Arroz de Tomate",
+    "meal_type": "refeicao",
+    "category": "Peixe",
+    "cuisine": "Portuguesa",
+    "time": "25 min",
+    "prepTime": "",
+    "cookTime": "",
+    "method": "",
+    "steps": "",
+    "items": [
+      {
+        "name": "Filetes de pescada",
+        "qty": 350,
+        "unit": "g"
+      },
+      {
+        "name": "Arroz",
+        "qty": 160,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "qty": 2,
+        "unit": "un"
+      },
+      {
+        "name": "Limão",
+        "qty": 1,
+        "unit": "un"
+      }
+    ],
+    "nutrition": {
+      "kcal": 470,
+      "protein_g": 34,
+      "carbs_g": 56,
+      "fat_g": 11,
+      "fiber_g": 4
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/peixe.svg",
+    "source": "starter"
+  },
+  {
+    "id": "r2",
+    "name": "Frango Salteado com Quinoa e Legumes",
+    "meal_type": "refeicao",
+    "category": "Aves",
+    "cuisine": "Saudável / Fit",
+    "time": "20 min",
+    "prepTime": "",
+    "cookTime": "",
+    "method": "",
+    "steps": "",
+    "items": [
+      {
+        "name": "Peito de frango",
+        "qty": 300,
+        "unit": "g"
+      },
+      {
+        "name": "Quinoa",
+        "qty": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Courgette",
+        "qty": 1,
+        "unit": "un"
+      },
+      {
+        "name": "Cenoura",
+        "qty": 2,
+        "unit": "un"
+      }
+    ],
+    "nutrition": {
+      "kcal": 490,
+      "protein_g": 42,
+      "carbs_g": 48,
+      "fat_g": 12,
+      "fiber_g": 8
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/aves.svg",
+    "source": "starter"
+  },
+  {
+    "id": "r13",
+    "name": "Frango de Caril com Arroz Basmati",
+    "meal_type": "refeicao",
+    "category": "Aves",
+    "cuisine": "Indiana",
+    "time": "25 min",
+    "prepTime": "",
+    "cookTime": "",
+    "method": "",
+    "steps": "",
+    "items": [
+      {
+        "name": "Peito de frango",
+        "qty": 320,
+        "unit": "g"
+      },
+      {
+        "name": "Leite de coco",
+        "qty": 200,
+        "unit": "ml"
+      },
+      {
+        "name": "Arroz basmati",
+        "qty": 160,
+        "unit": "g"
+      },
+      {
+        "name": "Caril",
+        "qty": 1,
+        "unit": "emb"
+      }
+    ],
+    "nutrition": {
+      "kcal": 600,
+      "protein_g": 41,
+      "carbs_g": 58,
+      "fat_g": 22,
+      "fiber_g": 4
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/aves.svg",
+    "source": "starter"
+  },
+  {
+    "id": "r17",
+    "name": "Hambúrgueres no Prato com Batata Assada",
+    "meal_type": "refeicao",
+    "category": "Carne",
+    "cuisine": "Internacional",
+    "time": "20 min",
+    "prepTime": "",
+    "cookTime": "",
+    "method": "",
+    "steps": "",
+    "items": [
+      {
+        "name": "Hambúrgueres",
+        "qty": 2,
+        "unit": "un"
+      },
+      {
+        "name": "Batatas",
+        "qty": 400,
+        "unit": "g"
+      },
+      {
+        "name": "Ovos",
+        "qty": 2,
+        "unit": "un"
+      },
+      {
+        "name": "Salada",
+        "qty": 1,
+        "unit": "emb"
+      }
+    ],
+    "nutrition": {
+      "kcal": 630,
+      "protein_g": 38,
+      "carbs_g": 46,
+      "fat_g": 31,
+      "fiber_g": 6
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/carne.svg",
+    "source": "starter"
+  },
+  {
+    "id": "r21",
+    "name": "Jardineira de Vitela",
+    "meal_type": "refeicao",
+    "category": "Carne",
+    "cuisine": "Portuguesa",
+    "time": "45 min",
+    "prepTime": "",
+    "cookTime": "",
+    "method": "",
+    "steps": "",
+    "items": [
+      {
+        "name": "Carne de vitela",
+        "qty": 350,
+        "unit": "g"
+      },
+      {
+        "name": "Batatas",
+        "qty": 400,
+        "unit": "g"
+      },
+      {
+        "name": "Cenoura",
+        "qty": 2,
+        "unit": "un"
+      },
+      {
+        "name": "Ervilhas",
+        "qty": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Polpa de tomate",
+        "qty": 150,
+        "unit": "ml"
+      }
+    ],
+    "nutrition": {
+      "kcal": 550,
+      "protein_g": 39,
+      "carbs_g": 48,
+      "fat_g": 21,
+      "fiber_g": 9
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/carne.svg",
+    "source": "starter"
+  },
+  {
+    "id": "r8",
+    "name": "Lombo de Porco com Puré de Batata Doce",
+    "meal_type": "refeicao",
+    "category": "Carne",
+    "cuisine": "Portuguesa",
+    "time": "40 min",
+    "prepTime": "",
+    "cookTime": "",
+    "method": "",
+    "steps": "",
+    "items": [
+      {
+        "name": "Lombo de porco",
+        "qty": 400,
+        "unit": "g"
+      },
+      {
+        "name": "Batata doce",
+        "qty": 500,
+        "unit": "g"
+      },
+      {
+        "name": "Alho",
+        "qty": 2,
+        "unit": "dente"
+      }
+    ],
+    "nutrition": {
+      "kcal": 590,
+      "protein_g": 42,
+      "carbs_g": 50,
+      "fat_g": 23,
+      "fiber_g": 7
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/carne.svg",
+    "source": "starter"
+  },
+  {
+    "id": "r5",
+    "name": "Massa com Atum, Tomate e Azeitonas",
+    "meal_type": "refeicao",
+    "category": "Rápido",
+    "cuisine": "Italiana",
+    "time": "15 min",
+    "prepTime": "",
+    "cookTime": "",
+    "method": "",
+    "steps": "",
+    "items": [
+      {
+        "name": "Esparguete",
+        "qty": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Atum em azeite",
+        "qty": 2,
+        "unit": "lata"
+      },
+      {
+        "name": "Polpa de tomate",
+        "qty": 200,
+        "unit": "ml"
+      },
+      {
+        "name": "Azeitonas",
+        "qty": 100,
+        "unit": "g"
+      }
+    ],
+    "nutrition": {
+      "kcal": 580,
+      "protein_g": 32,
+      "carbs_g": 68,
+      "fat_g": 18,
+      "fiber_g": 5
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/rapido.svg",
+    "source": "starter"
+  },
+  {
+    "id": "r6",
+    "name": "Omelete de Espinafres com Queijo Fresco",
+    "meal_type": "refeicao",
+    "category": "Ovos",
+    "cuisine": "Mediterrânica",
+    "time": "15 min",
+    "prepTime": "",
+    "cookTime": "",
+    "method": "",
+    "steps": "",
+    "items": [
+      {
+        "name": "Ovos",
+        "qty": 4,
+        "unit": "un"
+      },
+      {
+        "name": "Espinafres",
+        "qty": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Queijo fresco",
+        "qty": 1,
+        "unit": "un"
+      }
+    ],
+    "nutrition": {
+      "kcal": 360,
+      "protein_g": 26,
+      "carbs_g": 8,
+      "fat_g": 24,
+      "fiber_g": 4
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/ovos.svg",
+    "source": "starter"
+  },
+  {
+    "id": "r22",
+    "name": "Ovos Mexidos com Espargos e Cogumelos",
+    "meal_type": "refeicao",
+    "category": "Ovos",
+    "cuisine": "Mediterrânica",
+    "time": "15 min",
+    "prepTime": "",
+    "cookTime": "",
+    "method": "",
+    "steps": "",
+    "items": [
+      {
+        "name": "Ovos",
+        "qty": 4,
+        "unit": "un"
+      },
+      {
+        "name": "Espargos",
+        "qty": 1,
+        "unit": "maço"
+      },
+      {
+        "name": "Cogumelos",
+        "qty": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Pão",
+        "qty": 2,
+        "unit": "un"
+      }
+    ],
+    "nutrition": {
+      "kcal": 390,
+      "protein_g": 24,
+      "carbs_g": 26,
+      "fat_g": 21,
+      "fiber_g": 6
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/ovos.svg",
+    "source": "starter"
+  },
+  {
+    "id": "r10",
+    "name": "Peito de Frango Grelhado com Arroz e Salada",
+    "meal_type": "refeicao",
+    "category": "Aves",
+    "cuisine": "Mediterrânica",
+    "time": "20 min",
+    "prepTime": "",
+    "cookTime": "",
+    "method": "",
+    "steps": "",
+    "items": [
+      {
+        "name": "Peito de frango",
+        "qty": 320,
+        "unit": "g"
+      },
+      {
+        "name": "Arroz",
+        "qty": 160,
+        "unit": "g"
+      },
+      {
+        "name": "Salada",
+        "qty": 1,
+        "unit": "emb"
+      },
+      {
+        "name": "Tomate",
+        "qty": 2,
+        "unit": "un"
+      }
+    ],
+    "nutrition": {
+      "kcal": 510,
+      "protein_g": 45,
+      "carbs_g": 54,
+      "fat_g": 11,
+      "fiber_g": 5
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/aves.svg",
+    "source": "starter"
+  },
+  {
+    "id": "r15",
+    "name": "Peru Estufado com Ervilhas e Cenoura",
+    "meal_type": "refeicao",
+    "category": "Aves",
+    "cuisine": "Portuguesa",
+    "time": "30 min",
+    "prepTime": "",
+    "cookTime": "",
+    "method": "",
+    "steps": "",
+    "items": [
+      {
+        "name": "Bifes de peru",
+        "qty": 320,
+        "unit": "g"
+      },
+      {
+        "name": "Ervilhas",
+        "qty": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Cenoura",
+        "qty": 2,
+        "unit": "un"
+      },
+      {
+        "name": "Cebola",
+        "qty": 1,
+        "unit": "un"
+      }
+    ],
+    "nutrition": {
+      "kcal": 440,
+      "protein_g": 43,
+      "carbs_g": 34,
+      "fat_g": 13,
+      "fiber_g": 9
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/aves.svg",
+    "source": "starter"
+  },
+  {
+    "id": "r12",
+    "name": "Pescada Cozida com Todos",
+    "meal_type": "refeicao",
+    "category": "Peixe",
+    "cuisine": "Portuguesa",
+    "time": "25 min",
+    "prepTime": "",
+    "cookTime": "",
+    "method": "",
+    "steps": "",
+    "items": [
+      {
+        "name": "Postas de pescada",
+        "qty": 350,
+        "unit": "g"
+      },
+      {
+        "name": "Batatas",
+        "qty": 400,
+        "unit": "g"
+      },
+      {
+        "name": "Feijão verde",
+        "qty": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Cenoura",
+        "qty": 2,
+        "unit": "un"
+      },
+      {
+        "name": "Ovos",
+        "qty": 2,
+        "unit": "un"
+      }
+    ],
+    "nutrition": {
+      "kcal": 430,
+      "protein_g": 36,
+      "carbs_g": 42,
+      "fat_g": 12,
+      "fiber_g": 8
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/peixe.svg",
+    "source": "starter"
+  },
+  {
+    "id": "r18",
+    "name": "Quiche de Legumes com Salada",
+    "meal_type": "refeicao",
+    "category": "Vegetariano",
+    "cuisine": "Francesa",
+    "time": "35 min",
+    "prepTime": "",
+    "cookTime": "",
+    "method": "",
+    "steps": "",
+    "items": [
+      {
+        "name": "Massa quebrada",
+        "qty": 1,
+        "unit": "emb"
+      },
+      {
+        "name": "Ovos",
+        "qty": 3,
+        "unit": "un"
+      },
+      {
+        "name": "Natas",
+        "qty": 200,
+        "unit": "ml"
+      },
+      {
+        "name": "Espinafres",
+        "qty": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Cogumelos",
+        "qty": 150,
+        "unit": "g"
+      }
+    ],
+    "nutrition": {
+      "kcal": 520,
+      "protein_g": 18,
+      "carbs_g": 38,
+      "fat_g": 33,
+      "fiber_g": 6
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/vegetariano.svg",
+    "source": "starter"
+  },
+  {
+    "id": "r19",
+    "name": "Salada César com Frango",
+    "meal_type": "refeicao",
+    "category": "Rápido",
+    "cuisine": "Internacional",
+    "time": "15 min",
+    "prepTime": "",
+    "cookTime": "",
+    "method": "",
+    "steps": "",
+    "items": [
+      {
+        "name": "Peito de frango",
+        "qty": 250,
+        "unit": "g"
+      },
+      {
+        "name": "Alface",
+        "qty": 1,
+        "unit": "un"
+      },
+      {
+        "name": "Queijo parmesão",
+        "qty": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Pão",
+        "qty": 2,
+        "unit": "un"
+      }
+    ],
+    "nutrition": {
+      "kcal": 460,
+      "protein_g": 36,
+      "carbs_g": 28,
+      "fat_g": 22,
+      "fiber_g": 5
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/rapido.svg",
+    "source": "starter"
+  },
+  {
+    "id": "r1",
+    "name": "Salmão Grelhado com Batata Doce e Brócolos",
+    "meal_type": "refeicao",
+    "category": "Peixe",
+    "cuisine": "Mediterrânica",
+    "time": "25 min",
+    "prepTime": "",
+    "cookTime": "",
+    "method": "",
+    "steps": "",
+    "items": [
+      {
+        "name": "Salmão",
+        "qty": 350,
+        "unit": "g"
+      },
+      {
+        "name": "Batata doce",
+        "qty": 400,
+        "unit": "g"
+      },
+      {
+        "name": "Brócolos",
+        "qty": 300,
+        "unit": "g"
+      }
+    ],
+    "nutrition": {
+      "kcal": 560,
+      "protein_g": 40,
+      "carbs_g": 44,
+      "fat_g": 24,
+      "fiber_g": 9
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/peixe.svg",
+    "source": "starter"
+  },
+  {
+    "id": "r20",
+    "name": "Wraps de Atum e Abacate",
+    "meal_type": "refeicao",
+    "category": "Rápido",
+    "cuisine": "Mexicana",
+    "time": "10 min",
+    "prepTime": "",
+    "cookTime": "",
+    "method": "",
+    "steps": "",
+    "items": [
+      {
+        "name": "Tortilhas",
+        "qty": 4,
+        "unit": "un"
+      },
+      {
+        "name": "Atum em azeite",
+        "qty": 2,
+        "unit": "lata"
+      },
+      {
+        "name": "Abacate",
+        "qty": 1,
+        "unit": "un"
+      },
+      {
+        "name": "Alface",
+        "qty": 1,
+        "unit": "un"
+      },
+      {
+        "name": "Tomate",
+        "qty": 1,
+        "unit": "un"
+      }
+    ],
+    "nutrition": {
+      "kcal": 500,
+      "protein_g": 28,
+      "carbs_g": 44,
+      "fat_g": 23,
+      "fiber_g": 8
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/rapido.svg",
+    "source": "starter"
+  },
+  {
+    "id": "d6",
+    "name": "Arroz Doce Cremoso",
+    "meal_type": "sobremesa",
+    "category": "Sobremesa",
+    "cuisine": "Portuguesa",
+    "time": "30 min",
+    "prepTime": "",
+    "cookTime": "",
+    "method": "",
+    "steps": "",
+    "items": [
+      {
+        "name": "Arroz",
+        "qty": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Leite",
+        "qty": 500,
+        "unit": "ml"
+      },
+      {
+        "name": "Limão",
+        "qty": 1,
+        "unit": "un"
+      }
+    ],
+    "nutrition": {
+      "kcal": 240,
+      "protein_g": 6,
+      "carbs_g": 42,
+      "fat_g": 5,
+      "fiber_g": 1
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/sobremesa.svg",
+    "source": "starter"
+  },
+  {
+    "id": "b6",
+    "name": "Bowl de Queijo Quark com Frutos Vermelhos",
+    "meal_type": "pequeno_almoco",
+    "category": "Pequeno-Almoço",
+    "cuisine": "Saudável / Fit",
+    "time": "5 min",
+    "prepTime": "",
+    "cookTime": "",
+    "method": "",
+    "steps": "",
+    "items": [
+      {
+        "name": "Queijo quark",
+        "qty": 300,
+        "unit": "g"
+      },
+      {
+        "name": "Frutos vermelhos",
+        "qty": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Aveia",
+        "qty": 40,
+        "unit": "g"
+      }
+    ],
+    "nutrition": {
+      "kcal": 290,
+      "protein_g": 24,
+      "carbs_g": 32,
+      "fat_g": 6,
+      "fiber_g": 6
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/pequeno_almoco.svg",
+    "source": "starter"
+  },
+  {
+    "id": "d1",
+    "name": "Fruta da Época Laminada",
+    "meal_type": "sobremesa",
+    "category": "Sobremesa",
+    "cuisine": "Mediterrânica",
+    "time": "5 min",
+    "prepTime": "",
+    "cookTime": "",
+    "method": "",
+    "steps": "",
+    "items": [
+      {
+        "name": "Fruta da época",
+        "qty": 2,
+        "unit": "un"
+      }
+    ],
+    "nutrition": {
+      "kcal": 95,
+      "protein_g": 1,
+      "carbs_g": 24,
+      "fat_g": 0,
+      "fiber_g": 4
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/sobremesa.svg",
+    "source": "starter"
+  },
+  {
+    "id": "d2",
+    "name": "Gelatina de Frutos Vermelhos",
+    "meal_type": "sobremesa",
+    "category": "Sobremesa",
+    "cuisine": "Internacional",
+    "time": "5 min",
+    "prepTime": "",
+    "cookTime": "",
+    "method": "",
+    "steps": "",
+    "items": [
+      {
+        "name": "Gelatina",
+        "qty": 1,
+        "unit": "emb"
+      }
+    ],
+    "nutrition": {
+      "kcal": 60,
+      "protein_g": 2,
+      "carbs_g": 13,
+      "fat_g": 0,
+      "fiber_g": 0
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/sobremesa.svg",
+    "source": "starter"
+  },
+  {
+    "id": "b1",
+    "name": "Iogurte Grego com Granola e Fruta",
+    "meal_type": "pequeno_almoco",
+    "category": "Pequeno-Almoço",
+    "cuisine": "Mediterrânica",
+    "time": "5 min",
+    "prepTime": "",
+    "cookTime": "",
+    "method": "",
+    "steps": "",
+    "items": [
+      {
+        "name": "Iogurte grego",
+        "qty": 300,
+        "unit": "g"
+      },
+      {
+        "name": "Granola",
+        "qty": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Fruta da época",
+        "qty": 2,
+        "unit": "un"
+      }
+    ],
+    "nutrition": {
+      "kcal": 340,
+      "protein_g": 16,
+      "carbs_g": 44,
+      "fat_g": 11,
+      "fiber_g": 6
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/pequeno_almoco.svg",
+    "source": "starter"
+  },
+  {
+    "id": "d3",
+    "name": "Maçã Assada com Canela",
+    "meal_type": "sobremesa",
+    "category": "Sobremesa",
+    "cuisine": "Portuguesa",
+    "time": "25 min",
+    "prepTime": "",
+    "cookTime": "",
+    "method": "",
+    "steps": "",
+    "items": [
+      {
+        "name": "Maçã",
+        "qty": 2,
+        "unit": "un"
+      }
+    ],
+    "nutrition": {
+      "kcal": 120,
+      "protein_g": 1,
+      "carbs_g": 29,
+      "fat_g": 1,
+      "fiber_g": 5
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/sobremesa.svg",
+    "source": "starter"
+  },
+  {
+    "id": "d5",
+    "name": "Mousse de Chocolate Caseira",
+    "meal_type": "sobremesa",
+    "category": "Sobremesa",
+    "cuisine": "Francesa",
+    "time": "15 min",
+    "prepTime": "",
+    "cookTime": "",
+    "method": "",
+    "steps": "",
+    "items": [
+      {
+        "name": "Chocolate preto",
+        "qty": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Ovos",
+        "qty": 3,
+        "unit": "un"
+      }
+    ],
+    "nutrition": {
+      "kcal": 260,
+      "protein_g": 6,
+      "carbs_g": 24,
+      "fat_g": 16,
+      "fiber_g": 3
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/sobremesa.svg",
+    "source": "starter"
+  },
+  {
+    "id": "b3",
+    "name": "Panquecas de Aveia e Banana",
+    "meal_type": "pequeno_almoco",
+    "category": "Pequeno-Almoço",
+    "cuisine": "Saudável / Fit",
+    "time": "15 min",
+    "prepTime": "",
+    "cookTime": "",
+    "method": "",
+    "steps": "",
+    "items": [
+      {
+        "name": "Aveia",
+        "qty": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Banana",
+        "qty": 2,
+        "unit": "un"
+      },
+      {
+        "name": "Ovos",
+        "qty": 2,
+        "unit": "un"
+      },
+      {
+        "name": "Leite",
+        "qty": 100,
+        "unit": "ml"
+      }
+    ],
+    "nutrition": {
+      "kcal": 370,
+      "protein_g": 15,
+      "carbs_g": 54,
+      "fat_g": 10,
+      "fiber_g": 7
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/pequeno_almoco.svg",
+    "source": "starter"
+  },
+  {
+    "id": "b4",
+    "name": "Papas de Aveia com Maçã e Canela",
+    "meal_type": "pequeno_almoco",
+    "category": "Pequeno-Almoço",
+    "cuisine": "Saudável / Fit",
+    "time": "10 min",
+    "prepTime": "",
+    "cookTime": "",
+    "method": "",
+    "steps": "",
+    "items": [
+      {
+        "name": "Aveia",
+        "qty": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Leite",
+        "qty": 350,
+        "unit": "ml"
+      },
+      {
+        "name": "Maçã",
+        "qty": 2,
+        "unit": "un"
+      }
+    ],
+    "nutrition": {
+      "kcal": 320,
+      "protein_g": 12,
+      "carbs_g": 52,
+      "fat_g": 7,
+      "fiber_g": 8
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/pequeno_almoco.svg",
+    "source": "starter"
+  },
+  {
+    "id": "d4",
+    "name": "Salada de Fruta com Hortelã",
+    "meal_type": "sobremesa",
+    "category": "Sobremesa",
+    "cuisine": "Mediterrânica",
+    "time": "10 min",
+    "prepTime": "",
+    "cookTime": "",
+    "method": "",
+    "steps": "",
+    "items": [
+      {
+        "name": "Maçã",
+        "qty": 1,
+        "unit": "un"
+      },
+      {
+        "name": "Banana",
+        "qty": 1,
+        "unit": "un"
+      },
+      {
+        "name": "Laranja",
+        "qty": 1,
+        "unit": "un"
+      }
+    ],
+    "nutrition": {
+      "kcal": 115,
+      "protein_g": 2,
+      "carbs_g": 28,
+      "fat_g": 0,
+      "fiber_g": 5
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/sobremesa.svg",
+    "source": "starter"
+  },
+  {
+    "id": "b2",
+    "name": "Torradas Integrais com Ovos Mexidos e Abacate",
+    "meal_type": "pequeno_almoco",
+    "category": "Pequeno-Almoço",
+    "cuisine": "Internacional",
+    "time": "10 min",
+    "prepTime": "",
+    "cookTime": "",
+    "method": "",
+    "steps": "",
+    "items": [
+      {
+        "name": "Pão integral",
+        "qty": 4,
+        "unit": "un"
+      },
+      {
+        "name": "Ovos",
+        "qty": 3,
+        "unit": "un"
+      },
+      {
+        "name": "Abacate",
+        "qty": 1,
+        "unit": "un"
+      }
+    ],
+    "nutrition": {
+      "kcal": 410,
+      "protein_g": 20,
+      "carbs_g": 34,
+      "fat_g": 22,
+      "fiber_g": 8
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/pequeno_almoco.svg",
+    "source": "starter"
+  },
+  {
+    "id": "b5",
+    "name": "Tosta Mista em Pão de Mistura e Sumo de Laranja",
+    "meal_type": "pequeno_almoco",
+    "category": "Pequeno-Almoço",
+    "cuisine": "Portuguesa",
+    "time": "8 min",
+    "prepTime": "",
+    "cookTime": "",
+    "method": "",
+    "steps": "",
+    "items": [
+      {
+        "name": "Pão",
+        "qty": 4,
+        "unit": "un"
+      },
+      {
+        "name": "Queijo",
+        "qty": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Fiambre",
+        "qty": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Laranja",
+        "qty": 4,
+        "unit": "un"
+      }
+    ],
+    "nutrition": {
+      "kcal": 390,
+      "protein_g": 18,
+      "carbs_g": 46,
+      "fat_g": 14,
+      "fiber_g": 4
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/pequeno_almoco.svg",
+    "source": "starter"
+  },
+  {
+    "id": "c-1795157700274",
+    "name": "Sarmale (Rolinhos de Couve Recheados)",
+    "meal_type": "refeicao",
+    "category": "Carne",
+    "cuisine": "Internacional",
+    "time": "65 min",
+    "prepTime": "20 min",
+    "cookTime": "45 min",
+    "method": "Bimby + Bimby Friend (Cozedura a vapor e estufado)",
+    "steps": "1. [Bimby] Pique a cebola e o alho: 5 seg / Vel.\n5. Adicione um fio de azeite e refogue: 5 min / 120°C / Vel.\n1.\n2. [Bimby] Adicione a carne picada, o arroz, sal e pimenta. Envolva: 30 seg / Colher Inversa / Vel.\n3.\n3. Coloque o recheio nas folhas de couve e enrole bem. Disponha os rolinhos na Varoma.\n4. [Bimby] Deite 500ml de água no copo, a polpa de tomate, o vinho e o louro.\n5. [Bimby Friend] Adicione um pouco de molho do copo da Bimby no copo da Bimby Friend e coloque rolinhos extras se necessário. Programe: 40 min / Varoma / Colher Inversa.\n6. [Bimby] Coloque a Varoma em cima da tampa e programe: 40 min / Varoma / Colher Inversa. Dica: A couve deve estar tenra mas firme; o arroz estará cozido pelo vapor da carne.",
+    "items": [
+      {
+        "name": "folhas de couve lombarda escaldadas",
+        "qty": 8,
+        "unit": "un"
+      },
+      {
+        "name": "carne de porco picada",
+        "qty": 300,
+        "unit": "g"
+      },
+      {
+        "name": "arroz carolino",
+        "qty": 100,
+        "unit": "g"
+      },
+      {
+        "name": "cebola",
+        "qty": 1,
+        "unit": "un"
+      },
+      {
+        "name": "de alho",
+        "qty": 1,
+        "unit": "dente"
+      },
+      {
+        "name": "polpa de tomate",
+        "qty": 200,
+        "unit": "g"
+      },
+      {
+        "name": "vinho branco",
+        "qty": 50,
+        "unit": "ml"
+      },
+      {
+        "name": "folha de louro",
+        "qty": 1,
+        "unit": "un"
+      },
+      {
+        "name": "azeite q.b.",
+        "qty": null,
+        "unit": ""
+      },
+      {
+        "name": "sal e pimenta q.b.",
+        "qty": null,
+        "unit": ""
+      }
+    ],
+    "nutrition": {
+      "kcal": 420,
+      "protein_g": 28,
+      "carbs_g": 35,
+      "fat_g": 18,
+      "fiber_g": 6
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/carne.svg",
+    "source": "starter"
+  },
+  {
+    "id": "c-1795167389665",
+    "name": "Salmão Teriyaki com Brócolos e Arroz de Jasmim",
+    "meal_type": "refeicao",
+    "category": "Peixe",
+    "cuisine": "Asiática",
+    "time": "25 min",
+    "prepTime": "10 min",
+    "cookTime": "18 min",
+    "method": "Bimby + Bimby Friend (Vapor Varoma e cesto em paralelo)",
+    "steps": "1. [Bimby] Coloque no copo 50 g de molho de soja, 25 g de mel, 1 dente de alho picado e 5 g de gengibre ralado. Misture 15 seg / Vel 4. Retire metade da marinada para temperar os lombos de salmão (350 g).\n2. [Bimby Friend] Coloque 1000 g de água e sal no copo do Bimby Friend. No cesto insira 180 g de arroz de jasmim. Cozinhe 18 min / 100°C / Vel 2.\n3. [Bimby] Entretanto, na Bimby principal com o restante molho, coloque 500 g de água no fundo do copo, disponha a Varoma com os floretes de brócolos (250 g) no tabuleiro inferior e os lombos de salmão marinados no tabuleiro superior (ou papel vegetal). Programe 18 min / Varoma / Vel 1.\n4. Emprate o arroz solto de jasmim, ladeie com os brócolos tenros e o salmão com o molho teriyaki reduzido. Polvilhe com sementes de sésamo tostadas.",
+    "items": [
+      {
+        "name": "Lombos de salmão",
+        "qty": 350,
+        "unit": "g"
+      },
+      {
+        "name": "Brócolos",
+        "qty": 250,
+        "unit": "g"
+      },
+      {
+        "name": "Arroz de jasmim",
+        "qty": 180,
+        "unit": "g"
+      },
+      {
+        "name": "Molho de soja",
+        "qty": 50,
+        "unit": "ml"
+      },
+      {
+        "name": "Mel",
+        "qty": 25,
+        "unit": "g"
+      },
+      {
+        "name": "Sementes de sésamo",
+        "qty": 10,
+        "unit": "g"
+      }
+    ],
+    "nutrition": {
+      "kcal": 520,
+      "protein_g": 38,
+      "carbs_g": 52,
+      "fat_g": 18,
+      "fiber_g": 5
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/peixe.svg",
+    "source": "starter"
+  }
+]

@@ -1,0 +1,195 @@
+get_plan:
+  name: Get meal plan & costs
+  description: Returns the current weekly meal plan, recipes, missing ingredients, and estimated supermarket costs.
+
+generate_week:
+  name: Generate weekly meal plan
+  description: Generates a new weekly meal plan (80% 4–5★ favorites, 20% new, excluding 1–3★, preserving locked meals).
+  fields:
+    updated_by:
+      name: Updated by
+      example: "Hermes"
+      selector:
+        text:
+
+swap_meal:
+  name: Swap meal
+  description: Replaces lunch or dinner for a specific day of the week (0=Monday .. 6=Sunday).
+  fields:
+    day_index:
+      name: Day index (0–6)
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 6
+    meal:
+      name: Meal
+      required: true
+      selector:
+        select:
+          options: ["lunch", "dinner"]
+    dish:
+      name: Dish name or recipe ID
+      required: true
+      selector:
+        text:
+    updated_by:
+      name: Updated by
+      selector:
+        text:
+
+sync_shopping_list:
+  name: Sync missing ingredients to shopping list
+  description: Adds missing weekly ingredients to the configured todo list with quantity and lowest supermarket price/store.
+  fields:
+    refresh_prices:
+      name: Refresh supermarket prices first
+      default: false
+      selector:
+        boolean:
+
+refresh_prices:
+  name: Refresh supermarket prices
+  description: Searches configured supermarkets for ingredients in the weekly plan (or all recipes) and updates average costs.
+  fields:
+    all_recipes:
+      name: All recipes
+      default: false
+      selector:
+        boolean:
+    max_items:
+      name: Max ingredients to search
+      default: 20
+      selector:
+        number:
+          min: 1
+          max: 100
+
+set_ingredient_price:
+  name: Set ingredient supermarket price
+  description: Manually record or override a supermarket price and store URL for an ingredient.
+  fields:
+    ingredient:
+      name: Ingredient
+      required: true
+      example: "Ovomaltine"
+      selector:
+        text:
+    store:
+      name: Supermarket domain or name
+      required: true
+      example: "auchan.pt"
+      selector:
+        text:
+    price:
+      name: Price
+      required: true
+      example: 9.0
+      selector:
+        number:
+          min: 0.01
+          max: 500
+          step: 0.01
+    url:
+      name: Store product URL
+      selector:
+        text:
+
+upsert_recipe:
+  name: Create or update recipe
+  description: Creates or updates a recipe or variant in the Plan My Meals library.
+  fields:
+    recipe_json:
+      name: Recipe JSON
+      required: true
+      selector:
+        text:
+
+delete_recipe:
+  name: Delete recipe
+  description: Removes a recipe (and its variants) from the library.
+  fields:
+    recipe_id:
+      name: Recipe ID
+      required: true
+      selector:
+        text:
+    updated_by:
+      name: Updated by
+      selector:
+        text:
+
+rate_recipe:
+  name: Rate recipe
+  description: Sets a 1–5 star rating for a recipe (0 clears rating).
+  fields:
+    recipe_id:
+      name: Recipe ID
+      required: true
+      selector:
+        text:
+    rating:
+      name: Rating (0–5)
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 5
+    updated_by:
+      name: Updated by
+      selector:
+        text:
+
+check_similarity:
+  name: Check recipe similarity
+  description: Checks if a recipe title/ingredients already exist or match an existing recipe as a variant.
+  fields:
+    title:
+      name: Title
+      required: true
+      selector:
+        text:
+    items:
+      name: Ingredients
+      selector:
+        object:
+    meal_type:
+      name: Meal type
+      selector:
+        text:
+
+upload_image:
+  name: Upload recipe image
+  description: Saves a base64 image or downloads an image URL locally into Home Assistant for a recipe.
+  fields:
+    recipe_id:
+      name: Recipe ID
+      selector:
+        text:
+    image_base64:
+      name: Base64 image data URL
+      selector:
+        text:
+    image_url_source:
+      name: Source image URL
+      selector:
+        text:
+    updated_by:
+      name: Updated by
+      selector:
+        text:
+
+save_state:
+  name: Save full state
+  description: Saves the complete Plan My Meals state JSON (used by the embedded web UI).
+  fields:
+    state_json:
+      name: State JSON
+      required: true
+      selector:
+        text:
+    updated_by:
+      name: Updated by
+      selector:
+        text:

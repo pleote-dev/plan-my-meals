@@ -1,0 +1,59 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Set up Plan My Meals",
+        "description": "Configure your weekly meal planner, kitchen appliances, AI assistant, and supermarket price tracking.",
+        "data": {
+          "todo_entity": "Shopping list entity (todo.*)",
+          "servings": "Default number of people (servings)",
+          "base_servings": "Base servings per recipe",
+          "appliances": "Available kitchen appliances",
+          "bimby_mode": "Thermomix / Bimby mode",
+          "bimby_friend": "Thermomix Friend / Bimby Friend",
+          "ai_entity": "Home Assistant AI entity (optional — leave empty for external agents like Hermes)",
+          "price_tracking": "Enable supermarket price tracking",
+          "country": "Supermarket country",
+          "supermarkets": "Supermarkets to track",
+          "currency": "Currency symbol",
+          "price_ttl_days": "Price cache lifetime (days)",
+          "include_qty_in_todo": "Include quantity in shopping list items",
+          "include_price_in_todo": "Include lowest price & supermarket in shopping list items",
+          "show_in_sidebar": "Show Plan My Meals in Home Assistant sidebar",
+          "sidebar_title": "Sidebar title",
+          "sidebar_icon": "Sidebar icon"
+        }
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Plan My Meals is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Plan My Meals Options",
+        "description": "Update shopping list, kitchen equipment, AI assistant, and supermarket price settings.",
+        "data": {
+          "todo_entity": "Shopping list entity (todo.*)",
+          "servings": "Default number of people (servings)",
+          "base_servings": "Base servings per recipe",
+          "appliances": "Available kitchen appliances",
+          "bimby_mode": "Thermomix / Bimby mode",
+          "bimby_friend": "Thermomix Friend / Bimby Friend",
+          "ai_entity": "Home Assistant AI entity (optional)",
+          "price_tracking": "Enable supermarket price tracking",
+          "country": "Supermarket country",
+          "supermarkets": "Supermarkets to track",
+          "currency": "Currency symbol",
+          "price_ttl_days": "Price cache lifetime (days)",
+          "include_qty_in_todo": "Include quantity in shopping list items",
+          "include_price_in_todo": "Include lowest price & supermarket in shopping list items",
+          "show_in_sidebar": "Show Plan My Meals in Home Assistant sidebar",
+          "sidebar_title": "Sidebar title",
+          "sidebar_icon": "Sidebar icon"
+        }
+      }
+    }
+  }
+}

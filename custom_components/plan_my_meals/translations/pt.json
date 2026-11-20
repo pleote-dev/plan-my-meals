@@ -1,0 +1,59 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configurar Plan My Meals",
+        "description": "Configura o plano semanal de refeições, equipamentos de cozinha, IA do Home Assistant e pesquisa de preços de supermercados.",
+        "data": {
+          "todo_entity": "Lista de compras (entidade todo.*)",
+          "servings": "Número de pessoas por omissão (doses)",
+          "base_servings": "Doses base de cada receita",
+          "appliances": "Equipamentos de cozinha disponíveis",
+          "bimby_mode": "Modo Bimby / Thermomix",
+          "bimby_friend": "Bimby Friend",
+          "ai_entity": "Entidade de IA do Home Assistant (opcional — deixa vazio para agentes externos como o Hermes)",
+          "price_tracking": "Ativar pesquisa de preços de supermercados",
+          "country": "País dos supermercados",
+          "supermarkets": "Supermercados a acompanhar",
+          "currency": "Símbolo da moeda",
+          "price_ttl_days": "Validade da cache de preços (dias)",
+          "include_qty_in_todo": "Incluir quantidade nos itens da lista de compras",
+          "include_price_in_todo": "Incluir preço mais baixo e supermercado na lista de compras (ex.: Ovomaltine (2 un) (9€ Auchan))",
+          "show_in_sidebar": "Mostrar Plan My Meals na barra lateral do Home Assistant",
+          "sidebar_title": "Título na barra lateral",
+          "sidebar_icon": "Ícone na barra lateral"
+        }
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "O Plan My Meals já está configurado."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opções do Plan My Meals",
+        "description": "Atualiza a lista de compras, equipamentos de cozinha, IA e pesquisa de preços.",
+        "data": {
+          "todo_entity": "Lista de compras (entidade todo.*)",
+          "servings": "Número de pessoas por omissão (doses)",
+          "base_servings": "Doses base de cada receita",
+          "appliances": "Equipamentos de cozinha disponíveis",
+          "bimby_mode": "Modo Bimby / Thermomix",
+          "bimby_friend": "Bimby Friend",
+          "ai_entity": "Entidade de IA do Home Assistant (opcional)",
+          "price_tracking": "Ativar pesquisa de preços de supermercados",
+          "country": "País dos supermercados",
+          "supermarkets": "Supermercados a acompanhar",
+          "currency": "Símbolo da moeda",
+          "price_ttl_days": "Validade da cache de preços (dias)",
+          "include_qty_in_todo": "Incluir quantidade nos itens da lista de compras",
+          "include_price_in_todo": "Incluir preço mais baixo e supermercado na lista de compras",
+          "show_in_sidebar": "Mostrar Plan My Meals na barra lateral do Home Assistant",
+          "sidebar_title": "Título na barra lateral",
+          "sidebar_icon": "Ícone na barra lateral"
+        }
+      }
+    }
+  }
+}
