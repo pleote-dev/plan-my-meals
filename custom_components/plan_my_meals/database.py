@@ -141,6 +141,9 @@ def _default_state(starter_recipes: list[dict[str, Any]], config: dict[str, Any]
         "updated_by": "Plan My Meals",
         "servings": int(cfg.get("servings", DEFAULT_SERVINGS)),
         "includeQtyInHA": bool(cfg.get("include_qty_in_todo", True)),
+        "includePriceInHA": bool(cfg.get("include_price_in_todo", True)),
+        "priceSearchMode": "ai",
+        "priceRefreshMeta": {},
         "mealConfig": {
             "breakfast": True,
             "lunch": True,
@@ -235,6 +238,46 @@ class PlanMyMealsDB:
         )
         self._conn.commit()
 
+    def get_price_stats(self, ttl_days: int = DEFAULT_PRICE_TTL_DAYS) -> dict[str, Any]:
+        sql = "SELECT COUNT(DISTINCT term_norm) AS items, COUNT(*) AS offers, MAX(fetched_at) AS last_fetched FROM supermarket_prices"
+        params: list[Any] = []
+        if ttl_days > 0:
+            cutoff = (datetime.now(timezone.utc) - timedelta(days=ttl_days)).replace(microsecond=0).isoformat()
+            sql += " WHERE fetched_at >= ?"
+            params.append(cutoff)
+        with self._lock:
+            row = self._conn.execute(sql, params).fetchone()
+            if not row:
+                return {"total_priced_items": 0, "total_offers": 0, "last_fetched_at": None}
+            return {
+                "total_priced_items": int(row["items"] or 0),
+                "total_offers": int(row["offers"] or 0),
+                "last_fetched_at": row["last_fetched"],
+            }
+
+    def record_price_refresh(
+        self,
+        searched: int,
+        priced: int,
+        mode: str = "supermarkets",
+        updated_by: str = "Automation",
+    ) -> dict[str, Any]:
+        with self._lock:
+            state = self.get_state()
+            stats = self.get_price_stats()
+            meta = {
+                "last_run_at": utc_now_iso(),
+                "searched": int(searched),
+                "priced": int(priced),
+                "mode": str(mode or "supermarkets"),
+                "updated_by": str(updated_by or "Automation"),
+                "total_priced_items": stats["total_priced_items"],
+                "total_offers": stats["total_offers"],
+            }
+            state["priceRefreshMeta"] = meta
+            self.save_state(state, updated_by=updated_by)
+            return meta
+
     def get_state(
         self,
         ttl_days: int = DEFAULT_PRICE_TTL_DAYS,
@@ -251,6 +294,13 @@ class PlanMyMealsDB:
             state["ingredientPrices"] = merged_prices
             costs = self.compute_meal_costs(state, merged_prices)
             state["costSummary"] = costs
+            stats = self.get_price_stats(ttl_days=ttl_days)
+            meta = dict(state.get("priceRefreshMeta") or {})
+            meta["total_priced_items"] = stats["total_priced_items"]
+            meta["total_offers"] = stats["total_offers"]
+            if not meta.get("last_run_at") and stats.get("last_fetched_at"):
+                meta["last_run_at"] = stats["last_fetched_at"]
+            state["priceRefreshMeta"] = meta
             return state
 
     def save_state(self, state: dict[str, Any], updated_by: str = "Home Assistant") -> dict[str, Any]:

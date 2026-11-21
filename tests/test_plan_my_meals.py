@@ -234,6 +234,29 @@ class TestPlanMyMeals(unittest.TestCase):
         finally:
             store.close()
 
+    def test_price_refresh_metadata_and_shopping_options_ui(self) -> None:
+        store = database.PlanMyMealsDB(self.db_path)
+        try:
+            store.initialize()
+            store.upsert_supermarket_price("Salmão", "Continente", "continente.pt", 12.99, "Salmão Fresco", "")
+            meta = store.record_price_refresh(searched=10, priced=7, mode="ai", updated_by="Automation")
+            self.assertEqual(meta["searched"], 10)
+            self.assertEqual(meta["priced"], 7)
+            self.assertEqual(meta["mode"], "ai")
+            self.assertEqual(meta["total_priced_items"], 1)
+            self.assertTrue(meta["last_run_at"])
+
+            full = store.get_state()
+            self.assertEqual(full["priceRefreshMeta"]["priced"], 7)
+            self.assertEqual(full["priceRefreshMeta"]["total_priced_items"], 1)
+            self.assertEqual(full["priceRefreshMeta"]["updated_by"], "Automation")
+        finally:
+            store.close()
+
+        html = (PKG_DIR / "frontend" / "app.html").read_text(encoding="utf-8")
+        for marker in ("btnShoppingOptions", "shoppingOptionsDialog", "selPriceSearchMode", "chkIncludeQty", "chkIncludePrice", "btnRunPriceRefreshNow"):
+            self.assertIn(marker, html)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -60,3 +60,29 @@ Standalone **Home Assistant** integration for weekly meal planning, recipe libra
 | `plan_my_meals.sync_shopping_list` | Pushes missing ingredients (`Ovomaltine (2 un) (9€ Auchan)`) to `todo.*` |
 | `plan_my_meals.refresh_prices` | Refreshes supermarket prices for weekly ingredients (or all recipes) |
 | `plan_my_meals.set_ingredient_price` | Manually sets or overrides a supermarket price & store URL |
+
+---
+
+## Daily Supermarket Price Refresh Automation
+
+You can schedule Home Assistant to refresh supermarket prices once a day automatically. The timestamp of the last run and the number of prices fetched are displayed inside the **Shopping → Options** menu in the Plan My Meals UI (along with a **Run Now** button and AI search mode toggle).
+
+Add the following automation to your Home Assistant `automations.yaml` (or create it via **Settings → Automations & Scenes**):
+
+```yaml
+alias: "Plan My Meals - Daily Supermarket Price Refresh"
+description: "Refresh local supermarket prices for weekly meal plan ingredients once a day"
+mode: single
+triggers:
+  - trigger: time
+    at: "07:00:00"
+conditions: []
+actions:
+  - action: plan_my_meals.refresh_prices
+    data:
+      all_recipes: false
+      max_items: 25
+```
+
+- Set `all_recipes: true` if you want to refresh prices across your entire recipe library instead of just the current weekly plan.
+- You can optionally pass `use_ai: true` (or `false`) to override the AI-assisted price lookup mode configured in **Shopping → Options**.

@@ -1782,15 +1782,13 @@
               <p>Quantidades ajustadas para <strong id="shoppingServingsText">4 pessoas</strong>. Marca 🏠 se já tens em casa.</p>
             </div>
             <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button type="button" class="btn btn-sm" id="btnShoppingOptions" title="Opções de preços de supermercado e formato da lista HA">⚙️ Opções</button>
               <button type="button" class="btn btn-sm" id="btnRefreshHA">🔄 Atualizar HA</button>
               <button type="button" class="btn btn-accent" id="btnSyncAll">➕ Enviar Faltantes ao HA</button>
             </div>
           </div>
           <div class="qty-toggle-row">
-            <label class="qty-toggle-label">
-              <input type="checkbox" id="chkIncludeQty" checked>
-              Incluir quantidades ao enviar para a lista do HA (ex: <code>Salmão (700 g)</code>)
-            </label>
+            <span id="shoppingPriceSummary" style="font-size:0.8rem; color:var(--text-muted);"></span>
             <span id="sharedSyncMeta" style="font-size:0.78rem; color:var(--text-muted);"></span>
           </div>
           <div class="ingredients-grid" id="ingredientsList"></div>
@@ -2021,6 +2019,46 @@
     </div>
   </dialog>
 
+  <!-- DIALOG: SHOPPING & SUPERMARKET PRICE OPTIONS -->
+  <dialog id="shoppingOptionsDialog" aria-labelledby="shoppingOptionsTitle">
+    <div class="dialog-header">
+      <h3 id="shoppingOptionsTitle">⚙️ Opções de Compras &amp; Preços</h3>
+      <button type="button" class="btn btn-icon btn-sm" data-close-dialog="shoppingOptionsDialog" aria-label="Fechar">✕</button>
+    </div>
+    <div class="dialog-body" style="display:flex; flex-direction:column; gap:14px;">
+      <div class="recipe-appliances-box">
+        <div style="font-weight:800; font-size:0.88rem;">💰 Pesquisa de Preços de Supermercado</div>
+        <div class="form-field" style="margin:0;">
+          <label for="selPriceSearchMode">Modo de pesquisa de preços</label>
+          <select class="input" id="selPriceSearchMode">
+            <option value="ai">🤖 Pesquisa com IA + Supermercados locais (recomendado)</option>
+            <option value="supermarkets">🛒 Apenas pesquisa direta nos supermercados locais</option>
+          </select>
+        </div>
+        <div id="priceStatusBox" style="display:flex; flex-direction:column; gap:5px; font-size:0.82rem; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px 12px;"></div>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
+          <span class="form-hint" id="priceRunHint" style="margin:0;">Podes agendar esta pesquisa uma vez por dia numa automação do Home Assistant ou executar agora.</span>
+          <button type="button" class="btn btn-primary btn-sm" id="btnRunPriceRefreshNow">▶ Correr pesquisa agora</button>
+        </div>
+      </div>
+
+      <div class="recipe-appliances-box">
+        <div style="font-weight:800; font-size:0.88rem;">🛒 Formato na Lista de Compras do HA</div>
+        <label class="qty-toggle-label">
+          <input type="checkbox" id="chkIncludeQty" checked>
+          <span>Incluir quantidades ao enviar para a lista do HA (ex: <code>Salmão (700 g)</code>)</span>
+        </label>
+        <label class="qty-toggle-label">
+          <input type="checkbox" id="chkIncludePrice" checked>
+          <span>Incluir o melhor preço e supermercado na descrição (ex: <code>Ovomaltine (2 un) (9€ Auchan)</code>)</span>
+        </label>
+      </div>
+    </div>
+    <div class="dialog-footer">
+      <button type="button" class="btn btn-primary" data-close-dialog="shoppingOptionsDialog">Fechar</button>
+    </div>
+  </dialog>
+
   <!-- DIALOG: NEW WEEK AUTO-FILL PROMPT -->
   <dialog id="newWeekDialog" aria-labelledby="newWeekTitle">
     <div class="dialog-header">
@@ -2230,6 +2268,9 @@
         },
         servings: 4,
         includeQtyInHA: true,
+        includePriceInHA: true,
+        priceSearchMode: "ai",
+        priceRefreshMeta: {},
         updated_at: null,
         updated_by: null,
         theme: null,
@@ -2489,6 +2530,8 @@
           updated_by: state.updated_by || getCurrentUserName(),
           servings: state.servings,
           includeQtyInHA: state.includeQtyInHA,
+          includePriceInHA: state.includePriceInHA,
+          priceSearchMode: state.priceSearchMode,
           mealConfig: state.mealConfig,
           weeklyPlan: currentWeekPlan,
           weeks: state.weeks,
@@ -2561,6 +2604,13 @@
           state.servings = Math.round(parsed.servings);
         }
         if (typeof parsed.includeQtyInHA === "boolean") state.includeQtyInHA = parsed.includeQtyInHA;
+        if (typeof parsed.includePriceInHA === "boolean") state.includePriceInHA = parsed.includePriceInHA;
+        if (parsed.priceSearchMode === "ai" || parsed.priceSearchMode === "supermarkets") {
+          state.priceSearchMode = parsed.priceSearchMode;
+        }
+        if (parsed.priceRefreshMeta && typeof parsed.priceRefreshMeta === "object") {
+          state.priceRefreshMeta = parsed.priceRefreshMeta;
+        }
         if (parsed.updated_at) state.updated_at = parsed.updated_at;
         if (parsed.updated_by) state.updated_by = parsed.updated_by;
         if (parsed.weeks && typeof parsed.weeks === "object") {
@@ -2594,6 +2644,8 @@
         }
       }
 
+      const APP_UI_VERSION = "0.1.3";
+
       async function loadSharedState(notifyOnUpdate = false) {
         try {
           const hass = getHass();
@@ -2602,11 +2654,22 @@
           if (wsResp && wsResp.config) {
             INTEGRATION_CONFIG = { ...INTEGRATION_CONFIG, ...wsResp.config };
             if (INTEGRATION_CONFIG.todo_entity) TODO_ENTITY = INTEGRATION_CONFIG.todo_entity;
+            const serverVer = String(wsResp.config.version || "").trim();
+            if (serverVer && serverVer !== APP_UI_VERSION) {
+              try {
+                if (sessionStorage.getItem("pmm_reloaded_for") !== serverVer) {
+                  sessionStorage.setItem("pmm_reloaded_for", serverVer);
+                  window.location.replace(`${window.location.pathname}?v=${encodeURIComponent(serverVer)}&t=${Date.now()}`);
+                  return false;
+                }
+              } catch (_) {}
+            }
           }
           const remote = wsResp && wsResp.state;
           if (!remote || !Array.isArray(remote.weeklyPlan) || remote.weeklyPlan.length !== 7) return false;
           if (remote.ingredientPrices) state.ingredientPrices = remote.ingredientPrices;
           if (remote.costSummary) state.costSummary = remote.costSummary;
+          if (remote.priceRefreshMeta) state.priceRefreshMeta = remote.priceRefreshMeta;
 
           const remoteTs = remote.updated_at || "";
           const localTs = state.updated_at || "";
@@ -2621,6 +2684,7 @@
             return true;
           }
           sharedSynced = true;
+          renderShoppingOptionsUI();
           updateSyncMetaUI();
           return false;
         } catch (e) {
@@ -3173,7 +3237,7 @@
           });
           const qtyLabel = qtyParts.join(" + ");
           const priceInfo = (state.ingredientPrices || {})[entry.normKey] || null;
-          const priceTag = (INTEGRATION_CONFIG.include_price_in_todo && priceInfo && priceInfo.tag) ? priceInfo.tag : "";
+          const priceTag = (state.includePriceInHA && priceInfo && priceInfo.tag) ? priceInfo.tag : "";
           const parts = [entry.name];
           if (state.includeQtyInHA && qtyLabel) parts.push(`(${qtyLabel})`);
           if (priceTag) parts.push(`(${priceTag})`);
@@ -3194,12 +3258,66 @@
         renderIngredients();
       }
 
+      function formatPriceTimestamp(iso) {
+        if (!iso) return "Ainda não executada";
+        const d = new Date(iso);
+        if (Number.isNaN(d.getTime())) return String(iso);
+        return d.toLocaleString("pt-PT", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit"
+        });
+      }
+
+      function renderShoppingOptionsUI() {
+        const chkQty = document.getElementById("chkIncludeQty");
+        const chkPrice = document.getElementById("chkIncludePrice");
+        const selMode = document.getElementById("selPriceSearchMode");
+        const statusBox = document.getElementById("priceStatusBox");
+        const summaryEl = document.getElementById("shoppingPriceSummary");
+
+        if (chkQty) chkQty.checked = Boolean(state.includeQtyInHA);
+        if (chkPrice) chkPrice.checked = Boolean(state.includePriceInHA);
+        if (selMode) selMode.value = state.priceSearchMode === "supermarkets" ? "supermarkets" : "ai";
+
+        const meta = state.priceRefreshMeta || {};
+        const cachedItems = typeof meta.total_priced_items === "number"
+          ? meta.total_priced_items
+          : Object.keys(state.ingredientPrices || {}).length;
+        const lastRunLabel = formatPriceTimestamp(meta.last_run_at);
+        const lastPriced = typeof meta.priced === "number" ? meta.priced : null;
+        const lastSearched = typeof meta.searched === "number" ? meta.searched : null;
+        const stores = Array.isArray(INTEGRATION_CONFIG.supermarkets) && INTEGRATION_CONFIG.supermarkets.length
+          ? INTEGRATION_CONFIG.supermarkets.join(", ")
+          : "Configurados na integração";
+
+        if (statusBox) {
+          statusBox.innerHTML = `
+            <div><strong>🕒 Última execução:</strong> ${esc(lastRunLabel)}${meta.updated_by ? ` <span style="color:var(--text-muted);">(${esc(meta.updated_by)})</span>` : ""}</div>
+            <div><strong>🏷️ Preços obtidos:</strong> ${
+              lastPriced !== null
+                ? `<strong>${lastPriced}</strong> na última execução${lastSearched !== null ? ` (de ${lastSearched} pesquisados)` : ""} · <strong>${cachedItems}</strong> ingredientes em cache`
+                : `<strong>${cachedItems}</strong> ingredientes com preço em cache`
+            }</div>
+            <div><strong>🏪 Supermercados locais:</strong> <span style="color:var(--text-muted);">${esc(stores)}</span></div>
+          `;
+        }
+        if (summaryEl) {
+          const weekCost = state.costSummary && state.costSummary.week_avg_eur
+            ? ` · Est. semana: <strong>${Number(state.costSummary.week_avg_eur).toFixed(2).replace(".", ",")}€</strong>`
+            : "";
+          summaryEl.innerHTML = `💰 <strong>${cachedItems}</strong> preço${cachedItems === 1 ? "" : "s"} em cache${weekCost}${meta.last_run_at ? ` · Última pesquisa: ${esc(lastRunLabel)}` : ""}`;
+        }
+      }
+
       // Rendering
       function renderServingsUI() {
         const txt = `${state.servings} ${state.servings === 1 ? "pessoa" : "pessoas"}`;
         document.getElementById("servingsLabel").textContent = `👥 ${txt}`;
         document.getElementById("shoppingServingsText").textContent = txt;
-        document.getElementById("chkIncludeQty").checked = state.includeQtyInHA;
+        renderShoppingOptionsUI();
       }
 
       function stripLeadingEmoji(label) {
@@ -4463,10 +4581,73 @@
         }
       });
 
+      document.getElementById("btnShoppingOptions").addEventListener("click", () => {
+        renderShoppingOptionsUI();
+        document.getElementById("shoppingOptionsDialog").showModal();
+      });
+
+      document.getElementById("shoppingOptionsDialog").addEventListener("click", (e) => {
+        if (e.target === e.currentTarget) e.currentTarget.close();
+      });
+
       document.getElementById("chkIncludeQty").addEventListener("change", (e) => {
         state.includeQtyInHA = e.target.checked;
         scheduleSharedSave();
         renderIngredients();
+      });
+
+      document.getElementById("chkIncludePrice").addEventListener("change", (e) => {
+        state.includePriceInHA = e.target.checked;
+        scheduleSharedSave();
+        renderIngredients();
+      });
+
+      document.getElementById("selPriceSearchMode").addEventListener("change", (e) => {
+        state.priceSearchMode = e.target.value === "supermarkets" ? "supermarkets" : "ai";
+        scheduleSharedSave();
+        renderShoppingOptionsUI();
+        showToast(state.priceSearchMode === "ai"
+          ? "Modo de preços: Supermercados + IA."
+          : "Modo de preços: Apenas supermercados locais."
+        );
+      });
+
+      document.getElementById("btnRunPriceRefreshNow").addEventListener("click", async () => {
+        const btn = document.getElementById("btnRunPriceRefreshNow");
+        const hass = getHass();
+        if (!hass) {
+          showToast("Abre o painel no Home Assistant para executar a pesquisa de preços.");
+          return;
+        }
+        btn.disabled = true;
+        btn.textContent = "⏳ A pesquisar preços…";
+        try {
+          const resp = await hass.callWS({
+            type: "call_service",
+            domain: "plan_my_meals",
+            service: "refresh_prices",
+            service_data: {
+              all_recipes: false,
+              max_items: 25,
+              use_ai: state.priceSearchMode === "ai",
+              updated_by: getCurrentUserName()
+            },
+            return_response: true
+          });
+          const out = (resp && resp.response) || resp || {};
+          if (out.meta) state.priceRefreshMeta = out.meta;
+          await loadSharedState(false);
+          renderShoppingOptionsUI();
+          renderIngredients();
+          const found = typeof out.priced === "number" ? out.priced : 0;
+          const searched = typeof out.searched === "number" ? out.searched : 0;
+          showToast(`Pesquisa concluída: ${found} preço${found === 1 ? "" : "s"} obtido${found === 1 ? "" : "s"} (${searched} pesquisados).`);
+        } catch (err) {
+          showToast("Erro ao pesquisar preços: " + (err.message || err));
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "▶ Correr pesquisa agora";
+        }
       });
 
       document.getElementById("btnTheme").addEventListener("click", () => {

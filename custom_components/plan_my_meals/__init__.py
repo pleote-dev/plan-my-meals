@@ -10,10 +10,11 @@ import time
 from pathlib import Path
 from typing import Any
 
+from aiohttp import web
 import voluptuous as vol
 
 from homeassistant.components import frontend, websocket_api
-from homeassistant.components.http import StaticPathConfig
+from homeassistant.components.http import HomeAssistantView, StaticPathConfig
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, ServiceCall, ServiceResponse, SupportsResponse
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
@@ -61,6 +62,31 @@ _LOGGER = logging.getLogger(__name__)
 PANEL_URL_PATH = "plan-my-meals-app"
 
 
+class _PlanMyMealsAppView(HomeAssistantView):
+    """Serve app.html with strict no-cache headers so upgrades show immediately."""
+
+    url = f"/api/{DOMAIN}/app"
+    name = f"api:{DOMAIN}:app"
+    requires_auth = False
+
+    def __init__(self, html_path: Path) -> None:
+        self._html_path = html_path
+
+    async def get(self, request: web.Request) -> web.Response:
+        hass: HomeAssistant = request.app["hass"]
+        html = await hass.async_add_executor_job(self._html_path.read_text, "utf-8")
+        return web.Response(
+            text=html,
+            content_type="text/html",
+            charset="utf-8",
+            headers={
+                "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+                "Pragma": "no-cache",
+                "Expires": "0",
+            },
+        )
+
+
 def _public_config(entry: ConfigEntry) -> dict[str, Any]:
     cfg = {**entry.data, **entry.options}
     appliances = list(cfg.get(CONF_APPLIANCES) or [])
@@ -104,12 +130,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data[DOMAIN]["db"] = db
     hass.data[DOMAIN]["coordinator"] = coordinator
 
-    # Register static frontend assets
+    # Register static frontend assets + no-cache app HTML view
     if not hass.data[DOMAIN].get("static_registered"):
-        frontend_dir = str(Path(__file__).resolve().parent / "frontend")
+        frontend_dir = Path(__file__).resolve().parent / "frontend"
         await hass.http.async_register_static_paths(
-            [StaticPathConfig(STATIC_URL_PATH, frontend_dir, cache_headers=False)]
+            [StaticPathConfig(STATIC_URL_PATH, str(frontend_dir), cache_headers=False)]
         )
+        hass.http.register_view(_PlanMyMealsAppView(frontend_dir / "app.html"))
         hass.data[DOMAIN]["static_registered"] = True
 
     # Register sidebar panel if enabled
@@ -121,7 +148,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             sidebar_title=merged.get(CONF_SIDEBAR_TITLE, DEFAULT_SIDEBAR_TITLE),
             sidebar_icon=merged.get(CONF_SIDEBAR_ICON, DEFAULT_SIDEBAR_ICON),
             frontend_url_path=PANEL_URL_PATH,
-            config={"url": f"{STATIC_URL_PATH}/app.html?v={VERSION}"},
+            config={"url": f"/api/{DOMAIN}/app?v={VERSION}"},
             require_admin=False,
             update=True,
         )
@@ -309,9 +336,13 @@ def _register_services(hass: HomeAssistant) -> None:
 
     async def handle_refresh_prices(call: ServiceCall) -> ServiceResponse:
         coord: PlanMyMealsCoordinator = hass.data[DOMAIN]["coordinator"]
+        use_ai_raw = call.data.get("use_ai")
+        use_ai = None if use_ai_raw is None else bool(use_ai_raw)
         return await coord.async_refresh_prices(
             all_recipes=bool(call.data.get("all_recipes", False)),
             max_items=int(call.data.get("max_items", 20)),
+            use_ai=use_ai,
+            updated_by=str(call.data.get("updated_by") or "Automation"),
         )
 
     async def handle_set_ingredient_price(call: ServiceCall) -> ServiceResponse:

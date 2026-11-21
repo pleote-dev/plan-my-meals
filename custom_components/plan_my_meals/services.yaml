@@ -65,6 +65,11 @@ refresh_prices:
         number:
           min: 1
           max: 100
+    use_ai:
+      name: Use AI-assisted price lookup
+      description: Override the app's AI price search mode for this run (leave unset to use the app setting).
+      selector:
+        boolean:
 
 set_ingredient_price:
   name: Set ingredient supermarket price
