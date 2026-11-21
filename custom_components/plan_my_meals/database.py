@@ -70,6 +70,58 @@ def _format_qty(qty: float | None, unit: str) -> str:
     return f"{num} {unit}".strip()
 
 
+def normalize_kitchen(
+    kitchen: dict[str, Any] | None,
+    config: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Normalize kitchen equipment and migrate legacy bimbyMode/bimbyFriend flags."""
+    raw = dict(kitchen or {})
+    cfg = config or {}
+    appliances_src = raw.get("appliances")
+    if not isinstance(appliances_src, list):
+        appliances_src = list(cfg.get("appliances", DEFAULT_APPLIANCES))
+    appliances: list[str] = []
+    for item in appliances_src:
+        s = str(item or "").strip()
+        if s and s not in appliances:
+            appliances.append(s)
+
+    accessories_raw = raw.get("accessories")
+    if not isinstance(accessories_raw, dict):
+        accessories_raw = dict(cfg.get("accessories") or {})
+    accessories: dict[str, list[str]] = {}
+    for app_id, acc_list in accessories_raw.items():
+        aid = str(app_id or "").strip()
+        if not aid or not isinstance(acc_list, list):
+            continue
+        cleaned = []
+        for acc in acc_list:
+            s = str(acc or "").strip()
+            if s and s not in cleaned:
+                cleaned.append(s)
+        if cleaned:
+            accessories[aid] = cleaned
+
+    # Migrate legacy bimbyMode / bimbyFriend flags seamlessly
+    if (raw.get("bimbyMode") or cfg.get("bimby_mode")) and "bimby" not in appliances:
+        appliances.append("bimby")
+    if (raw.get("bimbyFriend") or cfg.get("bimby_friend")) and "bimby" in appliances:
+        bimby_acc = list(accessories.get("bimby") or [])
+        if "bimby_friend" not in bimby_acc:
+            bimby_acc.append("bimby_friend")
+        accessories["bimby"] = bimby_acc
+
+    custom_appliances = raw.get("customAppliances") if isinstance(raw.get("customAppliances"), list) else []
+    custom_accessories = raw.get("customAccessories") if isinstance(raw.get("customAccessories"), dict) else {}
+
+    return {
+        "appliances": appliances,
+        "accessories": accessories,
+        "customAppliances": custom_appliances,
+        "customAccessories": custom_accessories,
+    }
+
+
 def _default_state(starter_recipes: list[dict[str, Any]], config: dict[str, Any] | None = None) -> dict[str, Any]:
     cfg = config or {}
     main_meals = [r for r in starter_recipes if (r.get("meal_type") or "refeicao") == "refeicao"]
@@ -84,7 +136,7 @@ def _default_state(starter_recipes: list[dict[str, Any]], config: dict[str, Any]
         dinner["locked"] = False
         plan.append({"day": day, "lunch": lunch, "dinner": dinner})
     return {
-        "version": 4,
+        "version": 5,
         "updated_at": utc_now_iso(),
         "updated_by": "Plan My Meals",
         "servings": int(cfg.get("servings", DEFAULT_SERVINGS)),
@@ -99,11 +151,7 @@ def _default_state(starter_recipes: list[dict[str, Any]], config: dict[str, Any]
         "weeklyPlan": plan,
         "weeks": {},
         "pantry": [],
-        "kitchen": {
-            "appliances": list(cfg.get("appliances", DEFAULT_APPLIANCES)),
-            "bimbyMode": bool(cfg.get("bimby_mode", False)),
-            "bimbyFriend": bool(cfg.get("bimby_friend", False)),
-        },
+        "kitchen": normalize_kitchen(None, config=cfg),
         "recipes": starter_recipes,
         "customRecipes": [],
         "recipeRatings": {},
@@ -154,7 +202,9 @@ class PlanMyMealsDB:
         with self._lock:
             row = self._conn.execute("SELECT value FROM state_kv WHERE key = 'main'").fetchone()
             if row:
-                return json.loads(row["value"])
+                state = json.loads(row["value"])
+                state["kitchen"] = normalize_kitchen(state.get("kitchen"), config=config)
+                return state
 
             # One-time automatic migration from legacy Pyscript /local/plan_my_meals_state.json
             if self.legacy_state_path and self.legacy_state_path.exists():
@@ -162,6 +212,7 @@ class PlanMyMealsDB:
                     legacy = json.loads(self.legacy_state_path.read_text(encoding="utf-8"))
                     if isinstance(legacy, dict) and legacy.get("recipes"):
                         legacy.setdefault("ingredientPrices", {})
+                        legacy["kitchen"] = normalize_kitchen(legacy.get("kitchen"), config=config)
                         legacy["migrated_from_legacy"] = True
                         self._save_raw(legacy)
                         return legacy
@@ -192,6 +243,7 @@ class PlanMyMealsDB:
         with self._lock:
             row = self._conn.execute("SELECT value FROM state_kv WHERE key = 'main'").fetchone()
             state = json.loads(row["value"]) if row else self.initialize()
+            state["kitchen"] = normalize_kitchen(state.get("kitchen"))
             # Merge live supermarket price summaries into state
             prices = self.get_all_price_summaries(ttl_days=ttl_days, currency=currency)
             merged_prices = dict(state.get("ingredientPrices") or {})
@@ -203,10 +255,24 @@ class PlanMyMealsDB:
 
     def save_state(self, state: dict[str, Any], updated_by: str = "Home Assistant") -> dict[str, Any]:
         with self._lock:
-            state["updated_at"] = utc_now_iso()
-            state["updated_by"] = updated_by or state.get("updated_by") or "Home Assistant"
-            self._save_raw(state)
-            return state
+            row = self._conn.execute("SELECT value FROM state_kv WHERE key = 'main'").fetchone()
+            prev = json.loads(row["value"]) if row else {}
+            merged = {**prev, **state}
+            # Never wipe existing recipes if an incoming payload omits them
+            if not merged.get("recipes") and prev.get("recipes"):
+                merged["recipes"] = list(prev["recipes"])
+            # Ensure any customRecipes sent by the client are also present in recipes
+            if isinstance(merged.get("customRecipes"), list) and merged["customRecipes"]:
+                by_id = {r.get("id"): r for r in (merged.get("recipes") or []) if isinstance(r, dict) and r.get("id")}
+                for cr in merged["customRecipes"]:
+                    if isinstance(cr, dict) and cr.get("id"):
+                        by_id[cr["id"]] = cr
+                merged["recipes"] = list(by_id.values())
+            merged["kitchen"] = normalize_kitchen(merged.get("kitchen"))
+            merged["updated_at"] = utc_now_iso()
+            merged["updated_by"] = updated_by or merged.get("updated_by") or "Home Assistant"
+            self._save_raw(merged)
+            return merged
 
     # ------------------------------------------------------------------ Recipes
 
@@ -261,6 +327,18 @@ class PlanMyMealsDB:
             existing_idx = next((i for i, r in enumerate(recipes) if r.get("id") == rid), None)
             existing = recipes[existing_idx] if existing_idx is not None else {}
 
+            raw_appliances = recipe_data.get("appliances") if recipe_data.get("appliances") is not None else existing.get("appliances", [])
+            appliances = [str(a).strip() for a in (raw_appliances or []) if str(a).strip()]
+            raw_accessories = recipe_data.get("accessories") if recipe_data.get("accessories") is not None else existing.get("accessories", {})
+            accessories: dict[str, list[str]] = {}
+            if isinstance(raw_accessories, dict):
+                for app_id, acc_list in raw_accessories.items():
+                    aid = str(app_id or "").strip()
+                    if aid and isinstance(acc_list, list):
+                        cleaned = [str(x).strip() for x in acc_list if str(x).strip()]
+                        if cleaned:
+                            accessories[aid] = cleaned
+
             merged = {
                 "id": rid,
                 "name": str(recipe_data.get("name") or existing.get("name") or "Sem nome").strip(),
@@ -271,6 +349,8 @@ class PlanMyMealsDB:
                 "prepTime": recipe_data.get("prepTime") or recipe_data.get("prep_time") or existing.get("prepTime") or "",
                 "cookTime": recipe_data.get("cookTime") or recipe_data.get("cook_time") or existing.get("cookTime") or "",
                 "method": recipe_data.get("method") if recipe_data.get("method") is not None else existing.get("method", ""),
+                "appliances": appliances,
+                "accessories": accessories,
                 "steps": recipe_data.get("steps") if recipe_data.get("steps") is not None else existing.get("steps", ""),
                 "items": recipe_data.get("items") if recipe_data.get("items") is not None else existing.get("items", []),
                 "nutrition": recipe_data.get("nutrition") if recipe_data.get("nutrition") is not None else existing.get("nutrition", {}),

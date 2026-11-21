@@ -63,13 +63,18 @@ PANEL_URL_PATH = "plan-my-meals-app"
 
 def _public_config(entry: ConfigEntry) -> dict[str, Any]:
     cfg = {**entry.data, **entry.options}
+    appliances = list(cfg.get(CONF_APPLIANCES) or [])
+    accessories: dict[str, list[str]] = {}
+    if cfg.get(CONF_BIMBY_MODE) and "bimby" not in appliances:
+        appliances.append("bimby")
+    if cfg.get(CONF_BIMBY_FRIEND) and "bimby" in appliances:
+        accessories["bimby"] = ["bimby_friend"]
     return {
         "todo_entity": cfg.get(CONF_TODO_ENTITY, DEFAULT_TODO_ENTITY),
         "servings": int(cfg.get(CONF_SERVINGS, DEFAULT_SERVINGS)),
         "base_servings": int(cfg.get(CONF_BASE_SERVINGS, DEFAULT_BASE_SERVINGS)),
-        "appliances": list(cfg.get(CONF_APPLIANCES) or []),
-        "bimby_mode": bool(cfg.get(CONF_BIMBY_MODE, False)),
-        "bimby_friend": bool(cfg.get(CONF_BIMBY_FRIEND, False)),
+        "appliances": appliances,
+        "accessories": accessories,
         "ai_entity": cfg.get(CONF_AI_ENTITY, ""),
         "price_tracking": bool(cfg.get(CONF_PRICE_TRACKING, True)),
         "country": cfg.get(CONF_COUNTRY, DEFAULT_COUNTRY),

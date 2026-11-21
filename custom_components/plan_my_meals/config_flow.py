@@ -61,6 +61,9 @@ def _build_schema(defaults: dict[str, Any]) -> vol.Schema:
     appliance_opts = [
         selector.SelectOptionDict(value=k, label=v) for k, v in APPLIANCE_OPTIONS.items()
     ]
+    default_appliances = list(defaults.get(CONF_APPLIANCES, DEFAULT_APPLIANCES))
+    if defaults.get(CONF_BIMBY_MODE) and "bimby" not in default_appliances:
+        default_appliances.append("bimby")
     current_ai = str(defaults.get(CONF_AI_ENTITY) or "").strip()
     ai_key = (
         vol.Optional(CONF_AI_ENTITY, description={"suggested_value": current_ai})
@@ -87,7 +90,7 @@ def _build_schema(defaults: dict[str, Any]) -> vol.Schema:
             ),
             vol.Optional(
                 CONF_APPLIANCES,
-                default=defaults.get(CONF_APPLIANCES, DEFAULT_APPLIANCES),
+                default=default_appliances,
             ): selector.SelectSelector(
                 selector.SelectSelectorConfig(
                     options=appliance_opts,
@@ -95,14 +98,6 @@ def _build_schema(defaults: dict[str, Any]) -> vol.Schema:
                     mode=selector.SelectSelectorMode.DROPDOWN,
                 )
             ),
-            vol.Optional(
-                CONF_BIMBY_MODE,
-                default=defaults.get(CONF_BIMBY_MODE, False),
-            ): selector.BooleanSelector(),
-            vol.Optional(
-                CONF_BIMBY_FRIEND,
-                default=defaults.get(CONF_BIMBY_FRIEND, False),
-            ): selector.BooleanSelector(),
             ai_key: selector.EntitySelector(selector.EntitySelectorConfig(domain=["ai_task", "conversation"])),
             vol.Optional(
                 CONF_PRICE_TRACKING,
