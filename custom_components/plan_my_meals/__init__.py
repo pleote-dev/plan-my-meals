@@ -21,6 +21,7 @@ from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .const import (
     CONF_AI_ENTITY,
+    CONF_AI_FALLBACK_ENTITY,
     CONF_APPLIANCES,
     CONF_BASE_SERVINGS,
     CONF_BIMBY_FRIEND,
@@ -102,6 +103,7 @@ def _public_config(entry: ConfigEntry) -> dict[str, Any]:
         "appliances": appliances,
         "accessories": accessories,
         "ai_entity": cfg.get(CONF_AI_ENTITY, ""),
+        "ai_fallback_entity": cfg.get(CONF_AI_FALLBACK_ENTITY, ""),
         "price_tracking": bool(cfg.get(CONF_PRICE_TRACKING, True)),
         "country": cfg.get(CONF_COUNTRY, DEFAULT_COUNTRY),
         "supermarkets": list(cfg.get(CONF_SUPERMARKETS) or DEFAULT_SUPERMARKETS_PT),

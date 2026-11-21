@@ -362,10 +362,16 @@ class PlanMyMealsDB:
             status = "variant_candidate"
         else:
             status = "new"
+        match_obj = {"id": best_match["id"], "name": best_match["name"]} if best_match and status != "new" else None
+        parent_id = (best_match.get("parent_recipe_id") or best_match["id"]) if best_match and status != "new" else None
+        parent_name = best_match["name"] if best_match and status != "new" else None
         return {
             "status": status,
             "score": round(best_score, 3),
-            "match": {"id": best_match["id"], "name": best_match["name"]} if best_match and status != "new" else None,
+            "match": match_obj,
+            "parent_id": parent_id,
+            "parent_name": parent_name,
+            "suggested_variant_name": f"Alternativa ({title.strip()})" if title.strip() and status != "new" else "Variante Personalizada",
         }
 
     def upsert_recipe(self, recipe_data: dict[str, Any], updated_by: str = "Home Assistant") -> dict[str, Any]:

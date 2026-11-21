@@ -13,6 +13,7 @@ from homeassistant.helpers import selector
 from .const import (
     APPLIANCE_OPTIONS,
     CONF_AI_ENTITY,
+    CONF_AI_FALLBACK_ENTITY,
     CONF_APPLIANCES,
     CONF_BASE_SERVINGS,
     CONF_BIMBY_FRIEND,
@@ -70,6 +71,12 @@ def _build_schema(defaults: dict[str, Any]) -> vol.Schema:
         if current_ai
         else vol.Optional(CONF_AI_ENTITY)
     )
+    current_ai_fallback = str(defaults.get(CONF_AI_FALLBACK_ENTITY) or "").strip()
+    ai_fallback_key = (
+        vol.Optional(CONF_AI_FALLBACK_ENTITY, description={"suggested_value": current_ai_fallback})
+        if current_ai_fallback
+        else vol.Optional(CONF_AI_FALLBACK_ENTITY)
+    )
     return vol.Schema(
         {
             vol.Optional(
@@ -99,6 +106,7 @@ def _build_schema(defaults: dict[str, Any]) -> vol.Schema:
                 )
             ),
             ai_key: selector.EntitySelector(selector.EntitySelectorConfig(domain=["ai_task", "conversation"])),
+            ai_fallback_key: selector.EntitySelector(selector.EntitySelectorConfig(domain=["ai_task", "conversation"])),
             vol.Optional(
                 CONF_PRICE_TRACKING,
                 default=defaults.get(CONF_PRICE_TRACKING, True),
@@ -171,6 +179,7 @@ class PlanMyMealsConfigFlow(ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             data = dict(user_input)
             data.setdefault(CONF_AI_ENTITY, "")
+            data.setdefault(CONF_AI_FALLBACK_ENTITY, "")
             return self.async_create_entry(
                 title=data.get(CONF_SIDEBAR_TITLE) or DEFAULT_SIDEBAR_TITLE,
                 data=data,
@@ -194,6 +203,7 @@ class PlanMyMealsOptionsFlow(OptionsFlow):
         if user_input is not None:
             data = dict(user_input)
             data.setdefault(CONF_AI_ENTITY, "")
+            data.setdefault(CONF_AI_FALLBACK_ENTITY, "")
             return self.async_create_entry(title="", data=data)
 
         current = {**self._entry.data, **self._entry.options}

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 DOMAIN = "plan_my_meals"
-VERSION = "0.1.3"
+VERSION = "0.1.4"
 
 PLATFORMS = ["sensor", "calendar", "button"]
 
@@ -19,6 +19,7 @@ CONF_APPLIANCES = "appliances"
 CONF_BIMBY_MODE = "bimby_mode"  # Legacy key (migrated into appliances)
 CONF_BIMBY_FRIEND = "bimby_friend"  # Legacy key (migrated into accessories.bimby)
 CONF_AI_ENTITY = "ai_entity"
+CONF_AI_FALLBACK_ENTITY = "ai_fallback_entity"
 CONF_PRICE_TRACKING = "price_tracking"
 CONF_COUNTRY = "country"
 CONF_SUPERMARKETS = "supermarkets"

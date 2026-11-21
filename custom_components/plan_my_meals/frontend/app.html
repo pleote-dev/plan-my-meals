@@ -2283,6 +2283,7 @@
       let sharedSynced = false;
       let remoteSaveTimer = null;
       let pickerTarget = null;
+      let pendingAssignSlot = null;
       let detailRecipe = null;
       let pickerCategory = "Todas";
       let kitchenEditMode = false;
@@ -2644,7 +2645,7 @@
         }
       }
 
-      const APP_UI_VERSION = "0.1.3";
+      const APP_UI_VERSION = "0.1.4";
 
       async function loadSharedState(notifyOnUpdate = false) {
         try {
@@ -3050,7 +3051,16 @@
               return_response: true
             });
             const data = (resp && resp.response) || resp;
-            if (data && data.status) return data;
+            if (data && data.status) {
+              const parentId = data.parent_id || (data.match && data.match.id) || null;
+              const parentName = data.parent_name || (data.match && data.match.name) || null;
+              return {
+                ...data,
+                parent_id: parentId,
+                parent_name: parentName,
+                suggested_variant_name: data.suggested_variant_name || (title ? `Alternativa (${title.trim()})` : "Variante Personalizada")
+              };
+            }
           } catch (err) {
             console.warn("Backend check_similarity failed, using local fallback:", err);
           }
@@ -4472,7 +4482,16 @@
               </div>
             </article>
           `;
-        }).join("");
+        }).join("") + (rawQuery ? `
+          <article class="recipe-card" style="border-style:dashed; justify-content:center; align-items:flex-start; gap:10px; background:var(--surface-2);">
+            <div style="font-size:1.4rem;">✨</div>
+            <div class="meal-title">Criar nova receita "${esc(rawQuery)}" com IA</div>
+            <div class="kitchen-sub">
+              Abre o formulário já com "${esc(rawQuery)}" preenchido no campo de IA, pronto a gerar usando os teus eletrodomésticos. Se for parecida com uma existente, poderás guardá-la como alternativa.
+            </div>
+            <button type="button" class="btn btn-primary btn-sm" data-create-from-search="${esc(rawQuery)}">✨ Criar "${esc(rawQuery)}" com IA</button>
+          </article>
+        ` : "");
       }
 
       // Picker Dialog
@@ -4505,20 +4524,55 @@
           chipsEl.innerHTML = "";
         }
 
-        const q = normalize(document.getElementById("pickerSearch").value);
-        const list = getRecipesByType(mType).filter(r => {
-          if (mType === "refeicao" && pickerCategory !== "Todas" && r.category !== pickerCategory) return false;
-          if (!q) return true;
-          return normalize(r.name).includes(q) ||
-            (r.items || []).some(i => normalize(normalizeItem(i).name).includes(q));
-        });
+        const rawQuery = document.getElementById("pickerSearch").value.trim();
+        const q = normalize(rawQuery);
+        const queryTokens = q ? q.split(/\s+/).filter(Boolean) : [];
+        const allTypeRecipes = getRecipesByType(mType);
+        const vocab = q ? buildSearchVocabulary(getAllRecipes()) : null;
+        const spellSuggestion = q ? computeSpellingCorrection(rawQuery, vocab) : null;
+        const correctedTokens = spellSuggestion ? normalize(spellSuggestion).split(/\s+/).filter(Boolean) : [];
+
+        const matchesCategory = (r) =>
+          !(mType === "refeicao" && pickerCategory !== "Todas" && r.category !== pickerCategory);
+
+        let list = allTypeRecipes.filter(r => matchesCategory(r) && matchesTokens(recipeSearchHaystack(r), queryTokens, false));
+        let usedFuzzy = false;
+        if (q && !list.length) {
+          const fuzzyTokens = correctedTokens.length ? correctedTokens : queryTokens;
+          const fuzzyList = allTypeRecipes.filter(r => matchesCategory(r) && matchesTokens(recipeSearchHaystack(r), fuzzyTokens, true));
+          if (fuzzyList.length) {
+            list = fuzzyList;
+            usedFuzzy = true;
+          }
+        }
 
         const listEl = document.getElementById("pickerList");
+        const createLabel = rawQuery ? `✨ Criar nova receita "${rawQuery}" com IA` : "✨ Criar nova receita com IA";
+        const corrBanner = (spellSuggestion && normalize(spellSuggestion) !== q)
+          ? `<div class="search-correction-bar" style="margin-bottom:8px;"><span>${usedFuzzy ? `✨ Resultados aproximados para <strong>${esc(rawQuery)}</strong>. Quis dizer:` : "✨ Quis dizer:"}</span><button type="button" class="search-correction-btn" data-picker-apply-correction="${esc(spellSuggestion)}">${esc(spellSuggestion)}</button></div>`
+          : "";
+
         if (!list.length) {
-          listEl.innerHTML = `<div class="empty-state">Sem receitas correspondentes.</div>`;
+          listEl.innerHTML = `
+            ${corrBanner}
+            <div class="empty-state-card" style="padding:18px 14px;">
+              <div style="font-size:1.5rem;">🍽️</div>
+              <div style="font-weight:700; font-size:0.9rem;">
+                ${rawQuery ? `Nenhuma receita encontrada para "${esc(rawQuery)}".` : "Sem receitas correspondentes."}
+              </div>
+              <div class="kitchen-sub">
+                ${rawQuery ? "Cria já esta receita com ajuda da IA (usando os teus eletrodomésticos) e ela fica logo atribuída a esta refeição." : "Podes criar uma nova receita para esta refeição."}
+              </div>
+              <div class="empty-state-actions">
+                <button type="button" class="btn btn-primary btn-sm" data-picker-create-search="${esc(rawQuery)}">${esc(createLabel)}</button>
+                ${spellSuggestion ? `<button type="button" class="btn btn-sm" data-picker-apply-correction="${esc(spellSuggestion)}">🔍 Pesquisar "${esc(spellSuggestion)}"</button>` : ""}
+              </div>
+            </div>
+          `;
           return;
         }
-        listEl.innerHTML = list.map(r => `
+
+        listEl.innerHTML = corrBanner + list.map(r => `
           <button type="button" class="picker-item" data-pick-recipe="${esc(r.id)}">
             <div class="picker-item-top">
               <span>${esc(r.name)}${r.variant_name ? ` (${esc(r.variant_name)})` : ""}</span>
@@ -4526,7 +4580,15 @@
             </div>
             <div class="picker-item-sub">${esc(formatMealItemsPreview(r.items))}</div>
           </button>
-        `).join("");
+        `).join("") + (rawQuery ? `
+          <button type="button" class="picker-item" style="border-style:dashed; background:var(--surface-2);" data-picker-create-search="${esc(rawQuery)}">
+            <div class="picker-item-top">
+              <span>✨ Criar nova receita "${esc(rawQuery)}" com IA</span>
+              <span class="cat-tag">➕ Nova</span>
+            </div>
+            <div class="picker-item-sub">Abre o formulário já com "${esc(rawQuery)}" pronto a pesquisar por IA e atribui logo a esta refeição.</div>
+          </button>
+        ` : "");
       }
 
       function setTab(tab) {
@@ -4786,9 +4848,10 @@
         document.getElementById("recipeDialog").showModal();
       }
 
-      function openNewRecipeDialog(prefillName = "") {
+      function openNewRecipeDialog(prefillName = "", forcedMealType = null, assignSlot = null) {
         editingRecipeId = null;
         creatingVariantParentId = null;
+        pendingAssignSlot = assignSlot || null;
         dialogRecipeAppliances = [];
         dialogRecipeAccessories = {};
         dialogShowAllAppliances = false;
@@ -4806,7 +4869,7 @@
         document.getElementById("recTime").value = "25 min";
         document.getElementById("recCreatedBy").value = getCurrentUserName();
         updateImagePreview("");
-        const mType = state.activeTab === "recipes" ? state.recipesModule : "refeicao";
+        const mType = forcedMealType || (state.activeTab === "recipes" ? state.recipesModule : "refeicao");
         document.getElementById("recMealType").value = mType;
         if (mType === "pequeno_almoco") document.getElementById("recCategory").value = "Pequeno-Almoço";
         else if (mType === "sobremesa") document.getElementById("recCategory").value = "Sobremesa";
@@ -5005,16 +5068,17 @@
       });
 
       // AI Recipe Assistant (via Home Assistant ai_task.generate_data)
-      async function askAIRecipe(dishName, hintText, existingIngredients, mealType = "refeicao", equipment = null) {
+      async function askAIRecipe(dishName, hintText, existingIngredients, mealType = "refeicao", equipment = null, onStatus = null) {
         const hass = getHass();
         if (!hass) {
           throw new Error("Abre o painel no Home Assistant para usar a ajuda da IA.");
         }
 
-        const useApps = (equipment && Array.isArray(equipment.appliances) && equipment.appliances.length)
+        const hasExplicitEquip = Boolean(equipment && Array.isArray(equipment.appliances) && equipment.appliances.length);
+        const useApps = hasExplicitEquip
           ? equipment.appliances
           : (state.kitchen.appliances || []);
-        const useAcc = (equipment && Array.isArray(equipment.appliances) && equipment.appliances.length)
+        const useAcc = hasExplicitEquip
           ? (equipment.accessories || {})
           : (state.kitchen.accessories || {});
 
@@ -5026,8 +5090,14 @@
 
         const bimbyInstructions = usesBimby
           ? (hasFriend
-              ? "A receita utiliza Bimby e o acessório Bimby Friend: adapta os passos para trabalhar em paralelo com a Bimby (TM6/TM5) e a Bimby Friend. Indica em cada passo [Bimby] ou [Bimby Friend] e usa a notação real da Bimby (Tempo / Temperatura / Velocidade, ex: '5 seg / Vel. 5', '12 min / 100°C / Colher Inversa', '20 min / Varoma / Vel. 1'). Respeita os limites reais da Bimby Friend (máximo 100°C ou Varoma, velocidades Colher até Vel. 2 inversa), otimizando o tempo total."
-              : "A receita utiliza Bimby: usa a notação real da Bimby em cada passo (Tempo / Temperatura / Velocidade e os acessórios indicados, ex: '5 seg / Vel. 5', '15 min / Varoma / Vel. 1').")
+              ? "A cozinha dispõe de Bimby e Bimby Friend: se for a opção mais eficiente para este prato, trabalha em paralelo com [Bimby] e [Bimby Friend] usando a notação real (Tempo / Temperatura / Velocidade, respeitando os limites da Bimby Friend: até 100°C/Varoma e Colher a Vel. 2 inversa)."
+              : "A cozinha dispõe de Bimby: se for a opção mais eficiente para este prato, usa a notação real da Bimby em cada passo (Tempo / Temperatura / Velocidade e acessórios disponíveis).")
+          : "";
+
+        const equipPrompt = appliancesList.length
+          ? (hasExplicitEquip
+              ? `Eletrodomésticos e acessórios selecionados para esta receita: ${appliancesList.join("; ")}. Utiliza estes equipamentos e acessórios na confeção.`
+              : `Eletrodomésticos e acessórios disponíveis na cozinha: ${appliancesList.join("; ")}. Escolhe automaticamente a combinação mais eficiente destes equipamentos e acessórios disponíveis para este prato (ex.: Airfryer, Forno, Fogão, Bimby, Varoma, Bimby Friend) e indica claramente no campo 'method' quais os equipamentos utilizados.`)
           : "";
 
         const promptParts = [
@@ -5035,9 +5105,7 @@
           dishName
             ? `Cria ou completa a receita de ${typeLabel} para 2 pessoas de: "${dishName}".`
             : `Sugere uma receita prática e equilibrada de ${typeLabel} caseira portuguesa para 2 pessoas.`,
-          appliancesList.length
-            ? `Eletrodomésticos e acessórios a utilizar: ${appliancesList.join("; ")}. Aproveita estes equipamentos e acessórios na confeção.`
-            : "",
+          equipPrompt,
           bimbyInstructions,
           hintText && normalize(hintText) !== normalize(dishName) ? `Preferências / notas: ${hintText}.` : "",
           existingIngredients ? `Ingredientes já indicados: ${existingIngredients}.` : "",
@@ -5061,18 +5129,58 @@
           steps: { description: "Passos numerados claros de confeção separados por quebras de linha, incluindo dica de ponto de cozedura", required: true, selector: { text: {} } }
         };
 
-        const discoveredAI = Object.keys(hass.states || {}).filter(e => e.startsWith("ai_task."));
-        const aiEntities = [
-          ...(INTEGRATION_CONFIG.ai_entity ? [INTEGRATION_CONFIG.ai_entity] : []),
-          ...discoveredAI.filter(e => e !== INTEGRATION_CONFIG.ai_entity),
-          "ai_task.google_ai_task",
-          "ai_task.ollama_ai_task"
-        ];
-        let lastErr = null;
-        for (const entityId of aiEntities) {
-          if (hass.states && !hass.states[entityId]) continue;
-          try {
-            const resp = await hass.callWS({
+        const AI_TIMEOUT_MS = 25000;
+        const withTimeout = (promise, ms, entityId) => new Promise((resolve, reject) => {
+          const timer = setTimeout(() => {
+            reject(new Error(`Tempo limite excedido (${Math.round(ms / 1000)}s) em ${entityId}.`));
+          }, ms);
+          promise.then(
+            (val) => { clearTimeout(timer); resolve(val); },
+            (err) => { clearTimeout(timer); reject(err); }
+          );
+        });
+
+        const extractJsonObject = (text) => {
+          const s = String(text || "").trim();
+          const start = s.indexOf("{");
+          const end = s.lastIndexOf("}");
+          if (start >= 0 && end > start) {
+            try {
+              const parsed = JSON.parse(s.slice(start, end + 1));
+              if (parsed && typeof parsed === "object") return parsed;
+            } catch (_) {}
+          }
+          return null;
+        };
+
+        const callSingleAI = async (entityId) => {
+          if (entityId.startsWith("conversation.")) {
+            const jsonPrompt = `${promptParts} Responde APENAS com um objeto JSON válido (sem texto extra nem markdown) com as chaves exatas: name, category, cuisine, method, prep_time, cook_time, total_time, kcal, protein_g, carbs_g, fat_g, fiber_g, ingredients_csv, steps.`;
+            const resp = await withTimeout(
+              hass.callWS({
+                type: "call_service",
+                domain: "conversation",
+                service: "process",
+                service_data: {
+                  agent_id: entityId,
+                  text: jsonPrompt
+                },
+                return_response: true
+              }),
+              AI_TIMEOUT_MS,
+              entityId
+            );
+            const speech =
+              (resp && resp.response && resp.response.response && resp.response.response.speech && resp.response.response.speech.plain && resp.response.response.speech.plain.speech) ||
+              (resp && resp.response && resp.response.speech && resp.response.speech.plain && resp.response.speech.plain.speech) ||
+              "";
+            const parsed = extractJsonObject(speech);
+            if (parsed) return parsed;
+            throw new Error(`Resposta da entidade ${entityId} não continha JSON de receita válido.`);
+          }
+
+          const resp = await withTimeout(
+            hass.callWS({
               type: "call_service",
               domain: "ai_task",
               service: "generate_data",
@@ -5083,15 +5191,52 @@
                 structure
               },
               return_response: true
-            });
-            const data = (resp && resp.response && resp.response.data) || (resp && resp.data);
-            if (data && typeof data === "object") return data;
+            }),
+            AI_TIMEOUT_MS,
+            entityId
+          );
+          const data = (resp && resp.response && resp.response.data) || (resp && resp.data);
+          if (data && typeof data === "object") return data;
+          throw new Error(`Sem dados estruturados devolvidos por ${entityId}.`);
+        };
+
+        const discoveredAI = Object.keys(hass.states || {}).filter(e => e.startsWith("ai_task."));
+        const rawCandidates = [
+          INTEGRATION_CONFIG.ai_entity || "",
+          INTEGRATION_CONFIG.ai_fallback_entity || "",
+          ...discoveredAI,
+          "ai_task.google_ai_task",
+          "ai_task.ollama_ai_task"
+        ].map(x => String(x || "").trim()).filter(Boolean);
+        const aiEntities = [...new Set(rawCandidates)].filter(e => !hass.states || Boolean(hass.states[e]));
+
+        if (!aiEntities.length) {
+          throw new Error("Nenhuma entidade de IA disponível no Home Assistant. Revê a configuração da IA em Definições → Dispositivos e Serviços → Plan My Meals → Configurar.");
+        }
+
+        const errors = [];
+        for (let i = 0; i < aiEntities.length; i++) {
+          const entityId = aiEntities[i];
+          if (typeof onStatus === "function") {
+            onStatus(i === 0
+              ? `⏳ A consultar IA (${entityId})…`
+              : `🔄 IA anterior não respondeu — a tentar IA de redundância (${entityId})…`
+            );
+          }
+          try {
+            const data = await callSingleAI(entityId);
+            if (data && typeof data === "object") {
+              data._ai_entity = entityId;
+              return data;
+            }
           } catch (err) {
-            lastErr = err;
+            errors.push(`${entityId}: ${err.message || err}`);
             console.warn(`AI entity ${entityId} failed:`, err);
           }
         }
-        throw lastErr || new Error("Nenhum motor de IA respondeu no Home Assistant.");
+        throw new Error(
+          `A IA demorou demasiado tempo ou não respondeu (${errors[0] || "sem resposta"}). Revê a IA principal e define uma IA de redundância em Definições → Dispositivos e Serviços → Plan My Meals → Configurar.`
+        );
       }
 
       function normalizeAICategory(cat, mealType = "refeicao") {
@@ -5362,6 +5507,21 @@
       });
       document.getElementById("pickerDialog").addEventListener("click", (e) => {
         if (e.target === e.currentTarget) { e.currentTarget.close(); return; }
+        const corrBtn = e.target.closest("[data-picker-apply-correction]");
+        if (corrBtn) {
+          document.getElementById("pickerSearch").value = corrBtn.dataset.pickerApplyCorrection || "";
+          renderPickerList();
+          return;
+        }
+        const createBtn = e.target.closest("[data-picker-create-search]");
+        if (createBtn) {
+          const queryText = createBtn.dataset.pickerCreateSearch || "";
+          const slot = pickerTarget ? { ...pickerTarget } : null;
+          const mType = slot ? getSlotMealType(slot.mealKey) : "refeicao";
+          document.getElementById("pickerDialog").close();
+          openNewRecipeDialog(queryText, mType, slot);
+          return;
+        }
         const quick = e.target.closest("[data-quick-meal]");
         if (quick && pickerTarget) {
           state.weeklyPlan[pickerTarget.dayIdx][pickerTarget.mealKey] = {
@@ -5448,7 +5608,7 @@
           const data = await askAIRecipe(dishName, hintText, itemsEl.value.trim(), mealType, {
             appliances: dialogRecipeAppliances,
             accessories: dialogRecipeAccessories
-          });
+          }, (msg) => { statusEl.textContent = msg; });
           if (!dishName && data.name) nameEl.value = data.name;
           if (data.category) document.getElementById("recCategory").value = normalizeAICategory(data.category, mealType);
           if (data.cuisine) document.getElementById("recCuisine").value = data.cuisine;
@@ -5463,8 +5623,16 @@
           if (data.fiber_g !== undefined) document.getElementById("recFiber").value = Math.round(Number(data.fiber_g) || 0);
           if (data.ingredients_csv) itemsEl.value = data.ingredients_csv;
           if (data.steps) document.getElementById("recSteps").value = formatStepsText(data.steps);
+          if (!dialogRecipeAppliances.length && (data.method || data.steps)) {
+            const inferred = getRecipeEquipment({ method: `${data.method || ""} ${data.steps || ""}`, name: data.name || dishName });
+            if (inferred.appliances.length) {
+              dialogRecipeAppliances = [...inferred.appliances];
+              dialogRecipeAccessories = JSON.parse(JSON.stringify(inferred.accessories || {}));
+              renderRecipeAppliancesPicker();
+            }
+          }
 
-          statusEl.textContent = "✨ Sugestão preenchida (incluindo nutrientes)! Revê os campos e clica em Guardar Receita.";
+          statusEl.textContent = "✨ Sugestão preenchida (incluindo nutrientes e eletrodomésticos)! Revê os campos e clica em Guardar Receita.";
           showToast("Receita sugerida pela IA!");
         } catch (err) {
           statusEl.textContent = "Não foi possível obter resposta da IA: " + (err.message || err);
@@ -5527,14 +5695,23 @@
         if (parentId) {
           selectedVariantByParent[parentId] = finalObj.id;
         }
+        let assignedDayLabel = "";
+        if (pendingAssignSlot && state.weeklyPlan[pendingAssignSlot.dayIdx]) {
+          state.weeklyPlan[pendingAssignSlot.dayIdx][pendingAssignSlot.mealKey] = { ...finalObj, locked: true };
+          assignedDayLabel = `${state.weeklyPlan[pendingAssignSlot.dayIdx].day} — ${SLOT_LABELS[pendingAssignSlot.mealKey] || pendingAssignSlot.mealKey}`;
+          pendingAssignSlot = null;
+          scheduleSharedSave();
+        }
         pendingRecipeDraft = null;
         pendingSimilarity = null;
         document.getElementById("similarityBox").classList.add("hidden");
         document.getElementById("recipeDialog").close();
         renderAll();
-        showToast(parentId
-          ? `Variante "${finalObj.variant_name}" guardada!`
-          : `Receita "${finalObj.name}" guardada e sincronizada!`
+        showToast(assignedDayLabel
+          ? `Receita "${finalObj.name}" guardada e adicionada a ${assignedDayLabel}!`
+          : (parentId
+              ? `Variante "${finalObj.variant_name}" guardada!`
+              : `Receita "${finalObj.name}" guardada e sincronizada!`)
         );
       }
 

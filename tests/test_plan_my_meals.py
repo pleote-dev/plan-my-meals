@@ -257,6 +257,22 @@ class TestPlanMyMeals(unittest.TestCase):
         for marker in ("btnShoppingOptions", "shoppingOptionsDialog", "selPriceSearchMode", "chkIncludeQty", "chkIncludePrice", "btnRunPriceRefreshNow"):
             self.assertIn(marker, html)
 
+    def test_similarity_proposes_alternative_variant(self) -> None:
+        store = database.PlanMyMealsDB(self.db_path)
+        try:
+            store.initialize()
+            sim = store.check_similarity(
+                "Bacalhau à Brás na Airfryer",
+                items=[{"name": "Bacalhau desfiado", "qty": 300, "unit": "g"}, {"name": "Ovos", "qty": 4, "unit": "un"}],
+                meal_type="refeicao",
+            )
+            self.assertIn(sim["status"], ("variant_candidate", "duplicate"))
+            self.assertIsNotNone(sim["parent_id"])
+            self.assertIn("Bacalhau", sim["parent_name"])
+            self.assertTrue(sim["suggested_variant_name"])
+        finally:
+            store.close()
+
 
 if __name__ == "__main__":
     unittest.main()

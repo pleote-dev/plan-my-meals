@@ -110,12 +110,14 @@ class PlanMyMealsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         """Use a configured/available HA ai_task entity to estimate local supermarket prices."""
         if not terms:
             return 0
-        from .const import CONF_AI_ENTITY, SUPERMARKETS_BY_COUNTRY
+        from .const import CONF_AI_ENTITY, CONF_AI_FALLBACK_ENTITY, SUPERMARKETS_BY_COUNTRY
 
         cfg_ai = str(self.cfg.get(CONF_AI_ENTITY) or "").strip()
+        cfg_fallback = str(self.cfg.get(CONF_AI_FALLBACK_ENTITY) or "").strip()
         candidates: list[str] = []
-        if cfg_ai and self.hass.states.get(cfg_ai):
-            candidates.append(cfg_ai)
+        for ent in (cfg_ai, cfg_fallback):
+            if ent and ent.startswith("ai_task.") and self.hass.states.get(ent) and ent not in candidates:
+                candidates.append(ent)
         for st in self.hass.states.async_all("ai_task"):
             if st.entity_id not in candidates:
                 candidates.append(st.entity_id)
@@ -137,21 +139,25 @@ class PlanMyMealsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 "selector": {"text": {}},
             }
         }
+        import asyncio as _asyncio
         import json as _json
 
         for entity_id in candidates:
             try:
-                resp = await self.hass.services.async_call(
-                    "ai_task",
-                    "generate_data",
-                    {
-                        "entity_id": entity_id,
-                        "task_name": "Plan My Meals Supermarket Prices",
-                        "instructions": instructions,
-                        "structure": structure,
-                    },
-                    blocking=True,
-                    return_response=True,
+                resp = await _asyncio.wait_for(
+                    self.hass.services.async_call(
+                        "ai_task",
+                        "generate_data",
+                        {
+                            "entity_id": entity_id,
+                            "task_name": "Plan My Meals Supermarket Prices",
+                            "instructions": instructions,
+                            "structure": structure,
+                        },
+                        blocking=True,
+                        return_response=True,
+                    ),
+                    timeout=25,
                 )
                 data = (resp or {}).get("data") or resp or {}
                 raw_json = str(data.get("prices_json") or "").strip()
