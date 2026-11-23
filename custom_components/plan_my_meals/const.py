@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 DOMAIN = "plan_my_meals"
-VERSION = "0.1.4"
+VERSION = "0.1.5"
 
 PLATFORMS = ["sensor", "calendar", "button"]
 

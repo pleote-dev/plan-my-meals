@@ -41,7 +41,7 @@ class _ActionButton(CoordinatorEntity[PlanMyMealsCoordinator], ButtonEntity):
     ) -> None:
         super().__init__(coordinator)
         self._action = action
-        self._attr_name = name
+        self._attr_translation_key = action
         self._attr_icon = icon
         self._attr_unique_id = f"{entry.entry_id}_btn_{action}"
         self._attr_device_info = DeviceInfo(

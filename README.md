@@ -2,8 +2,13 @@
   <img src="icon.png" alt="Plan My Meals" width="128" />
 </p>
 
+<p align="center">
+  🌐 <strong>English</strong> | <a href="README.pt.md">Português</a>
+</p>
+
 # Plan My Meals for Home Assistant
 
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=pleote-dev&repository=plan-my-meals&category=integration)
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -15,14 +20,16 @@ Standalone **Home Assistant** integration for weekly meal planning, recipe libra
 
 - **100% Native Home Assistant Integration (no Pyscript required):** installs via HACS with full **Config Flow & Options Flow** UI setup.
 - **Embedded Web App & Sidebar Panel:** automatically serves the interactive Plan My Meals UI inside Home Assistant's sidebar (zero manual `/config/www/` setup).
+- **Multi-Language Ready (English & Portuguese included):** auto-detects your Home Assistant language, includes an in-app language switcher, and uses simple JSON locale files so any language can be added easily.
 - **36 Copyright-Free Starter Recipes Included:** main meals, breakfasts, and desserts with structured ingredients, nutrition, and original MIT-licensed category artwork (see `ATTRIBUTIONS.md`).
 - **Smart Weekly Generator:** 80% 4–5★ favorites, 20% new/unrated recipes, excludes 1–3★, avoids repeating categories on the same day, and preserves locked meals.
 - **Supermarket Price Tracking & Menu Costing:**
   - Tracks major supermarkets in Portugal (Continente, Auchan, Pingo Doce / Mercadão, Aldi, Lidl, Intermarché, Minipreço, El Corte Inglés, Mercadona; extensible to other countries).
   - Computes **average meal cost**, **weekly average cost**, and **cost per person**.
   - Annotates shopping list items with quantity + lowest price and supermarket, e.g. **`Ovomaltine (2 un) (9€ Auchan)`**, and stores direct store links.
-- **Native Home Assistant AI + External AI Agents:**
-  - Works out of the box with any Home Assistant `ai_task.*` entity (Google Generative AI, OpenAI, Anthropic, Ollama, etc.).
+- **Resilient Native Home Assistant AI + External AI Agents:**
+  - Works out of the box with any Home Assistant `ai_task.*` or `conversation.*` entity (Google Generative AI, OpenAI, Anthropic, Ollama, etc.).
+  - Two-stage structured + JSON fallback, generous timeouts (60s cloud / 90s local LLMs), primary + fallback AI redundancy, and full diagnostic logging in Home Assistant logs.
   - Exposes full services (`plan_my_meals.*`) with `return_response` so external agents like **Hermes** can read/modify plans, add recipes, rate dishes, and sync shopping lists.
 - **Exposed Entities for Custom Dashboards & Automations:**
   - `sensor.plan_my_meals_lunch_today` & `sensor.plan_my_meals_dinner_today` (with image, time, method, rating, avg cost, ingredients)
@@ -36,6 +43,12 @@ Standalone **Home Assistant** integration for weekly meal planning, recipe libra
 ---
 
 ## Installation via HACS
+
+### One-Click (My Home Assistant)
+
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=pleote-dev&repository=plan-my-meals&category=integration)
+
+### Manual HACS Setup
 
 1. Open **HACS** → **Integrations** → menu (`⋮`) → **Custom repositories**.
 2. Add `https://github.com/pleote-dev/plan-my-meals` with category **Integration**.
@@ -56,6 +69,7 @@ Standalone **Home Assistant** integration for weekly meal planning, recipe libra
 | `plan_my_meals.delete_recipe` | Deletes a recipe and its variants |
 | `plan_my_meals.rate_recipe` | Sets 1–5★ rating (`0` clears) |
 | `plan_my_meals.check_similarity` | Checks for duplicate or variant candidates |
+| `plan_my_meals.generate_recipe_ai` | Generates or completes a recipe via HA AI with structured/JSON fallback & logging |
 | `plan_my_meals.upload_image` | Saves base64 or downloads image URL locally |
 | `plan_my_meals.sync_shopping_list` | Pushes missing ingredients (`Ovomaltine (2 un) (9€ Auchan)`) to `todo.*` |
 | `plan_my_meals.refresh_prices` | Refreshes supermarket prices for weekly ingredients (or all recipes) |
@@ -86,3 +100,17 @@ actions:
 
 - Set `all_recipes: true` if you want to refresh prices across your entire recipe library instead of just the current weekly plan.
 - You can optionally pass `use_ai: true` (or `false`) to override the AI-assisted price lookup mode configured in **Shopping → Options**.
+
+---
+
+## Translations & Adding a New Language
+
+Plan My Meals is designed to be easily translated into any language:
+
+1. **Web App UI:**
+   - Copy `custom_components/plan_my_meals/frontend/locales/en.json` to `<lang>.json` (e.g. `es.json`, `fr.json`, `de.json`) and translate the string values (keep `{placeholders}` intact).
+   - Register the new language in `custom_components/plan_my_meals/frontend/locales/index.json`.
+   - Any missing key automatically falls back to English.
+2. **Home Assistant Config Flow & Entities:**
+   - Copy `custom_components/plan_my_meals/translations/en.json` to `custom_components/plan_my_meals/translations/<lang>.json` and translate the labels.
+3. Open a Pull Request — contributions are very welcome!

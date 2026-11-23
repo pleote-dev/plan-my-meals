@@ -53,5 +53,19 @@
         }
       }
     }
+  },
+  "entity": {
+    "sensor": {
+      "lunch_today": { "name": "Lunch Today" },
+      "dinner_today": { "name": "Dinner Today" },
+      "week_cost": { "name": "Weekly Average Cost" },
+      "missing_ingredients": { "name": "Missing Ingredients" },
+      "recipes_count": { "name": "Recipes Library" }
+    },
+    "button": {
+      "generate_week": { "name": "Generate Weekly Plan" },
+      "sync_shopping": { "name": "Sync Shopping List" },
+      "refresh_prices": { "name": "Refresh Supermarket Prices" }
+    }
   }
 }

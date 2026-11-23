@@ -61,7 +61,7 @@ class MealTodaySensor(_BaseMealEntity):
     ) -> None:
         super().__init__(coordinator, entry)
         self._meal_key = meal_key
-        self._attr_name = name
+        self._attr_translation_key = f"{meal_key}_today"
         self._attr_icon = icon
         self._attr_unique_id = f"{entry.entry_id}_{meal_key}_today"
 
@@ -99,7 +99,7 @@ class MealTodaySensor(_BaseMealEntity):
 class WeekCostSensor(_BaseMealEntity):
     """Exposes the estimated weekly average cost based on supermarket prices."""
 
-    _attr_name = "Weekly Average Cost"
+    _attr_translation_key = "week_cost"
     _attr_icon = "mdi:currency-eur"
 
     def __init__(self, coordinator: PlanMyMealsCoordinator, entry: ConfigEntry) -> None:
@@ -128,7 +128,7 @@ class WeekCostSensor(_BaseMealEntity):
 class MissingIngredientsSensor(_BaseMealEntity):
     """Exposes the number of missing ingredients and their best supermarket price/link."""
 
-    _attr_name = "Missing Ingredients"
+    _attr_translation_key = "missing_ingredients"
     _attr_icon = "mdi:cart-outline"
 
     def __init__(self, coordinator: PlanMyMealsCoordinator, entry: ConfigEntry) -> None:
@@ -161,7 +161,7 @@ class MissingIngredientsSensor(_BaseMealEntity):
 class RecipesCountSensor(_BaseMealEntity):
     """Exposes total recipes and sync metadata."""
 
-    _attr_name = "Recipes Library"
+    _attr_translation_key = "recipes_count"
     _attr_icon = "mdi:book-open-variant"
 
     def __init__(self, coordinator: PlanMyMealsCoordinator, entry: ConfigEntry) -> None:

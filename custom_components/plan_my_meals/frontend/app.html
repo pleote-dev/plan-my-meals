@@ -227,6 +227,19 @@
       font-size: 0.78rem;
     }
 
+    .lang-select {
+      min-height: 38px;
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .lang-select:hover { border-color: var(--primary); }
+
     /* Sticky Navigation Tabs */
     .nav-bar {
       position: sticky;
@@ -1721,36 +1734,40 @@
   <header class="topbar">
     <div class="brand">
       <span class="brand-title">🥗 Plan My Meals</span>
-      <button type="button" class="status-pill" id="haSyncBadge" title="Sincronizar agora com o Home Assistant">
+      <button type="button" class="status-pill" id="haSyncBadge" title="Sincronizar agora com o Home Assistant" data-i18n-title="topbar.sync_title">
         <span class="status-dot"></span>
-        <span id="haSyncLabel">A ligar ao HA…</span>
+        <span id="haSyncLabel" data-i18n="topbar.connecting_ha">A ligar ao HA…</span>
       </button>
     </div>
     <div class="topbar-actions">
-      <div class="servings-control" title="Número de pessoas (ajusta automaticamente as quantidades)">
-        <button type="button" class="servings-btn" id="btnServingsMinus" aria-label="Diminuir pessoas">−</button>
+      <div class="servings-control" title="Número de pessoas (ajusta automaticamente as quantidades)" data-i18n-title="topbar.servings_title">
+        <button type="button" class="servings-btn" id="btnServingsMinus" aria-label="Diminuir pessoas" data-i18n-aria="topbar.servings_decrease">−</button>
         <span class="servings-label" id="servingsLabel">👥 4 pessoas</span>
-        <button type="button" class="servings-btn" id="btnServingsPlus" aria-label="Aumentar pessoas">+</button>
+        <button type="button" class="servings-btn" id="btnServingsPlus" aria-label="Aumentar pessoas" data-i18n-aria="topbar.servings_increase">+</button>
       </div>
-      <button type="button" class="btn btn-primary" id="btnRandomize">🎲 Gerar Semana</button>
-      <button type="button" class="btn" id="btnNewRecipe">➕ Receita</button>
-      <button type="button" class="btn btn-icon" id="btnTheme" title="Alternar tema claro/escuro" aria-label="Alternar tema claro/escuro">🌙</button>
+      <button type="button" class="btn btn-primary" id="btnRandomize" data-i18n="topbar.generate_week">🎲 Gerar Semana</button>
+      <button type="button" class="btn" id="btnNewRecipe" data-i18n="topbar.new_recipe">➕ Receita</button>
+      <select id="langSelect" class="lang-select" aria-label="Idioma" data-i18n-aria="topbar.language_label" data-i18n-title="topbar.language_label">
+        <option value="pt">🇵🇹 PT</option>
+        <option value="en">🇬🇧 EN</option>
+      </select>
+      <button type="button" class="btn btn-icon" id="btnTheme" title="Alternar tema claro/escuro" aria-label="Alternar tema claro/escuro" data-i18n-title="topbar.toggle_theme" data-i18n-aria="topbar.toggle_theme">🌙</button>
     </div>
   </header>
 
-  <nav class="nav-bar" aria-label="Secções">
+  <nav class="nav-bar" aria-label="Secções" data-i18n-aria="tabs.aria_label">
     <div class="tabs" role="tablist">
-      <button type="button" class="tab-btn" role="tab" id="tabBtn-planner" aria-selected="true" aria-controls="tab-planner" data-tab="planner" title="Plano Semanal">
-        <span>📅</span><span class="tab-label">Plano Semanal</span>
+      <button type="button" class="tab-btn" role="tab" id="tabBtn-planner" aria-selected="true" aria-controls="tab-planner" data-tab="planner" title="Plano Semanal" data-i18n-title="tabs.planner">
+        <span>📅</span><span class="tab-label" data-i18n="tabs.planner">Plano Semanal</span>
       </button>
-      <button type="button" class="tab-btn" role="tab" id="tabBtn-shopping" aria-selected="false" aria-controls="tab-shopping" data-tab="shopping" title="Compras &amp; HA">
-        <span>🛒</span><span class="tab-label">Compras &amp; HA</span> <span class="tab-count hidden" id="missingCountBadge">0</span>
+      <button type="button" class="tab-btn" role="tab" id="tabBtn-shopping" aria-selected="false" aria-controls="tab-shopping" data-tab="shopping" title="Compras &amp; HA" data-i18n-title="tabs.shopping">
+        <span>🛒</span><span class="tab-label" data-i18n="tabs.shopping">Compras &amp; HA</span> <span class="tab-count hidden" id="missingCountBadge">0</span>
       </button>
-      <button type="button" class="tab-btn" role="tab" id="tabBtn-recipes" aria-selected="false" aria-controls="tab-recipes" data-tab="recipes" title="Receitas">
-        <span>📖</span><span class="tab-label">Receitas</span>
+      <button type="button" class="tab-btn" role="tab" id="tabBtn-recipes" aria-selected="false" aria-controls="tab-recipes" data-tab="recipes" title="Receitas" data-i18n-title="tabs.recipes">
+        <span>📖</span><span class="tab-label" data-i18n="tabs.recipes">Receitas</span>
       </button>
-      <button type="button" class="tab-btn" role="tab" id="tabBtn-kitchen" aria-selected="false" aria-controls="tab-kitchen" data-tab="kitchen" title="Editar cozinha (Eletrodomésticos &amp; Sub-Acessórios)">
-        <span>🍳</span><span class="tab-label">Editar cozinha</span> <span class="tab-count" id="kitchenCountBadge">5</span>
+      <button type="button" class="tab-btn" role="tab" id="tabBtn-kitchen" aria-selected="false" aria-controls="tab-kitchen" data-tab="kitchen" title="Editar cozinha (Eletrodomésticos &amp; Sub-Acessórios)" data-i18n-title="tabs.kitchen_title">
+        <span>🍳</span><span class="tab-label" data-i18n="tabs.kitchen">Editar cozinha</span> <span class="tab-count" id="kitchenCountBadge">5</span>
       </button>
     </div>
     <div class="week-stats" id="weekStats"></div>
@@ -1762,10 +1779,10 @@
       <div class="planner-toolbar">
         <div class="planner-config-row">
           <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-            <span style="font-size:0.8rem; font-weight:800; color:var(--text-muted);" title="Refeições incluídas no plano">⚙️</span>
+            <span style="font-size:0.8rem; font-weight:800; color:var(--text-muted);" title="Refeições incluídas no plano" data-i18n-title="slots.included_title">⚙️</span>
             <div class="meal-icon-group" id="mealConfigChips"></div>
           </div>
-          <div class="week-day-bar" id="weekDayBar" aria-label="Navegação de semanas e dias"></div>
+          <div class="week-day-bar" id="weekDayBar" aria-label="Navegação de semanas e dias" data-i18n-aria="days.nav_aria"></div>
         </div>
         <div class="nutrition-bar" id="weeklyNutritionBar"></div>
       </div>
@@ -1778,13 +1795,13 @@
         <div class="panel-card">
           <div class="panel-header">
             <div>
-              <h2>Ingredientes da Semana por Corredor</h2>
-              <p>Quantidades ajustadas para <strong id="shoppingServingsText">4 pessoas</strong>. Marca 🏠 se já tens em casa.</p>
+              <h2 data-i18n="shopping.title">Ingredientes da Semana por Corredor</h2>
+              <p><span data-i18n="shopping.subtitle_prefix">Quantidades ajustadas para</span> <strong id="shoppingServingsText">4 pessoas</strong><span data-i18n="shopping.subtitle_suffix">. Marca 🏠 se já tens em casa.</span></p>
             </div>
             <div style="display:flex; gap:8px; flex-wrap:wrap;">
-              <button type="button" class="btn btn-sm" id="btnShoppingOptions" title="Opções de preços de supermercado e formato da lista HA">⚙️ Opções</button>
-              <button type="button" class="btn btn-sm" id="btnRefreshHA">🔄 Atualizar HA</button>
-              <button type="button" class="btn btn-accent" id="btnSyncAll">➕ Enviar Faltantes ao HA</button>
+              <button type="button" class="btn btn-sm" id="btnShoppingOptions" title="Opções de preços de supermercado e formato da lista HA" data-i18n="shopping.options_btn" data-i18n-title="shopping.options_title">⚙️ Opções</button>
+              <button type="button" class="btn btn-sm" id="btnRefreshHA" data-i18n="shopping.refresh_ha_btn">🔄 Atualizar HA</button>
+              <button type="button" class="btn btn-accent" id="btnSyncAll" data-i18n="shopping.sync_all_btn">➕ Enviar Faltantes ao HA</button>
             </div>
           </div>
           <div class="qty-toggle-row">
@@ -1797,13 +1814,13 @@
         <aside class="panel-card">
           <div class="panel-header">
             <div>
-              <h2>Lista de Compras HA</h2>
+              <h2 data-i18n="shopping.ha_list_title">Lista de Compras HA</h2>
               <p id="haListSubtitle">A carregar <code>todo.shopping_list</code>…</p>
             </div>
-            <button type="button" class="btn btn-sm" id="btnClearCompleted" title="Remover itens concluídos no HA">🧹 Limpar</button>
+            <button type="button" class="btn btn-sm" id="btnClearCompleted" title="Remover itens concluídos no HA" data-i18n="shopping.clear_btn" data-i18n-title="shopping.clear_title">🧹 Limpar</button>
           </div>
           <form class="ha-add-form" id="haAddForm">
-            <input type="text" class="input" id="haNewItemInput" placeholder="Adicionar item à lista HA…" autocomplete="off">
+            <input type="text" class="input" id="haNewItemInput" placeholder="Adicionar item à lista HA…" data-i18n-placeholder="shopping.add_placeholder" autocomplete="off">
             <button type="submit" class="btn btn-primary">➕</button>
           </form>
           <div class="ha-todo-list" id="haTodoList"></div>
@@ -1813,11 +1830,11 @@
 
     <!-- TAB: RECIPES -->
     <section id="tab-recipes" class="hidden" role="tabpanel" aria-labelledby="tabBtn-recipes">
-      <div class="module-tabs" id="recipeModuleTabs" role="tablist" aria-label="Módulos de Receitas"></div>
+      <div class="module-tabs" id="recipeModuleTabs" role="tablist" aria-label="Módulos de Receitas" data-i18n-aria="recipes.modules_aria"></div>
 
       <div class="recipes-toolbar">
         <div class="search-box-wrap" id="recipeSearchWrap">
-          <input type="search" class="input" id="recipeSearch" placeholder="Pesquisar receita, ingrediente ou eletrodoméstico…" autocomplete="off" spellcheck="true" aria-autocomplete="list" aria-controls="recipeSearchSuggestions">
+          <input type="search" class="input" id="recipeSearch" placeholder="Pesquisar receita, ingrediente ou eletrodoméstico…" data-i18n-placeholder="recipes.search_placeholder" autocomplete="off" spellcheck="true" aria-autocomplete="list" aria-controls="recipeSearchSuggestions">
           <div class="search-suggestions hidden" id="recipeSearchSuggestions" role="listbox"></div>
         </div>
         <div class="filter-chips" id="recipeCategoryChips"></div>
@@ -1835,16 +1852,16 @@
   <!-- DIALOG: PICKER -->
   <dialog id="pickerDialog" aria-labelledby="pickerTitle">
     <div class="dialog-header">
-      <h3 id="pickerTitle">Escolher Refeição</h3>
-      <button type="button" class="btn btn-icon btn-sm" data-close-dialog="pickerDialog" aria-label="Fechar">✕</button>
+      <h3 id="pickerTitle" data-i18n="picker.title">Escolher Refeição</h3>
+      <button type="button" class="btn btn-icon btn-sm" data-close-dialog="pickerDialog" aria-label="Fechar" data-i18n-aria="common.close">✕</button>
     </div>
     <div class="dialog-body">
       <div style="display:flex; gap:8px; flex-wrap:wrap;">
-        <button type="button" class="btn btn-sm" data-quick-meal="Fora / Restaurante">🍽️ Comer fora</button>
-        <button type="button" class="btn btn-sm" data-quick-meal="Sobras">♻️ Sobras</button>
-        <button type="button" class="btn btn-sm" data-quick-meal="Sopa &amp; Sandes">🥣 Leve / Sopa</button>
+        <button type="button" class="btn btn-sm" data-quick-meal="Fora / Restaurante" data-i18n="picker.quick_out">🍽️ Comer fora</button>
+        <button type="button" class="btn btn-sm" data-quick-meal="Sobras" data-i18n="picker.quick_leftovers">♻️ Sobras</button>
+        <button type="button" class="btn btn-sm" data-quick-meal="Sopa &amp; Sandes" data-i18n="picker.quick_light">🥣 Leve / Sopa</button>
       </div>
-      <input type="search" class="input" id="pickerSearch" placeholder="Filtrar receitas por nome ou ingrediente…">
+      <input type="search" class="input" id="pickerSearch" placeholder="Filtrar receitas por nome ou ingrediente…" data-i18n-placeholder="picker.search_placeholder">
       <div class="filter-chips" id="pickerChips"></div>
       <div class="picker-list" id="pickerList"></div>
     </div>
@@ -1853,68 +1870,68 @@
   <!-- DIALOG: NEW RECIPE -->
   <dialog id="recipeDialog" aria-labelledby="recipeDialogTitle">
     <div class="dialog-header">
-      <h3 id="recipeDialogTitle">Nova Receita (base 2 pessoas)</h3>
-      <button type="button" class="btn btn-icon btn-sm" data-close-dialog="recipeDialog" aria-label="Fechar">✕</button>
+      <h3 id="recipeDialogTitle" data-i18n="recipe_dialog.new_title">Nova Receita (base 2 pessoas)</h3>
+      <button type="button" class="btn btn-icon btn-sm" data-close-dialog="recipeDialog" aria-label="Fechar" data-i18n-aria="common.close">✕</button>
     </div>
     <form id="recipeForm">
       <div class="dialog-body">
         <div class="form-field hidden" id="directVariantBox">
-          <label for="recDirectVariantName">🔀 Variante de <strong id="directVariantParentName"></strong> — Nome da variante *</label>
-          <input type="text" class="input" id="recDirectVariantName" placeholder="Ex: Versão Low-Carb, Com Frango, Modo Bimby">
+          <label for="recDirectVariantName"><span data-i18n="recipe_dialog.direct_variant_prefix">🔀 Variante de</span> <strong id="directVariantParentName"></strong> <span data-i18n="recipe_dialog.direct_variant_suffix">— Nome da variante *</span></label>
+          <input type="text" class="input" id="recDirectVariantName" placeholder="Ex: Versão Low-Carb, Com Frango, Modo Bimby" data-i18n-placeholder="recipe_dialog.direct_variant_placeholder">
         </div>
 
         <div class="form-field">
-          <label for="recName">Nome do prato *</label>
-          <input type="text" class="input" id="recName" required placeholder="Ex: Bacalhau com Natas, Frango na Airfryer…">
+          <label for="recName" data-i18n="recipe_dialog.dish_name_label">Nome do prato *</label>
+          <input type="text" class="input" id="recName" required placeholder="Ex: Bacalhau com Natas, Frango na Airfryer…" data-i18n-placeholder="recipe_dialog.dish_name_placeholder">
         </div>
 
         <div class="recipe-appliances-box" id="recipeAppliancesBox">
           <div class="recipe-appliances-header">
-            <label style="margin:0; font-weight:700; font-size:0.84rem;">🍳 Eletrodomésticos &amp; Acessórios necessários nesta receita</label>
-            <button type="button" class="btn btn-sm" id="btnToggleAllRecipeApps" style="font-size:0.74rem; padding:3px 9px;">Mostrar todos</button>
+            <label style="margin:0; font-weight:700; font-size:0.84rem;" data-i18n="recipe_dialog.equipment_label">🍳 Eletrodomésticos &amp; Acessórios necessários nesta receita</label>
+            <button type="button" class="btn btn-sm" id="btnToggleAllRecipeApps" style="font-size:0.74rem; padding:3px 9px;" data-i18n="kitchen.show_all">Mostrar todos</button>
           </div>
           <div id="recipeAppliancesPicker"></div>
         </div>
 
         <div class="ai-box">
           <div class="ai-box-top">
-            <span class="ai-box-title">✨ Assistente de IA (Ingredientes, Confeção &amp; Tempos)</span>
+            <span class="ai-box-title" data-i18n="recipe_dialog.ai_title">✨ Assistente de IA (Ingredientes, Confeção &amp; Tempos)</span>
           </div>
           <div class="ai-row">
-            <input type="text" class="input" id="recAiHint" placeholder="Opcional: rápido, sem lactose, com cogumelos…">
-            <button type="button" class="btn btn-ai" id="btnAiSuggest">✨ Sugerir com IA</button>
+            <input type="text" class="input" id="recAiHint" placeholder="Opcional: rápido, sem lactose, com cogumelos…" data-i18n-placeholder="recipe_dialog.ai_hint_placeholder">
+            <button type="button" class="btn btn-ai" id="btnAiSuggest" data-i18n="recipe_dialog.ai_suggest_btn">✨ Sugerir com IA</button>
           </div>
-          <span class="form-hint" id="aiSuggestStatus">Escreve o nome do prato (ou uma ideia acima) e a IA adapta ingredientes, passos e tempos aos eletrodomésticos selecionados.</span>
+          <span class="form-hint" id="aiSuggestStatus" data-i18n="recipe_dialog.ai_default_status">Escreve o nome do prato (ou uma ideia acima) e a IA adapta ingredientes, passos e tempos aos eletrodomésticos selecionados.</span>
         </div>
 
         <div class="form-row">
           <div class="form-field">
-            <label for="recMealType">Módulo / Tipo</label>
+            <label for="recMealType" data-i18n="recipe_dialog.meal_type_label">Módulo / Tipo</label>
             <select class="input" id="recMealType">
-              <option value="refeicao">🍽️ Refeição (Almoço / Jantar)</option>
-              <option value="pequeno_almoco">☕ Pequeno-Almoço</option>
-              <option value="sobremesa">🍮 Sobremesa</option>
+              <option value="refeicao" data-i18n="recipe_dialog.meal_type_main">🍽️ Refeição (Almoço / Jantar)</option>
+              <option value="pequeno_almoco" data-i18n="recipe_dialog.meal_type_breakfast">☕ Pequeno-Almoço</option>
+              <option value="sobremesa" data-i18n="recipe_dialog.meal_type_dessert">🍮 Sobremesa</option>
             </select>
           </div>
           <div class="form-field">
-            <label for="recCategory">Categoria</label>
+            <label for="recCategory" data-i18n="recipe_dialog.category_label">Categoria</label>
             <select class="input" id="recCategory">
-              <option value="Peixe">Peixe</option>
-              <option value="Aves">Aves</option>
-              <option value="Carne">Carne</option>
-              <option value="Vegetariano">Vegetariano</option>
-              <option value="Ovos">Ovos</option>
-              <option value="Rápido">Rápido</option>
-              <option value="Pequeno-Almoço">Pequeno-Almoço</option>
-              <option value="Sobremesa">Sobremesa</option>
+              <option value="Peixe" data-i18n="categories.Peixe">Peixe</option>
+              <option value="Aves" data-i18n="categories.Aves">Aves</option>
+              <option value="Carne" data-i18n="categories.Carne">Carne</option>
+              <option value="Vegetariano" data-i18n="categories.Vegetariano">Vegetariano</option>
+              <option value="Ovos" data-i18n="categories.Ovos">Ovos</option>
+              <option value="Rápido" data-i18n="categories.Rápido">Rápido</option>
+              <option value="Pequeno-Almoço" data-i18n="categories.Pequeno-Almoço">Pequeno-Almoço</option>
+              <option value="Sobremesa" data-i18n="categories.Sobremesa">Sobremesa</option>
             </select>
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-field">
-            <label for="recCuisine">Origem / Tipo de Cozinha</label>
-            <input type="text" class="input" id="recCuisine" list="cuisineOptions" placeholder="Ex: Portuguesa, Italiana, Asiática…">
+            <label for="recCuisine" data-i18n="recipe_dialog.cuisine_label">Origem / Tipo de Cozinha</label>
+            <input type="text" class="input" id="recCuisine" list="cuisineOptions" placeholder="Ex: Portuguesa, Italiana, Asiática…" data-i18n-placeholder="recipe_dialog.cuisine_placeholder">
             <datalist id="cuisineOptions">
               <option value="Portuguesa"></option>
               <option value="Mediterrânica"></option>
@@ -1928,79 +1945,79 @@
             </datalist>
           </div>
           <div class="form-field">
-            <label for="recMethod">Forma de cozinhar</label>
-            <input type="text" class="input" id="recMethod" placeholder="Ex: Bimby + Friend, Airfryer 180°C, Forno">
+            <label for="recMethod" data-i18n="recipe_dialog.method_label">Forma de cozinhar</label>
+            <input type="text" class="input" id="recMethod" placeholder="Ex: Bimby + Friend, Airfryer 180°C, Forno" data-i18n-placeholder="recipe_dialog.method_placeholder">
           </div>
         </div>
 
         <div class="form-row-3">
           <div class="form-field">
-            <label for="recPrepTime">Preparação</label>
-            <input type="text" class="input" id="recPrepTime" placeholder="Ex: 15 min">
+            <label for="recPrepTime" data-i18n="recipe_dialog.prep_time_label">Preparação</label>
+            <input type="text" class="input" id="recPrepTime" placeholder="Ex: 15 min" data-i18n-placeholder="recipe_dialog.prep_time_placeholder">
           </div>
           <div class="form-field">
-            <label for="recCookTime">Cozedura</label>
-            <input type="text" class="input" id="recCookTime" placeholder="Ex: 25 min">
+            <label for="recCookTime" data-i18n="recipe_dialog.cook_time_label">Cozedura</label>
+            <input type="text" class="input" id="recCookTime" placeholder="Ex: 25 min" data-i18n-placeholder="recipe_dialog.cook_time_placeholder">
           </div>
           <div class="form-field">
-            <label for="recTime">Tempo total</label>
-            <input type="text" class="input" id="recTime" value="25 min" placeholder="Ex: 40 min">
+            <label for="recTime" data-i18n="recipe_dialog.total_time_label">Tempo total</label>
+            <input type="text" class="input" id="recTime" value="25 min" placeholder="Ex: 40 min" data-i18n-placeholder="recipe_dialog.total_time_placeholder">
           </div>
         </div>
 
         <div class="form-field">
-          <label>Nutrientes estimados por pessoa (preenchido automaticamente pela IA)</label>
+          <label data-i18n="recipe_dialog.nutrition_label">Nutrientes estimados por pessoa (preenchido automaticamente pela IA)</label>
           <div class="form-row-5">
-            <input type="number" class="input" id="recKcal" placeholder="kcal" min="0" title="Calorias (kcal)">
-            <input type="number" class="input" id="recProt" placeholder="Prot (g)" min="0" title="Proteína (g)">
-            <input type="number" class="input" id="recCarbs" placeholder="HC (g)" min="0" title="Hidratos (g)">
-            <input type="number" class="input" id="recFat" placeholder="Gord (g)" min="0" title="Gordura (g)">
-            <input type="number" class="input" id="recFiber" placeholder="Fibra (g)" min="0" title="Fibra (g)">
+            <input type="number" class="input" id="recKcal" placeholder="kcal" data-i18n-placeholder="recipe_dialog.kcal_placeholder" min="0" title="Calorias (kcal)">
+            <input type="number" class="input" id="recProt" placeholder="Prot (g)" data-i18n-placeholder="recipe_dialog.prot_placeholder" min="0" title="Proteína (g)">
+            <input type="number" class="input" id="recCarbs" placeholder="HC (g)" data-i18n-placeholder="recipe_dialog.carbs_placeholder" min="0" title="Hidratos (g)">
+            <input type="number" class="input" id="recFat" placeholder="Gord (g)" data-i18n-placeholder="recipe_dialog.fat_placeholder" min="0" title="Gordura (g)">
+            <input type="number" class="input" id="recFiber" placeholder="Fibra (g)" data-i18n-placeholder="recipe_dialog.fiber_placeholder" min="0" title="Fibra (g)">
           </div>
         </div>
 
         <div class="form-field">
-          <label for="recItems">Ingredientes para 2 pessoas (separados por vírgula) *</label>
-          <textarea class="input" id="recItems" rows="3" required placeholder="Ex: 300g Bacalhau, 400g Batatas, 200ml Natas, 1 Cebola"></textarea>
-          <span class="form-hint">Podes incluir quantidades (ex: 300g, 200ml, 2 latas, 4 un) ou só o nome do ingrediente.</span>
+          <label for="recItems" data-i18n="recipe_dialog.ingredients_label">Ingredientes para 2 pessoas (separados por vírgula) *</label>
+          <textarea class="input" id="recItems" rows="3" required placeholder="Ex: 300g Bacalhau, 400g Batatas, 200ml Natas, 1 Cebola" data-i18n-placeholder="recipe_dialog.ingredients_placeholder"></textarea>
+          <span class="form-hint" data-i18n="recipe_dialog.ingredients_hint">Podes incluir quantidades (ex: 300g, 200ml, 2 latas, 4 un) ou só o nome do ingrediente.</span>
         </div>
 
         <div class="form-field">
-          <label for="recCreatedBy">Autor / Fonte da receita</label>
-          <input type="text" class="input" id="recCreatedBy" placeholder="Ex: Pedro, Isabel, 24Kitchen, Hermes">
+          <label for="recCreatedBy" data-i18n="recipe_dialog.author_label">Autor / Fonte da receita</label>
+          <input type="text" class="input" id="recCreatedBy" placeholder="Ex: Pedro, Isabel, 24Kitchen, Hermes" data-i18n-placeholder="recipe_dialog.author_placeholder">
         </div>
 
         <div class="form-field">
-          <label for="recImageUrl">Imagem da receita (foto do telemóvel ou URL)</label>
+          <label for="recImageUrl" data-i18n="recipe_dialog.image_label">Imagem da receita (foto do telemóvel ou URL)</label>
           <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
             <input type="text" class="input" id="recImageUrl" style="flex:1 1 180px;" placeholder="https://… ou /local/meals_img/…">
             <input type="file" id="recImageFile" accept="image/*" class="hidden">
-            <button type="button" class="btn btn-sm" id="btnPickPhoto">📷 Foto / Galeria</button>
+            <button type="button" class="btn btn-sm" id="btnPickPhoto" data-i18n="recipe_dialog.pick_photo_btn">📷 Foto / Galeria</button>
           </div>
           <img id="recImagePreview" class="recipe-cover hidden" alt="Pré-visualização da receita" style="margin-top:6px;">
         </div>
 
         <div class="form-field">
-          <label for="recSteps">Modo de preparação &amp; dicas de cozedura</label>
-          <textarea class="input" id="recSteps" rows="4" placeholder="Passos de confeção (preenchido automaticamente pela IA ou à mão)…"></textarea>
+          <label for="recSteps" data-i18n="recipe_dialog.steps_label">Modo de preparação &amp; dicas de cozedura</label>
+          <textarea class="input" id="recSteps" rows="4" placeholder="Passos de confeção (preenchido automaticamente pela IA ou à mão)…" data-i18n-placeholder="recipe_dialog.steps_placeholder"></textarea>
         </div>
 
         <div class="similarity-box hidden" id="similarityBox">
-          <div class="similarity-title" id="similarityTitle">🔀 Receita parecida encontrada</div>
+          <div class="similarity-title" id="similarityTitle" data-i18n="recipe_dialog.similarity_title">🔀 Receita parecida encontrada</div>
           <p style="font-size:0.82rem;" id="similarityDesc"></p>
           <div class="form-field">
-            <label for="recVariantName">Nome da variante</label>
-            <input type="text" class="input" id="recVariantName" placeholder="Ex: Versão Low-Carb, Com Frango, Modo Bimby">
+            <label for="recVariantName" data-i18n="recipe_dialog.variant_name_label">Nome da variante</label>
+            <input type="text" class="input" id="recVariantName" placeholder="Ex: Versão Low-Carb, Com Frango, Modo Bimby" data-i18n-placeholder="recipe_dialog.direct_variant_placeholder">
           </div>
           <div class="similarity-actions">
-            <button type="button" class="btn btn-primary" id="btnSaveAsVariant">🔀 Guardar como Variante</button>
-            <button type="button" class="btn" id="btnSaveAsIndependent">✨ Guardar como Independente</button>
+            <button type="button" class="btn btn-primary" id="btnSaveAsVariant" data-i18n="recipe_dialog.save_as_variant_btn">🔀 Guardar como Variante</button>
+            <button type="button" class="btn" id="btnSaveAsIndependent" data-i18n="recipe_dialog.save_as_independent_btn">✨ Guardar como Independente</button>
           </div>
         </div>
       </div>
       <div class="dialog-footer">
-        <button type="button" class="btn" data-close-dialog="recipeDialog">Cancelar</button>
-        <button type="submit" class="btn btn-primary">Guardar Receita</button>
+        <button type="button" class="btn" data-close-dialog="recipeDialog" data-i18n="recipe_dialog.cancel_btn">Cancelar</button>
+        <button type="submit" class="btn btn-primary" data-i18n="recipe_dialog.save_btn">Guardar Receita</button>
       </div>
     </form>
   </dialog>
@@ -2008,69 +2025,69 @@
   <!-- DIALOG: RECIPE DETAIL / COOKING GUIDE -->
   <dialog id="detailDialog" aria-labelledby="detailTitle">
     <div class="dialog-header">
-      <h3 id="detailTitle">Preparação da Receita</h3>
-      <button type="button" class="btn btn-icon btn-sm" data-close-dialog="detailDialog" aria-label="Fechar">✕</button>
+      <h3 id="detailTitle" data-i18n="detail_dialog.title">Preparação da Receita</h3>
+      <button type="button" class="btn btn-icon btn-sm" data-close-dialog="detailDialog" aria-label="Fechar" data-i18n-aria="common.close">✕</button>
     </div>
     <div class="dialog-body" id="detailBody"></div>
     <div class="dialog-footer">
-      <button type="button" class="btn" id="btnDetailEdit">✏️ Editar / Foto</button>
-      <button type="button" class="btn btn-ai" id="btnDetailAiGen">✨ Gerar passos e tempos com IA</button>
-      <button type="button" class="btn" data-close-dialog="detailDialog">Fechar</button>
+      <button type="button" class="btn" id="btnDetailEdit" data-i18n="detail_dialog.edit_btn">✏️ Editar / Foto</button>
+      <button type="button" class="btn btn-ai" id="btnDetailAiGen" data-i18n="detail_dialog.ai_gen_btn">✨ Gerar passos e tempos com IA</button>
+      <button type="button" class="btn" data-close-dialog="detailDialog" data-i18n="detail_dialog.close_btn">Fechar</button>
     </div>
   </dialog>
 
   <!-- DIALOG: SHOPPING & SUPERMARKET PRICE OPTIONS -->
   <dialog id="shoppingOptionsDialog" aria-labelledby="shoppingOptionsTitle">
     <div class="dialog-header">
-      <h3 id="shoppingOptionsTitle">⚙️ Opções de Compras &amp; Preços</h3>
-      <button type="button" class="btn btn-icon btn-sm" data-close-dialog="shoppingOptionsDialog" aria-label="Fechar">✕</button>
+      <h3 id="shoppingOptionsTitle" data-i18n="shopping_options.title">⚙️ Opções de Compras &amp; Preços</h3>
+      <button type="button" class="btn btn-icon btn-sm" data-close-dialog="shoppingOptionsDialog" aria-label="Fechar" data-i18n-aria="common.close">✕</button>
     </div>
     <div class="dialog-body" style="display:flex; flex-direction:column; gap:14px;">
       <div class="recipe-appliances-box">
-        <div style="font-weight:800; font-size:0.88rem;">💰 Pesquisa de Preços de Supermercado</div>
+        <div style="font-weight:800; font-size:0.88rem;" data-i18n="shopping_options.price_section">💰 Pesquisa de Preços de Supermercado</div>
         <div class="form-field" style="margin:0;">
-          <label for="selPriceSearchMode">Modo de pesquisa de preços</label>
+          <label for="selPriceSearchMode" data-i18n="shopping_options.mode_label">Modo de pesquisa de preços</label>
           <select class="input" id="selPriceSearchMode">
-            <option value="ai">🤖 Pesquisa com IA + Supermercados locais (recomendado)</option>
-            <option value="supermarkets">🛒 Apenas pesquisa direta nos supermercados locais</option>
+            <option value="ai" data-i18n="shopping_options.mode_ai">🤖 Pesquisa com IA + Supermercados locais (recomendado)</option>
+            <option value="supermarkets" data-i18n="shopping_options.mode_supermarkets">🛒 Apenas pesquisa direta nos supermercados locais</option>
           </select>
         </div>
         <div id="priceStatusBox" style="display:flex; flex-direction:column; gap:5px; font-size:0.82rem; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px 12px;"></div>
         <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
-          <span class="form-hint" id="priceRunHint" style="margin:0;">Podes agendar esta pesquisa uma vez por dia numa automação do Home Assistant ou executar agora.</span>
-          <button type="button" class="btn btn-primary btn-sm" id="btnRunPriceRefreshNow">▶ Correr pesquisa agora</button>
+          <span class="form-hint" id="priceRunHint" style="margin:0;" data-i18n="shopping_options.run_hint">Podes agendar esta pesquisa uma vez por dia numa automação do Home Assistant ou executar agora.</span>
+          <button type="button" class="btn btn-primary btn-sm" id="btnRunPriceRefreshNow" data-i18n="shopping_options.run_now_btn">▶ Correr pesquisa agora</button>
         </div>
       </div>
 
       <div class="recipe-appliances-box">
-        <div style="font-weight:800; font-size:0.88rem;">🛒 Formato na Lista de Compras do HA</div>
+        <div style="font-weight:800; font-size:0.88rem;" data-i18n="shopping_options.ha_format_section">🛒 Formato na Lista de Compras do HA</div>
         <label class="qty-toggle-label">
           <input type="checkbox" id="chkIncludeQty" checked>
-          <span>Incluir quantidades ao enviar para a lista do HA (ex: <code>Salmão (700 g)</code>)</span>
+          <span data-i18n-html="shopping_options.include_qty">Incluir quantidades ao enviar para a lista do HA (ex: <code>Salmão (700 g)</code>)</span>
         </label>
         <label class="qty-toggle-label">
           <input type="checkbox" id="chkIncludePrice" checked>
-          <span>Incluir o melhor preço e supermercado na descrição (ex: <code>Ovomaltine (2 un) (9€ Auchan)</code>)</span>
+          <span data-i18n-html="shopping_options.include_price">Incluir o melhor preço e supermercado na descrição (ex: <code>Ovomaltine (2 un) (9€ Auchan)</code>)</span>
         </label>
       </div>
     </div>
     <div class="dialog-footer">
-      <button type="button" class="btn btn-primary" data-close-dialog="shoppingOptionsDialog">Fechar</button>
+      <button type="button" class="btn btn-primary" data-close-dialog="shoppingOptionsDialog" data-i18n="common.close">Fechar</button>
     </div>
   </dialog>
 
   <!-- DIALOG: NEW WEEK AUTO-FILL PROMPT -->
   <dialog id="newWeekDialog" aria-labelledby="newWeekTitle">
     <div class="dialog-header">
-      <h3 id="newWeekTitle">Nova Semana</h3>
-      <button type="button" class="btn btn-icon btn-sm" data-close-dialog="newWeekDialog" aria-label="Fechar">✕</button>
+      <h3 id="newWeekTitle" data-i18n="new_week_dialog.title">Nova Semana</h3>
+      <button type="button" class="btn btn-icon btn-sm" data-close-dialog="newWeekDialog" aria-label="Fechar" data-i18n-aria="common.close">✕</button>
     </div>
     <div class="dialog-body">
-      <p id="newWeekDesc" style="font-size:0.92rem;">Esta semana ainda não tem refeições planeadas. Queres auto-preencher agora com sugestões equilibradas?</p>
+      <p id="newWeekDesc" style="font-size:0.92rem;" data-i18n="new_week_dialog.desc">Esta semana ainda não tem refeições planeadas. Queres auto-preencher agora com sugestões equilibradas?</p>
     </div>
     <div class="dialog-footer">
-      <button type="button" class="btn" id="btnNewWeekEmpty">📄 Deixar Vazia</button>
-      <button type="button" class="btn btn-primary" id="btnNewWeekAutoFill">🎲 Auto-preencher Semana</button>
+      <button type="button" class="btn" id="btnNewWeekEmpty" data-i18n="new_week_dialog.empty_btn">📄 Deixar Vazia</button>
+      <button type="button" class="btn btn-primary" id="btnNewWeekAutoFill" data-i18n="new_week_dialog.autofill_btn">🎲 Auto-preencher Semana</button>
     </div>
   </dialog>
 
@@ -2079,6 +2096,218 @@
   <script>
     (() => {
       const STORAGE_KEY = "plan_my_meals_state_v4";
+      const I18N_STORAGE_KEY = "plan_my_meals_lang";
+      let i18nManifest = {
+        default: "en",
+        fallback: "en",
+        languages: [
+          { code: "pt", name: "Portuguese", nativeName: "Português", flag: "🇵🇹" },
+          { code: "en", name: "English", nativeName: "English", flag: "🇬🇧" }
+        ]
+      };
+      const i18nCache = {};
+      let currentLang = "pt";
+      let i18nDict = {};
+      let i18nFallbackDict = {};
+
+      function _resolveKey(obj, key) {
+        if (!obj || !key) return undefined;
+        return String(key).split(".").reduce((acc, part) => (acc && acc[part] !== undefined ? acc[part] : undefined), obj);
+      }
+
+      function t(key, params = null) {
+        let val = _resolveKey(i18nDict, key);
+        if (val === undefined) val = _resolveKey(i18nFallbackDict, key);
+        if (val === undefined) return String(key);
+        if (typeof val !== "string") return val;
+        if (!params) return val;
+        return val.replace(/\{(\w+)\}/g, (_, k) => (params[k] !== undefined && params[k] !== null ? String(params[k]) : `{${k}}`));
+      }
+
+      function tDay(idx) {
+        const arr = t("days.full");
+        return Array.isArray(arr) && arr[idx] ? arr[idx] : (DAYS[idx] || "");
+      }
+      function tDayShort(idx) {
+        const arr = t("days.short");
+        return Array.isArray(arr) && arr[idx] ? arr[idx] : (DAYS_SHORT[idx] || "");
+      }
+      function tDayBtn(idx) {
+        const arr = t("days.btn");
+        return Array.isArray(arr) && arr[idx] ? arr[idx] : (DAYS_BTN[idx] || "");
+      }
+      function tSlot(mealKey) {
+        const v = t(`slots.${mealKey}`);
+        return v !== `slots.${mealKey}` ? v : (SLOT_LABELS[mealKey] || mealKey);
+      }
+      function tCategory(cat) {
+        const v = t(`categories.${cat}`);
+        return v !== `categories.${cat}` ? v : String(cat || "");
+      }
+      const AISLE_KEY_MAP = {
+        "🥩 Talho & Peixaria": "aisles.meat_fish",
+        "🥦 Fruta & Legumes": "aisles.produce",
+        "🥛 Laticínios & Ovos": "aisles.dairy_eggs",
+        "🥫 Mercearia & Despensa": "aisles.pantry",
+        "🧂 Outros": "aisles.other"
+      };
+      function tAisle(rawAisle) {
+        const key = AISLE_KEY_MAP[rawAisle];
+        if (!key) return rawAisle;
+        const v = t(key);
+        return v !== key ? v : rawAisle;
+      }
+      function tApplianceLabel(app) {
+        if (!app) return "";
+        const key = `appliances.${app.id}`;
+        const v = t(key);
+        return v !== key ? v : app.label;
+      }
+      function tAccessoryLabel(acc) {
+        if (!acc) return "";
+        const key = `accessories.${acc.id}`;
+        const v = t(key);
+        return v !== key ? v : acc.label;
+      }
+      function getDateLocale() {
+        const loc = t("meta.dateLocale");
+        return loc && loc !== "meta.dateLocale" ? loc : (currentLang === "pt" ? "pt-PT" : "en-GB");
+      }
+
+      function normalizeLangCode(raw, availableCodes) {
+        const clean = String(raw || "").trim().toLowerCase().replace("_", "-");
+        if (!clean) return "";
+        if (availableCodes.includes(clean)) return clean;
+        const base = clean.split("-")[0];
+        if (availableCodes.includes(base)) return base;
+        return "";
+      }
+
+      async function fetchJsonWithFallback(urls) {
+        for (const url of urls) {
+          try {
+            const res = await fetch(url, { cache: "no-store" });
+            if (res.ok) return await res.json();
+          } catch (_) {}
+        }
+        return null;
+      }
+
+      async function loadLocaleDict(code) {
+        if (i18nCache[code]) return i18nCache[code];
+        const v = encodeURIComponent(APP_UI_VERSION || "0.1.5");
+        const data = await fetchJsonWithFallback([
+          `/plan_my_meals_static/locales/${encodeURIComponent(code)}.json?v=${v}`,
+          `./locales/${encodeURIComponent(code)}.json?v=${v}`
+        ]);
+        if (data && typeof data === "object") {
+          i18nCache[code] = data;
+          return data;
+        }
+        return null;
+      }
+
+      function applyI18nToDOM() {
+        document.documentElement.lang = currentLang;
+        document.querySelectorAll("[data-i18n]").forEach(el => {
+          const val = t(el.dataset.i18n);
+          if (typeof val === "string" && val !== el.dataset.i18n) el.textContent = val;
+        });
+        document.querySelectorAll("[data-i18n-html]").forEach(el => {
+          const val = t(el.dataset.i18nHtml);
+          if (typeof val === "string" && val !== el.dataset.i18nHtml) el.innerHTML = val;
+        });
+        document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+          const val = t(el.dataset.i18nPlaceholder);
+          if (typeof val === "string" && val !== el.dataset.i18nPlaceholder) el.setAttribute("placeholder", val);
+        });
+        document.querySelectorAll("[data-i18n-title]").forEach(el => {
+          const val = t(el.dataset.i18nTitle);
+          if (typeof val === "string" && val !== el.dataset.i18nTitle) el.setAttribute("title", val);
+        });
+        document.querySelectorAll("[data-i18n-aria]").forEach(el => {
+          const val = t(el.dataset.i18nAria);
+          if (typeof val === "string" && val !== el.dataset.i18nAria) el.setAttribute("aria-label", val);
+        });
+        // Update quick meal button values for current language
+        const quickMap = {
+          "picker.quick_out": t("picker.quick_out_val"),
+          "picker.quick_leftovers": t("picker.quick_leftovers_val"),
+          "picker.quick_light": t("picker.quick_light_val")
+        };
+        document.querySelectorAll("[data-quick-meal]").forEach(btn => {
+          const k = btn.dataset.i18n;
+          if (k && quickMap[k] && quickMap[k] !== `${k}_val`) btn.dataset.quickMeal = quickMap[k];
+        });
+      }
+
+      function populateLangSelector() {
+        const sel = document.getElementById("langSelect");
+        if (!sel) return;
+        const langs = (i18nManifest && Array.isArray(i18nManifest.languages) && i18nManifest.languages.length)
+          ? i18nManifest.languages
+          : [{ code: "pt", nativeName: "Português", flag: "🇵🇹" }, { code: "en", nativeName: "English", flag: "🇬🇧" }];
+        sel.innerHTML = langs.map(l =>
+          `<option value="${esc(l.code)}">${l.flag ? `${l.flag} ` : ""}${esc(l.code.toUpperCase())}</option>`
+        ).join("");
+        sel.value = currentLang;
+      }
+
+      async function setLanguage(code, notify = true) {
+        const available = (i18nManifest.languages || []).map(l => l.code);
+        const target = normalizeLangCode(code, available) || i18nManifest.default || "en";
+        const dict = await loadLocaleDict(target);
+        if (dict) {
+          currentLang = target;
+          i18nDict = dict;
+          try { localStorage.setItem(I18N_STORAGE_KEY, target); } catch (_) {}
+        }
+        const sel = document.getElementById("langSelect");
+        if (sel) sel.value = currentLang;
+        applyI18nToDOM();
+        renderAll();
+        if (notify) {
+          const langMeta = (i18nManifest.languages || []).find(l => l.code === currentLang);
+          showToast(t("toasts.language_changed", { lang: (langMeta && langMeta.nativeName) || currentLang.toUpperCase() }));
+        }
+      }
+
+      async function initI18n() {
+        const v = encodeURIComponent(APP_UI_VERSION || "0.1.5");
+        const manifest = await fetchJsonWithFallback([
+          `/plan_my_meals_static/locales/index.json?v=${v}`,
+          `./locales/index.json?v=${v}`
+        ]);
+        if (manifest && Array.isArray(manifest.languages) && manifest.languages.length) {
+          i18nManifest = manifest;
+        }
+        const available = i18nManifest.languages.map(l => l.code);
+        const saved = (() => { try { return localStorage.getItem(I18N_STORAGE_KEY) || ""; } catch (_) { return ""; } })();
+        const hass = getHass();
+        const haLang = (hass && (hass.language || (hass.locale && hass.locale.language))) || "";
+        const navLang = (navigator.languages && navigator.languages[0]) || navigator.language || "";
+        const detected =
+          normalizeLangCode(saved, available) ||
+          normalizeLangCode(haLang, available) ||
+          normalizeLangCode(navLang, available) ||
+          i18nManifest.default ||
+          "en";
+
+        const fbCode = i18nManifest.fallback || "en";
+        i18nFallbackDict = (await loadLocaleDict(fbCode)) || {};
+        i18nDict = (detected === fbCode ? i18nFallbackDict : (await loadLocaleDict(detected))) || i18nFallbackDict;
+        currentLang = detected;
+
+        populateLangSelector();
+        const sel = document.getElementById("langSelect");
+        if (sel && !sel.dataset.bound) {
+          sel.dataset.bound = "1";
+          sel.addEventListener("change", (e) => setLanguage(e.target.value, true));
+        }
+        applyI18nToDOM();
+        renderAll();
+      }
+
       let TODO_ENTITY = "todo.shopping_list";
       let INTEGRATION_CONFIG = {
         todo_entity: "todo.shopping_list",
@@ -2645,7 +2874,7 @@
         }
       }
 
-      const APP_UI_VERSION = "0.1.4";
+      const APP_UI_VERSION = "0.1.5";
 
       async function loadSharedState(notifyOnUpdate = false) {
         try {
@@ -3269,10 +3498,10 @@
       }
 
       function formatPriceTimestamp(iso) {
-        if (!iso) return "Ainda não executada";
+        if (!iso) return t("shopping.price_not_run");
         const d = new Date(iso);
         if (Number.isNaN(d.getTime())) return String(iso);
-        return d.toLocaleString("pt-PT", {
+        return d.toLocaleString(getDateLocale(), {
           day: "2-digit",
           month: "2-digit",
           year: "numeric",
@@ -3301,30 +3530,34 @@
         const lastSearched = typeof meta.searched === "number" ? meta.searched : null;
         const stores = Array.isArray(INTEGRATION_CONFIG.supermarkets) && INTEGRATION_CONFIG.supermarkets.length
           ? INTEGRATION_CONFIG.supermarkets.join(", ")
-          : "Configurados na integração";
+          : t("shopping.price_configured_in_integration");
 
         if (statusBox) {
+          const searchedPart = lastSearched !== null ? t("shopping.price_searched_part", { searched: lastSearched }) : "";
+          const obtainedHtml = lastPriced !== null
+            ? t("shopping.price_obtained_detail", { priced: lastPriced, searched: searchedPart, cached: cachedItems })
+            : t("shopping.price_cached_only", { cached: cachedItems });
           statusBox.innerHTML = `
-            <div><strong>🕒 Última execução:</strong> ${esc(lastRunLabel)}${meta.updated_by ? ` <span style="color:var(--text-muted);">(${esc(meta.updated_by)})</span>` : ""}</div>
-            <div><strong>🏷️ Preços obtidos:</strong> ${
-              lastPriced !== null
-                ? `<strong>${lastPriced}</strong> na última execução${lastSearched !== null ? ` (de ${lastSearched} pesquisados)` : ""} · <strong>${cachedItems}</strong> ingredientes em cache`
-                : `<strong>${cachedItems}</strong> ingredientes com preço em cache`
-            }</div>
-            <div><strong>🏪 Supermercados locais:</strong> <span style="color:var(--text-muted);">${esc(stores)}</span></div>
+            <div><strong>${esc(t("shopping.price_last_run"))}</strong> ${esc(lastRunLabel)}${meta.updated_by ? ` <span style="color:var(--text-muted);">(${esc(meta.updated_by)})</span>` : ""}</div>
+            <div><strong>${esc(t("shopping.price_obtained"))}</strong> ${obtainedHtml}</div>
+            <div><strong>${esc(t("shopping.price_stores"))}</strong> <span style="color:var(--text-muted);">${esc(stores)}</span></div>
           `;
         }
         if (summaryEl) {
-          const weekCost = state.costSummary && state.costSummary.week_avg_eur
-            ? ` · Est. semana: <strong>${Number(state.costSummary.week_avg_eur).toFixed(2).replace(".", ",")}€</strong>`
+          const cur = INTEGRATION_CONFIG.currency || "€";
+          const costStr = state.costSummary && state.costSummary.week_avg_eur
+            ? `${Number(state.costSummary.week_avg_eur).toFixed(2).replace(".", currentLang === "pt" ? "," : ".")}${cur}`
             : "";
-          summaryEl.innerHTML = `💰 <strong>${cachedItems}</strong> preço${cachedItems === 1 ? "" : "s"} em cache${weekCost}${meta.last_run_at ? ` · Última pesquisa: ${esc(lastRunLabel)}` : ""}`;
+          const weekCost = costStr ? t("shopping.price_est_week", { cost: esc(costStr) }) : "";
+          const cachedPart = t(cachedItems === 1 ? "shopping.price_summary_one" : "shopping.price_summary_other", { cached: cachedItems });
+          const lastPart = meta.last_run_at ? t("shopping.price_last_search", { ts: esc(lastRunLabel) }) : "";
+          summaryEl.innerHTML = `${cachedPart}${weekCost}${lastPart}`;
         }
       }
 
       // Rendering
       function renderServingsUI() {
-        const txt = `${state.servings} ${state.servings === 1 ? "pessoa" : "pessoas"}`;
+        const txt = `${state.servings} ${t(state.servings === 1 ? "topbar.person_one" : "topbar.person_other")}`;
         document.getElementById("servingsLabel").textContent = `👥 ${txt}`;
         document.getElementById("shoppingServingsText").textContent = txt;
         renderShoppingOptionsUI();
@@ -3484,10 +3717,10 @@
           <div class="kitchen-header">
             <div>
               <h3>
-                🍳 Eletrodomésticos &amp; Sub-Acessórios da Cozinha
-                <span class="kitchen-meta-pill">${activeSet.size} ativos · ${totalAccCount} acessórios</span>
+                ${esc(t("kitchen.title"))}
+                <span class="kitchen-meta-pill">${esc(t("kitchen.meta_pill", { active: activeSet.size, acc: totalAccCount }))}</span>
               </h3>
-              <p class="kitchen-sub">Seleciona os equipamentos que tens em casa e marca os sub-acessórios disponíveis para cada um (ex.: Bimby Friend, Varoma, Borboleta…). As alterações ficam guardadas automaticamente.</p>
+              <p class="kitchen-sub">${esc(t("kitchen.subtitle"))}</p>
             </div>
           </div>
           <div class="kitchen-cards-grid">
@@ -3497,20 +3730,20 @@
               return `
                 <div class="kitchen-app-card ${on ? "active" : ""}">
                   <div class="kitchen-app-top">
-                    <button type="button" class="kitchen-app-toggle" data-appliance-toggle="${esc(a.id)}" aria-pressed="${on}">${esc(a.label)}</button>
-                    <button type="button" class="kitchen-app-status" data-appliance-toggle="${esc(a.id)}">${on ? "Tenho ✓" : "+ Ativar"}</button>
+                    <button type="button" class="kitchen-app-toggle" data-appliance-toggle="${esc(a.id)}" aria-pressed="${on}">${esc(tApplianceLabel(a))}</button>
+                    <button type="button" class="kitchen-app-status" data-appliance-toggle="${esc(a.id)}">${on ? esc(t("kitchen.owned")) : esc(t("kitchen.activate"))}</button>
                   </div>
                   ${on ? `
                     <div class="accessory-drawer">
-                      <div class="accessory-drawer-title">Sub-acessórios (${selAccSet.size}/${(a.accessories || []).length})</div>
+                      <div class="accessory-drawer-title">${esc(t("kitchen.sub_accessories", { selected: selAccSet.size, total: (a.accessories || []).length }))}</div>
                       <div class="accessory-chips">
                         ${(a.accessories || []).map(acc => {
                           const accOn = selAccSet.has(acc.id);
-                          return `<button type="button" class="accessory-chip ${accOn ? "active" : ""}" data-kitchen-acc-app="${esc(a.id)}" data-kitchen-acc-id="${esc(acc.id)}" aria-pressed="${accOn}">${esc(acc.label)}${accOn ? " ✓" : ""}</button>`;
+                          return `<button type="button" class="accessory-chip ${accOn ? "active" : ""}" data-kitchen-acc-app="${esc(a.id)}" data-kitchen-acc-id="${esc(acc.id)}" aria-pressed="${accOn}">${esc(tAccessoryLabel(acc))}${accOn ? " ✓" : ""}</button>`;
                         }).join("")}
                       </div>
                       <div class="inline-add-row">
-                        <input type="text" class="input" data-new-acc-input="${esc(a.id)}" placeholder="Outro acessório…">
+                        <input type="text" class="input" data-new-acc-input="${esc(a.id)}" placeholder="${esc(t("kitchen.add_acc_placeholder"))}">
                         <button type="button" class="btn btn-sm" data-add-acc-for="${esc(a.id)}">➕</button>
                       </div>
                     </div>
@@ -3520,8 +3753,8 @@
             }).join("")}
           </div>
           <div class="inline-add-row" style="margin-top:12px; padding-top:10px; border-top:1px dashed var(--border);">
-            <input type="text" class="input" id="newCustomApplianceInput" placeholder="Adicionar outro eletrodoméstico ou utensílio (ex.: Máquina de Pão, Churrasqueira)…">
-            <button type="button" class="btn btn-sm" data-add-custom-appliance="true">➕ Eletrodoméstico</button>
+            <input type="text" class="input" id="newCustomApplianceInput" placeholder="${esc(t("kitchen.add_app_placeholder"))}">
+            <button type="button" class="btn btn-sm" data-add-custom-appliance="true">${esc(t("kitchen.add_app_btn"))}</button>
           </div>
         `;
       }
@@ -3586,7 +3819,7 @@
           state.kitchen.accessories = accMap;
           scheduleSharedSave();
           renderKitchenUI();
-          showToast(`Acessório "${name}" adicionado!`);
+          showToast(t("toasts.accessory_added", { name }));
           return true;
         }
         const addAppBtn = e.target.closest("[data-add-custom-appliance]");
@@ -3599,7 +3832,7 @@
           state.kitchen.appliances = [...(state.kitchen.appliances || []), newApp.id];
           scheduleSharedSave();
           renderKitchenUI();
-          showToast(`"${name}" adicionado à cozinha!`);
+          showToast(t("toasts.appliance_added", { name }));
           return true;
         }
         return false;
@@ -3621,7 +3854,7 @@
         const appsToRender = visibleApps.length ? visibleApps : catalog;
 
         if (toggleBtn) {
-          toggleBtn.textContent = dialogShowAllAppliances ? "Só os da minha cozinha" : "Mostrar todos";
+          toggleBtn.textContent = dialogShowAllAppliances ? t("kitchen.show_only_mine") : t("kitchen.show_all");
         }
 
         const selectedDefs = catalog.filter(a => selectedSet.has(a.id));
@@ -3633,7 +3866,7 @@
               const selAccs = (dialogRecipeAccessories && dialogRecipeAccessories[a.id]) || [];
               return `
                 <button type="button" class="appliance-chip ${on ? "active" : ""}" data-rec-app-toggle="${esc(a.id)}" aria-pressed="${on}">
-                  <span>${esc(a.label)}${on ? " ✓" : ""}</span>
+                  <span>${esc(tApplianceLabel(a))}${on ? " ✓" : ""}</span>
                   ${selAccs.length ? `<span class="appliance-chip-count">+${selAccs.length}</span>` : ""}
                 </button>
               `;
@@ -3646,12 +3879,13 @@
             const homeAccSet = new Set(homeAccMap[app.id] || []);
             return `
               <div class="recipe-app-subpanel" style="margin-top:8px;">
-                <div class="accessory-drawer-title">Acessórios de ${esc(stripLeadingEmoji(app.label))} necessários nesta receita</div>
+                <div class="accessory-drawer-title">${esc(t("kitchen.recipe_acc_title", { app: stripLeadingEmoji(tApplianceLabel(app)) }))}</div>
                 <div class="accessory-chips">
                   ${availableAccs.map(acc => {
                     const accOn = selAccSet.has(acc.id);
-                    const ownedMark = homeAccSet.has(acc.id) ? "" : " (fora da cozinha)";
-                    return `<button type="button" class="accessory-chip ${accOn ? "active" : ""}" data-rec-acc-app="${esc(app.id)}" data-rec-acc-id="${esc(acc.id)}" aria-pressed="${accOn}" title="${esc(stripLeadingEmoji(acc.label))}${ownedMark}">${esc(acc.label)}${accOn ? " ✓" : ""}</button>`;
+                    const ownedMark = homeAccSet.has(acc.id) ? "" : t("kitchen.outside_kitchen");
+                    const accLbl = tAccessoryLabel(acc);
+                    return `<button type="button" class="accessory-chip ${accOn ? "active" : ""}" data-rec-acc-app="${esc(app.id)}" data-rec-acc-id="${esc(acc.id)}" aria-pressed="${accOn}" title="${esc(stripLeadingEmoji(accLbl))}${esc(ownedMark)}">${esc(accLbl)}${accOn ? " ✓" : ""}</button>`;
                   }).join("")}
                 </div>
               </div>
@@ -3703,7 +3937,7 @@
             ${list.map(a => {
               const on = selectedSet.has(a.id);
               const selAccs = (detailRecipeAccessories && detailRecipeAccessories[a.id]) || [];
-              return `<button type="button" class="appliance-chip ${on ? "active" : ""}" data-detail-app-toggle="${esc(a.id)}" aria-pressed="${on}">${esc(a.label)}${on ? " ✓" : ""}${selAccs.length ? ` <span class="appliance-chip-count">+${selAccs.length}</span>` : ""}</button>`;
+              return `<button type="button" class="appliance-chip ${on ? "active" : ""}" data-detail-app-toggle="${esc(a.id)}" aria-pressed="${on}">${esc(tApplianceLabel(a))}${on ? " ✓" : ""}${selAccs.length ? ` <span class="appliance-chip-count">+${selAccs.length}</span>` : ""}</button>`;
             }).join("")}
           </div>
           ${selectedDefs.map(app => {
@@ -3711,11 +3945,11 @@
             const selAccSet = new Set((detailRecipeAccessories && detailRecipeAccessories[app.id]) || []);
             return `
               <div class="recipe-app-subpanel" style="margin-top:6px;">
-                <div class="accessory-drawer-title">Acessórios de ${esc(stripLeadingEmoji(app.label))}</div>
+                <div class="accessory-drawer-title">${esc(t("kitchen.detail_acc_title", { app: stripLeadingEmoji(tApplianceLabel(app)) }))}</div>
                 <div class="accessory-chips">
                   ${app.accessories.map(acc => {
                     const accOn = selAccSet.has(acc.id);
-                    return `<button type="button" class="accessory-chip ${accOn ? "active" : ""}" data-detail-acc-app="${esc(app.id)}" data-detail-acc-id="${esc(acc.id)}" aria-pressed="${accOn}">${esc(acc.label)}${accOn ? " ✓" : ""}</button>`;
+                    return `<button type="button" class="accessory-chip ${accOn ? "active" : ""}" data-detail-acc-app="${esc(app.id)}" data-detail-acc-id="${esc(acc.id)}" aria-pressed="${accOn}">${esc(tAccessoryLabel(acc))}${accOn ? " ✓" : ""}</button>`;
                   }).join("")}
                 </div>
               </div>
@@ -3770,21 +4004,21 @@
           });
         });
         el.innerHTML = `
-          <span class="stat-chip">🐟 ${counts.Peixe} Peixe</span>
-          <span class="stat-chip">🥩 ${counts.CarneAves} Carne/Aves</span>
-          <span class="stat-chip">🥗 ${counts.Veg} Veg/Ovos</span>
-          ${counts.Locked ? `<span class="stat-chip">🔒 ${counts.Locked} fixas</span>` : ""}
+          <span class="stat-chip">${esc(t("stats.fish", { count: counts.Peixe }))}</span>
+          <span class="stat-chip">${esc(t("stats.meat_poultry", { count: counts.CarneAves }))}</span>
+          <span class="stat-chip">${esc(t("stats.veg_eggs", { count: counts.Veg }))}</span>
+          ${counts.Locked ? `<span class="stat-chip">${esc(t("stats.locked", { count: counts.Locked }))}</span>` : ""}
         `;
       }
 
       function renderDayStrip() {
         const strip = document.getElementById("dayStrip");
         const todayIdx = getTodayIdx();
-        let html = `<button type="button" class="day-pill ${state.mobileDayFilter === "all" ? "active" : ""}" data-day-filter="all">Todos</button>`;
-        DAYS_SHORT.forEach((short, idx) => {
+        let html = `<button type="button" class="day-pill ${state.mobileDayFilter === "all" ? "active" : ""}" data-day-filter="all">${esc(t("days.all"))}</button>`;
+        DAYS_SHORT.forEach((_, idx) => {
           const isToday = idx === todayIdx;
           const isActive = state.mobileDayFilter === idx;
-          html += `<button type="button" class="day-pill ${isToday ? "today" : ""} ${isActive ? "active" : ""}" data-day-filter="${idx}">${short}${isToday ? " ·" : ""}</button>`;
+          html += `<button type="button" class="day-pill ${isToday ? "today" : ""} ${isActive ? "active" : ""}" data-day-filter="${idx}">${esc(tDayShort(idx))}${isToday ? " ·" : ""}</button>`;
         });
         strip.innerHTML = html;
       }
@@ -3806,14 +4040,14 @@
         if (!el) return;
         const cfg = state.mealConfig;
         const slots = [
-          { key: "breakfast", icon: "☕", title: "Pequeno-Almoço" },
-          { key: "lunch", icon: "☀️", title: "Almoço" },
-          { key: "lunchDessert", icon: "🍮", title: "Sobremesa Almoço" },
-          { key: "dinner", icon: "🌙", title: "Jantar" },
-          { key: "dinnerDessert", icon: "🍨", title: "Sobremesa Jantar" }
+          { key: "breakfast", icon: "☕", title: tSlot("breakfast") },
+          { key: "lunch", icon: "☀️", title: tSlot("lunch") },
+          { key: "lunchDessert", icon: "🍮", title: tSlot("lunchDessert") },
+          { key: "dinner", icon: "🌙", title: tSlot("dinner") },
+          { key: "dinnerDessert", icon: "🍨", title: tSlot("dinnerDessert") }
         ];
         el.innerHTML = slots.map(s => `
-          <button type="button" class="meal-icon-btn ${cfg[s.key] ? "active" : ""}" data-meal-cfg="${s.key}" title="${s.title} (${cfg[s.key] ? "ativo" : "inativo"})" aria-label="${s.title}" aria-pressed="${cfg[s.key]}">${s.icon}</button>
+          <button type="button" class="meal-icon-btn ${cfg[s.key] ? "active" : ""}" data-meal-cfg="${s.key}" title="${esc(s.title)} (${esc(cfg[s.key] ? t("slots.active") : t("slots.inactive"))})" aria-label="${esc(s.title)}" aria-pressed="${cfg[s.key]}">${s.icon}</button>
         `).join("");
       }
 
@@ -3825,20 +4059,20 @@
         const allActive = state.dayFilter === "all" || (!isCurrentWeek && state.dayFilter === "from_today");
         const rangeLabel = getWeekRangeLabel(state.weekOffset);
 
-        const dayButtons = DAYS_BTN.map((label, idx) => {
+        const dayButtons = DAYS_BTN.map((_, idx) => {
           const isToday = isCurrentWeek && idx === todayIdx;
           const isSelected = state.dayFilter === idx || (state.dayFilter === "from_today" && isCurrentWeek && idx >= todayIdx);
-          return `<button type="button" class="day-btn ${isToday ? "today" : ""} ${isSelected ? "active" : ""}" data-day-select="${idx}" title="${DAYS[idx]}${isToday ? " (Hoje)" : ""}">${label}</button>`;
+          return `<button type="button" class="day-btn ${isToday ? "today" : ""} ${isSelected ? "active" : ""}" data-day-select="${idx}" title="${esc(tDay(idx))}${isToday ? ` (${esc(t("days.today"))})` : ""}">${esc(tDayBtn(idx))}</button>`;
         }).join("");
 
         bar.innerHTML = `
           <div class="week-nav-group">
-            <button type="button" class="week-nav-btn" data-week-step="-1" title="Semana anterior" aria-label="Semana anterior">‹</button>
-            <button type="button" class="week-nav-btn ${allActive ? "active" : ""}" data-day-select="todos" title="Alternar entre Todos os 7 dias e Hoje até Domingo">Todos</button>
-            <button type="button" class="week-nav-btn" data-week-step="1" title="Semana seguinte" aria-label="Semana seguinte">›</button>
+            <button type="button" class="week-nav-btn" data-week-step="-1" title="${esc(t("days.prev_week"))}" aria-label="${esc(t("days.prev_week"))}">‹</button>
+            <button type="button" class="week-nav-btn ${allActive ? "active" : ""}" data-day-select="todos" title="${esc(t("days.all_toggle_title"))}">${esc(t("days.all"))}</button>
+            <button type="button" class="week-nav-btn" data-week-step="1" title="${esc(t("days.next_week"))}" aria-label="${esc(t("days.next_week"))}">›</button>
           </div>
           ${dayButtons}
-          <span class="week-range-label" title="Semana selecionada">${esc(rangeLabel)}</span>
+          <span class="week-range-label" title="${esc(t("days.selected_week"))}">${esc(rangeLabel)}</span>
         `;
       }
 
@@ -3858,9 +4092,9 @@
         }
         // New empty week: ask whether to auto-fill or leave empty
         pendingNewWeekOffset = nextOffset;
-        document.getElementById("newWeekTitle").textContent = `Semana ${getWeekRangeLabel(nextOffset)}`;
-        document.getElementById("newWeekDesc").textContent =
-          `A semana de ${getWeekRangeLabel(nextOffset)} ainda não tem ementa. Queres auto-preencher agora com sugestões equilibradas?`;
+        const range = getWeekRangeLabel(nextOffset);
+        document.getElementById("newWeekTitle").textContent = t("new_week_dialog.week_title", { range });
+        document.getElementById("newWeekDesc").textContent = t("new_week_dialog.desc_range", { range });
         document.getElementById("newWeekDialog").showModal();
       }
 
@@ -3894,14 +4128,14 @@
         const fibClass = avg.fib >= 14 ? "ok" : "warn";
         const fishClass = peixe >= 3 ? "ok" : "warn";
         bar.innerHTML = `
-          <span style="font-weight:700; color:var(--text-muted);">📊 Média/dia (1 pessoa):</span>
+          <span style="font-weight:700; color:var(--text-muted);">${esc(t("stats.avg_day_label"))}</span>
           <span class="nut-pill">🔥 ${avg.kcal} kcal</span>
-          <span class="nut-pill ${protClass}">💪 ${avg.p}g Prot</span>
-          <span class="nut-pill">🌾 ${avg.c}g HC</span>
-          <span class="nut-pill">🥑 ${avg.f}g Gord</span>
-          <span class="nut-pill ${fibClass}">🥦 ${avg.fib}g Fibra</span>
-          <span class="nut-pill ${fishClass}" title="Recomendado: >= 3 refeições de peixe/semana (Ómega-3)">🐟 ${peixe}× Peixe</span>
-          <span class="nut-pill ${veg >= 2 ? "ok" : "warn"}" title="Variedade vegetal/ovos na semana">🌱 ${veg}× Veg/Ovos</span>
+          <span class="nut-pill ${protClass}">💪 ${avg.p}g ${esc(t("stats.prot_short"))}</span>
+          <span class="nut-pill">🌾 ${avg.c}g ${esc(t("stats.carbs_short"))}</span>
+          <span class="nut-pill">🥑 ${avg.f}g ${esc(t("stats.fat_short"))}</span>
+          <span class="nut-pill ${fibClass}">🥦 ${avg.fib}g ${esc(t("stats.fiber_short"))}</span>
+          <span class="nut-pill ${fishClass}" title="${esc(t("stats.fish_target_title"))}">${esc(t("stats.fish_times", { count: peixe }))}</span>
+          <span class="nut-pill ${veg >= 2 ? "ok" : "warn"}" title="${esc(t("stats.veg_target_title"))}">${esc(t("stats.veg_times", { count: veg }))}</span>
         `;
       }
 
@@ -3910,7 +4144,7 @@
           return `
             <div class="empty-meal-slot">
               <span>${label}</span>
-              <button type="button" class="btn btn-sm" data-action="pick" data-day="${dayIdx}" data-meal="${mealKey}">➕ Escolher</button>
+              <button type="button" class="btn btn-sm" data-action="pick" data-day="${dayIdx}" data-meal="${mealKey}">${esc(t("planner.choose"))}</button>
             </div>
           `;
         }
@@ -3925,7 +4159,7 @@
             <div class="meal-top">
               <span>${label}</span>
               <span class="meal-badges">
-                ${!compact && meal.category ? `<span class="cat-tag">${esc(meal.category)}</span>` : ""}
+                ${!compact && meal.category ? `<span class="cat-tag">${esc(tCategory(meal.category))}</span>` : ""}
                 ${guide.time ? `<span>⏱️ ${esc(guide.time)}</span>` : ""}
               </span>
             </div>
@@ -3934,11 +4168,11 @@
             ${nutStr ? `<div class="nut-mini">${esc(nutStr)}</div>` : ""}
             ${!compact ? `<div class="meal-items">${guide.method ? `🍳 ${esc(guide.method)} · ` : ""}${esc(itemsText)}</div>` : ""}
             <div class="meal-actions">
-              <button type="button" class="btn btn-sm" data-action="detail" data-day="${dayIdx}" data-meal="${mealKey}" title="Ver preparação, tempos e ingredientes">👨‍🍳${compact ? "" : " Preparação"}</button>
-              <button type="button" class="btn btn-sm" data-action="pick" data-day="${dayIdx}" data-meal="${mealKey}">✏️${compact ? "" : " Escolher"}</button>
-              <button type="button" class="btn btn-sm" data-action="swap" data-day="${dayIdx}" data-meal="${mealKey}" title="Sugerir outra receita">🔄</button>
-              ${mealKey === "breakfast" ? `<button type="button" class="btn btn-sm" data-action="repeat-breakfast" data-day="${dayIdx}" title="Repetir este pequeno-almoço de Segunda a Sexta">📌 Seg–Sex</button>` : ""}
-              <button type="button" class="btn btn-sm ${locked ? "is-locked" : ""}" data-action="lock" data-day="${dayIdx}" data-meal="${mealKey}" title="${locked ? "Desbloquear refeição" : "Fixar refeição (não muda ao gerar semana)"}">${locked ? "🔒" : "🔓"}</button>
+              <button type="button" class="btn btn-sm" data-action="detail" data-day="${dayIdx}" data-meal="${mealKey}" title="${esc(t("planner.prep_title"))}">👨‍🍳${compact ? "" : ` ${esc(t("planner.prep_btn"))}`}</button>
+              <button type="button" class="btn btn-sm" data-action="pick" data-day="${dayIdx}" data-meal="${mealKey}">✏️${compact ? "" : ` ${esc(t("planner.pick_btn"))}`}</button>
+              <button type="button" class="btn btn-sm" data-action="swap" data-day="${dayIdx}" data-meal="${mealKey}" title="${esc(t("planner.swap_title"))}">🔄</button>
+              ${mealKey === "breakfast" ? `<button type="button" class="btn btn-sm" data-action="repeat-breakfast" data-day="${dayIdx}" title="${esc(t("planner.repeat_breakfast_title"))}">${esc(t("planner.repeat_breakfast_btn"))}</button>` : ""}
+              <button type="button" class="btn btn-sm ${locked ? "is-locked" : ""}" data-action="lock" data-day="${dayIdx}" data-meal="${mealKey}" title="${esc(locked ? t("planner.unlock_title") : t("planner.lock_title"))}">${locked ? "🔒" : "🔓"}</button>
             </div>
           </div>
         `;
@@ -3962,19 +4196,19 @@
             <article class="day-card ${isToday ? "is-today" : ""} ${hidden ? "hidden" : ""}" data-day-card="${idx}">
               <div class="day-header">
                 <div class="day-title">
-                  <span>${esc(d.day)}</span>
-                  ${isToday ? `<span class="today-badge">Hoje</span>` : ""}
+                  <span>${esc(tDay(idx))}</span>
+                  ${isToday ? `<span class="today-badge">${esc(t("days.today"))}</span>` : ""}
                 </div>
                 <span class="day-date">${esc(dates[idx])}</span>
               </div>
-              ${cfg.breakfast ? renderMealBox(idx, "breakfast", "☕ Pequeno-Almoço", d.breakfast, false) : ""}
-              ${cfg.lunch ? renderMealBox(idx, "lunch", "☀️ Almoço", d.lunch, false) : ""}
-              ${cfg.lunchDessert ? renderMealBox(idx, "lunchDessert", "🍮 Sobremesa Almoço", d.lunchDessert, true) : ""}
-              ${cfg.dinner ? renderMealBox(idx, "dinner", "🌙 Jantar", d.dinner, false) : ""}
-              ${cfg.dinnerDessert ? renderMealBox(idx, "dinnerDessert", "🍨 Sobremesa Jantar", d.dinnerDessert, true) : ""}
+              ${cfg.breakfast ? renderMealBox(idx, "breakfast", `☕ ${esc(tSlot("breakfast"))}`, d.breakfast, false) : ""}
+              ${cfg.lunch ? renderMealBox(idx, "lunch", `☀️ ${esc(tSlot("lunch"))}`, d.lunch, false) : ""}
+              ${cfg.lunchDessert ? renderMealBox(idx, "lunchDessert", `🍮 ${esc(tSlot("lunchDessert"))}`, d.lunchDessert, true) : ""}
+              ${cfg.dinner ? renderMealBox(idx, "dinner", `🌙 ${esc(tSlot("dinner"))}`, d.dinner, false) : ""}
+              ${cfg.dinnerDessert ? renderMealBox(idx, "dinnerDessert", `🍨 ${esc(tSlot("dinnerDessert"))}`, d.dinnerDessert, true) : ""}
               <div class="day-nutrition">
                 <span>🔥 ~${dn.kcal} kcal</span>
-                <span>💪 ${dn.protein_g}g P · 🌾 ${dn.carbs_g}g HC · 🥑 ${dn.fat_g}g G · 🥦 ${dn.fiber_g}g F</span>
+                <span>💪 ${dn.protein_g}g P · 🌾 ${dn.carbs_g}g ${esc(t("stats.carbs_short"))} · 🥑 ${dn.fat_g}g ${esc(t("stats.fat_short"))} · 🥦 ${dn.fiber_g}g F</span>
               </div>
             </article>
           `;
@@ -4001,12 +4235,12 @@
         badge.textContent = String(missingCount);
         badge.classList.toggle("hidden", missingCount === 0);
         syncBtn.textContent = missingCount > 0
-          ? `➕ Enviar Faltantes (${missingCount}) ao HA`
-          : "✓ Tudo Sincronizado";
+          ? t("shopping.sync_all_count", { count: missingCount })
+          : t("shopping.all_synced");
         syncBtn.disabled = missingCount === 0;
 
         if (!items.length) {
-          container.innerHTML = `<div class="empty-state">Sem ingredientes no plano semanal atual.</div>`;
+          container.innerHTML = `<div class="empty-state">${esc(t("shopping.empty_ingredients"))}</div>`;
           return;
         }
 
@@ -4025,7 +4259,7 @@
             return `
               <div class="aisle-box">
                 <div class="aisle-title">
-                  <span>${aisle}</span>
+                  <span>${esc(tAisle(aisle))}</span>
                   <span>${list.length}</span>
                 </div>
                 ${list.map(it => `
@@ -4036,14 +4270,14 @@
                         ${it.qtyLabel ? `<span class="ing-qty">${esc(it.qtyLabel)}</span>` : ""}
                         ${!it.qtyLabel && it.count > 1 ? `<span class="ing-qty">×${it.count}</span>` : ""}
                       </div>
-                      <div class="ing-days">${esc(Array.from(it.days).join(", "))}${it.count > 1 ? ` · ${it.count} refeições` : ""}</div>
+                      <div class="ing-days">${esc(Array.from(it.days).join(", "))}${it.count > 1 ? ` · ${esc(t("shopping.meals_count", { count: it.count }))}` : ""}</div>
                     </div>
                     <div class="ing-controls">
-                      <button type="button" class="btn btn-sm" data-pantry="${esc(it.key)}" title="${it.inPantry ? "Remover da despensa" : "Marcar como já tenho em casa"}">${it.inPantry ? "↩️" : "🏠"}</button>
+                      <button type="button" class="btn btn-sm" data-pantry="${esc(it.key)}" title="${esc(it.inPantry ? t("shopping.pantry_remove_title") : t("shopping.pantry_add_title"))}">${it.inPantry ? "↩️" : "🏠"}</button>
                       ${it.inHA
-                        ? `<span class="sync-badge in-ha">✓ No HA</span>`
+                        ? `<span class="sync-badge in-ha">${esc(t("shopping.in_ha"))}</span>`
                         : it.inPantry
-                          ? `<span class="sync-badge pantry">Em casa</span>`
+                          ? `<span class="sync-badge pantry">${esc(t("shopping.in_pantry"))}</span>`
                           : `<button type="button" class="btn btn-sm btn-primary" data-add-ha="${esc(it.haText)}">➕ HA</button>`
                       }
                     </div>
@@ -4059,17 +4293,17 @@
         const subEl = document.getElementById("haListSubtitle");
 
         if (!haConnected && !haLiveItems.length) {
-          subEl.innerHTML = `Abre no Home Assistant para sincronizar com <code>${TODO_ENTITY}</code>.`;
-          listEl.innerHTML = `<div class="empty-state">Sem ligação ativa ao Home Assistant.</div>`;
+          subEl.innerHTML = `${esc(t("shopping.ha_offline_sub"))} <code>${esc(TODO_ENTITY)}</code>.`;
+          listEl.innerHTML = `<div class="empty-state">${esc(t("shopping.ha_offline_empty"))}</div>`;
           return;
         }
 
         const pending = haLiveItems.filter(i => i.status !== "completed");
         const completed = haLiveItems.filter(i => i.status === "completed");
-        subEl.textContent = `${pending.length} por comprar · ${completed.length} concluídos`;
+        subEl.textContent = t("shopping.ha_counts", { pending: pending.length, completed: completed.length });
 
         if (!haLiveItems.length) {
-          listEl.innerHTML = `<div class="empty-state">A lista de compras está vazia 🎉</div>`;
+          listEl.innerHTML = `<div class="empty-state">${esc(t("shopping.ha_empty"))}</div>`;
           return;
         }
 
@@ -4310,19 +4544,19 @@
         const modTabs = document.getElementById("recipeModuleTabs");
         if (modTabs) {
           const mods = [
-            { id: "refeicao", label: `🍽️ Refeições (${countByType.refeicao})` },
-            { id: "pequeno_almoco", label: `☕ Pequenos-Almoços (${countByType.pequeno_almoco})` },
-            { id: "sobremesa", label: `🍮 Sobremesas (${countByType.sobremesa})` }
+            { id: "refeicao", label: t("recipes.mod_meals", { count: countByType.refeicao }) },
+            { id: "pequeno_almoco", label: t("recipes.mod_breakfasts", { count: countByType.pequeno_almoco }) },
+            { id: "sobremesa", label: t("recipes.mod_desserts", { count: countByType.sobremesa }) }
           ];
           modTabs.innerHTML = mods.map(m =>
-            `<button type="button" class="module-tab ${state.recipesModule === m.id ? "active" : ""}" data-rec-module="${m.id}" role="tab" aria-selected="${state.recipesModule === m.id}">${m.label}</button>`
+            `<button type="button" class="module-tab ${state.recipesModule === m.id ? "active" : ""}" data-rec-module="${m.id}" role="tab" aria-selected="${state.recipesModule === m.id}">${esc(m.label)}</button>`
           ).join("");
         }
 
         const chipsEl = document.getElementById("recipeCategoryChips");
         if (state.recipesModule === "refeicao") {
           chipsEl.innerHTML = CATEGORIES.map(cat =>
-            `<button type="button" class="chip ${recipesCategory === cat ? "active" : ""}" data-rec-cat="${esc(cat)}">${esc(cat)}</button>`
+            `<button type="button" class="chip ${recipesCategory === cat ? "active" : ""}" data-rec-cat="${esc(cat)}">${esc(tCategory(cat))}</button>`
           ).join("");
         } else {
           chipsEl.innerHTML = "";
@@ -4376,8 +4610,8 @@
         if (corrBar) {
           if (spellSuggestion && normalize(spellSuggestion) !== query) {
             corrBar.innerHTML = usedFuzzy
-              ? `<span>✨ A mostrar resultados aproximados para <strong>${esc(rawQuery)}</strong>. Quis dizer:</span><button type="button" class="search-correction-btn" data-apply-correction="${esc(spellSuggestion)}">${esc(spellSuggestion)}</button>`
-              : `<span>✨ Quis dizer:</span><button type="button" class="search-correction-btn" data-apply-correction="${esc(spellSuggestion)}">${esc(spellSuggestion)}</button>`;
+              ? `<span>${t("recipes.fuzzy_results", { query: esc(rawQuery) })}</span><button type="button" class="search-correction-btn" data-apply-correction="${esc(spellSuggestion)}">${esc(spellSuggestion)}</button>`
+              : `<span>${esc(t("recipes.did_you_mean"))}</span><button type="button" class="search-correction-btn" data-apply-correction="${esc(spellSuggestion)}">${esc(spellSuggestion)}</button>`;
             corrBar.classList.remove("hidden");
           } else {
             corrBar.classList.add("hidden");
@@ -4391,21 +4625,25 @@
           const otherModMatch = query
             ? all.find(r => (r.meal_type || "refeicao") !== state.recipesModule && matchesTokens(recipeSearchHaystack(r), correctedTokens.length ? correctedTokens : queryTokens, true))
             : null;
-          const modLabels = { refeicao: "🍽️ Refeições", pequeno_almoco: "☕ Pequenos-Almoços", sobremesa: "🍮 Sobremesas" };
-          const createLabel = rawQuery ? `➕ Criar nova receita "${rawQuery}"` : "➕ Criar nova receita";
+          const modLabels = {
+            refeicao: t("recipes.mod_meals_plain"),
+            pequeno_almoco: t("recipes.mod_breakfasts_plain"),
+            sobremesa: t("recipes.mod_desserts_plain")
+          };
+          const createLabel = rawQuery ? t("recipes.create_named", { query: rawQuery }) : t("recipes.create_new");
           grid.innerHTML = `
             <div class="empty-state-card">
               <div style="font-size:1.8rem;">🍽️</div>
               <div style="font-weight:700; font-size:0.95rem;">
-                ${rawQuery ? `Nenhuma receita encontrada para "${esc(rawQuery)}".` : "Nenhuma receita encontrada neste módulo."}
+                ${esc(rawQuery ? t("recipes.none_found_query", { query: rawQuery }) : t("recipes.none_found_module"))}
               </div>
               <div class="kitchen-sub">
-                ${rawQuery ? "Podes criar já esta receita e preencher os ingredientes à mão ou com ajuda da IA." : "Cria a tua primeira receita neste módulo."}
+                ${esc(rawQuery ? t("recipes.none_hint_query") : t("recipes.none_hint_module"))}
               </div>
               <div class="empty-state-actions">
                 <button type="button" class="btn btn-primary" data-create-from-search="${esc(rawQuery)}">${esc(createLabel)}</button>
-                ${spellSuggestion ? `<button type="button" class="btn" data-apply-correction="${esc(spellSuggestion)}">🔍 Pesquisar "${esc(spellSuggestion)}"</button>` : ""}
-                ${otherModMatch ? `<button type="button" class="btn" data-switch-rec-module="${esc(otherModMatch.meal_type || "refeicao")}">Ver em ${esc(modLabels[otherModMatch.meal_type || "refeicao"] || "outro módulo")}</button>` : ""}
+                ${spellSuggestion ? `<button type="button" class="btn" data-apply-correction="${esc(spellSuggestion)}">${esc(t("recipes.search_suggestion", { suggestion: spellSuggestion }))}</button>` : ""}
+                ${otherModMatch ? `<button type="button" class="btn" data-switch-rec-module="${esc(otherModMatch.meal_type || "refeicao")}">${esc(t("recipes.view_in_module", { module: modLabels[otherModMatch.meal_type || "refeicao"] || t("recipes.other_module") }))}</button>` : ""}
               </div>
             </div>
           `;
@@ -4416,7 +4654,7 @@
           const author = String(rec.created_by || "").trim();
           if (rec.source === "jarvis_hermes") {
             if (!author || normalize(author) === "hermes") return `<span class="cat-tag">🤖 Hermes</span>`;
-            return `<span class="cat-tag" title="Fonte encontrada pelo Hermes">🔗 ${esc(author)}</span>`;
+            return `<span class="cat-tag" title="${esc(t("recipes.hermes_source_title"))}">🔗 ${esc(author)}</span>`;
           }
           if (author) return `<span class="cat-tag">👤 ${esc(author)}</span>`;
           return "";
@@ -4435,13 +4673,13 @@
 
           return `
             <article class="recipe-card" data-base-id="${esc(base.id)}">
-              <button type="button" class="corner-fold-btn ${variants.length ? "has-variants" : ""}" data-toggle-variants="${esc(base.id)}" aria-expanded="${drawerOpen}" title="${variants.length ? `${variants.length} variante(s) — clica para abrir menu` : "Abrir menu de variantes / criar variante"}">
+              <button type="button" class="corner-fold-btn ${variants.length ? "has-variants" : ""}" data-toggle-variants="${esc(base.id)}" aria-expanded="${drawerOpen}" title="${esc(variants.length ? t("recipes.variants_title_some", { count: variants.length }) : t("recipes.variants_title_none"))}">
                 <span class="corner-fold-count">${variants.length ? variants.length : "+"}</span>
               </button>
               ${active.image_url ? `<img class="recipe-cover" src="${esc(active.image_url)}" alt="${esc(active.name)}" loading="lazy" onerror="this.style.display='none'">` : ""}
               <div class="recipe-card-header">
                 <div class="meal-badges">
-                  <span class="cat-tag">${esc(active.category)}</span>
+                  <span class="cat-tag">${esc(tCategory(active.category))}</span>
                   ${active.cuisine ? `<span class="cat-tag">🌍 ${esc(active.cuisine)}</span>` : ""}
                   ${formatAuthorBadge(active)}
                   <span style="font-size:0.75rem; color:var(--text-muted);">⏱️ ${esc(guide.time || "—")}</span>
@@ -4450,7 +4688,7 @@
               ${drawerOpen ? `
                 <div class="variant-drawer" role="menu">
                   <button type="button" class="variant-option ${active.id === base.id ? "active" : ""}" data-select-variant-parent="${esc(base.id)}" data-select-variant-id="${esc(base.id)}">
-                    <span>📄 Original (${esc(base.name)})</span>
+                    <span>${esc(t("recipes.original_label", { name: base.name }))}</span>
                     <span>${base.rating ? `${base.rating}★` : ""}</span>
                   </button>
                   ${variants.map(v => `
@@ -4460,36 +4698,36 @@
                     </button>
                   `).join("")}
                   <button type="button" class="variant-option variant-create-opt" data-create-variant-for="${esc(base.id)}">
-                    <span>➕ Criar variante desta receita</span>
+                    <span>${esc(t("recipes.create_variant_opt"))}</span>
                     <span>→</span>
                   </button>
                 </div>
               ` : ""}
               <div class="meal-title">
                 ${esc(active.name)}
-                ${isVariantView ? `<div class="variant-pill-active">🔀 Variante: ${esc(active.variant_name || "Personalizada")}</div>` : ""}
+                ${isVariantView ? `<div class="variant-pill-active">${esc(t("recipes.variant_badge", { name: active.variant_name || t("recipes.variant_custom") }))}</div>` : ""}
               </div>
               ${renderStarsHTML(active.id, active.rating)}
               ${formatEquipmentBadgesHTML(equip.appliances, equip.accessories)}
-              ${nut.kcal ? `<div class="nut-mini">🔥 ${nut.kcal} kcal · 💪 ${nut.protein_g}g P · 🌾 ${nut.carbs_g}g HC · 🥑 ${nut.fat_g}g G · 🥦 ${nut.fiber_g}g F</div>` : ""}
+              ${nut.kcal ? `<div class="nut-mini">🔥 ${nut.kcal} kcal · 💪 ${nut.protein_g}g P · 🌾 ${nut.carbs_g}g ${esc(t("stats.carbs_short"))} · 🥑 ${nut.fat_g}g ${esc(t("stats.fat_short"))} · 🥦 ${nut.fiber_g}g F</div>` : ""}
               <div class="meal-items">${guide.method ? `🍳 ${esc(guide.method)} · ` : ""}${esc(formatMealItemsPreview(active.items))}</div>
               <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; margin-top:4px; flex-wrap:wrap;">
                 <div style="display:flex; gap:6px;">
-                  <button type="button" class="btn btn-sm" data-view-recipe="${esc(active.id)}">👨‍🍳 Preparação</button>
-                  <button type="button" class="btn btn-sm" data-edit-recipe="${esc(active.id)}" title="Editar receita ou adicionar foto">✏️ Editar</button>
+                  <button type="button" class="btn btn-sm" data-view-recipe="${esc(active.id)}">${esc(t("recipes.prep_btn"))}</button>
+                  <button type="button" class="btn btn-sm" data-edit-recipe="${esc(active.id)}" title="${esc(t("recipes.edit_title"))}">${esc(t("recipes.edit_btn"))}</button>
                 </div>
-                ${isCustom ? `<button type="button" class="btn btn-sm btn-danger-ghost" data-delete-recipe="${esc(active.id)}">🗑️ Apagar</button>` : ""}
+                ${isCustom ? `<button type="button" class="btn btn-sm btn-danger-ghost" data-delete-recipe="${esc(active.id)}">${esc(t("recipes.delete_btn"))}</button>` : ""}
               </div>
             </article>
           `;
         }).join("") + (rawQuery ? `
           <article class="recipe-card" style="border-style:dashed; justify-content:center; align-items:flex-start; gap:10px; background:var(--surface-2);">
             <div style="font-size:1.4rem;">✨</div>
-            <div class="meal-title">Criar nova receita "${esc(rawQuery)}" com IA</div>
+            <div class="meal-title">${esc(t("recipes.ai_card_title", { query: rawQuery }))}</div>
             <div class="kitchen-sub">
-              Abre o formulário já com "${esc(rawQuery)}" preenchido no campo de IA, pronto a gerar usando os teus eletrodomésticos. Se for parecida com uma existente, poderás guardá-la como alternativa.
+              ${esc(t("recipes.ai_card_desc", { query: rawQuery }))}
             </div>
-            <button type="button" class="btn btn-primary btn-sm" data-create-from-search="${esc(rawQuery)}">✨ Criar "${esc(rawQuery)}" com IA</button>
+            <button type="button" class="btn btn-primary btn-sm" data-create-from-search="${esc(rawQuery)}">${esc(t("recipes.ai_card_btn", { query: rawQuery }))}</button>
           </article>
         ` : "");
       }
@@ -4507,7 +4745,7 @@
         pickerTarget = { dayIdx, mealKey };
         pickerCategory = "Todas";
         document.getElementById("pickerTitle").textContent =
-          `${state.weeklyPlan[dayIdx].day} — ${SLOT_LABELS[mealKey] || mealKey}`;
+          `${tDay(dayIdx)} — ${tSlot(mealKey)}`;
         document.getElementById("pickerSearch").value = "";
         renderPickerList();
         document.getElementById("pickerDialog").showModal();
@@ -4518,7 +4756,7 @@
         const chipsEl = document.getElementById("pickerChips");
         if (mType === "refeicao") {
           chipsEl.innerHTML = CATEGORIES.map(cat =>
-            `<button type="button" class="chip ${pickerCategory === cat ? "active" : ""}" data-pick-cat="${esc(cat)}">${esc(cat)}</button>`
+            `<button type="button" class="chip ${pickerCategory === cat ? "active" : ""}" data-pick-cat="${esc(cat)}">${esc(tCategory(cat))}</button>`
           ).join("");
         } else {
           chipsEl.innerHTML = "";
@@ -4547,9 +4785,9 @@
         }
 
         const listEl = document.getElementById("pickerList");
-        const createLabel = rawQuery ? `✨ Criar nova receita "${rawQuery}" com IA` : "✨ Criar nova receita com IA";
+        const createLabel = rawQuery ? t("picker.create_ai_named", { query: rawQuery }) : t("picker.create_ai");
         const corrBanner = (spellSuggestion && normalize(spellSuggestion) !== q)
-          ? `<div class="search-correction-bar" style="margin-bottom:8px;"><span>${usedFuzzy ? `✨ Resultados aproximados para <strong>${esc(rawQuery)}</strong>. Quis dizer:` : "✨ Quis dizer:"}</span><button type="button" class="search-correction-btn" data-picker-apply-correction="${esc(spellSuggestion)}">${esc(spellSuggestion)}</button></div>`
+          ? `<div class="search-correction-bar" style="margin-bottom:8px;"><span>${usedFuzzy ? t("picker.fuzzy_results", { query: esc(rawQuery) }) : esc(t("recipes.did_you_mean"))}</span><button type="button" class="search-correction-btn" data-picker-apply-correction="${esc(spellSuggestion)}">${esc(spellSuggestion)}</button></div>`
           : "";
 
         if (!list.length) {
@@ -4558,14 +4796,14 @@
             <div class="empty-state-card" style="padding:18px 14px;">
               <div style="font-size:1.5rem;">🍽️</div>
               <div style="font-weight:700; font-size:0.9rem;">
-                ${rawQuery ? `Nenhuma receita encontrada para "${esc(rawQuery)}".` : "Sem receitas correspondentes."}
+                ${esc(rawQuery ? t("picker.none_found_query", { query: rawQuery }) : t("picker.none_found"))}
               </div>
               <div class="kitchen-sub">
-                ${rawQuery ? "Cria já esta receita com ajuda da IA (usando os teus eletrodomésticos) e ela fica logo atribuída a esta refeição." : "Podes criar uma nova receita para esta refeição."}
+                ${esc(rawQuery ? t("picker.none_hint_query") : t("picker.none_hint"))}
               </div>
               <div class="empty-state-actions">
                 <button type="button" class="btn btn-primary btn-sm" data-picker-create-search="${esc(rawQuery)}">${esc(createLabel)}</button>
-                ${spellSuggestion ? `<button type="button" class="btn btn-sm" data-picker-apply-correction="${esc(spellSuggestion)}">🔍 Pesquisar "${esc(spellSuggestion)}"</button>` : ""}
+                ${spellSuggestion ? `<button type="button" class="btn btn-sm" data-picker-apply-correction="${esc(spellSuggestion)}">${esc(t("recipes.search_suggestion", { suggestion: spellSuggestion }))}</button>` : ""}
               </div>
             </div>
           `;
@@ -4576,17 +4814,17 @@
           <button type="button" class="picker-item" data-pick-recipe="${esc(r.id)}">
             <div class="picker-item-top">
               <span>${esc(r.name)}${r.variant_name ? ` (${esc(r.variant_name)})` : ""}</span>
-              <span class="cat-tag">${r.rating ? `${r.rating}★ · ` : ""}${esc(r.category)} · ${esc(r.time)}</span>
+              <span class="cat-tag">${r.rating ? `${r.rating}★ · ` : ""}${esc(tCategory(r.category))} · ${esc(r.time)}</span>
             </div>
             <div class="picker-item-sub">${esc(formatMealItemsPreview(r.items))}</div>
           </button>
         `).join("") + (rawQuery ? `
           <button type="button" class="picker-item" style="border-style:dashed; background:var(--surface-2);" data-picker-create-search="${esc(rawQuery)}">
             <div class="picker-item-top">
-              <span>✨ Criar nova receita "${esc(rawQuery)}" com IA</span>
-              <span class="cat-tag">➕ Nova</span>
+              <span>${esc(t("picker.create_ai_named", { query: rawQuery }))}</span>
+              <span class="cat-tag">${esc(t("picker.new_tag"))}</span>
             </div>
-            <div class="picker-item-sub">Abre o formulário já com "${esc(rawQuery)}" pronto a pesquisar por IA e atribui logo a esta refeição.</div>
+            <div class="picker-item-sub">${esc(t("picker.create_assign_hint", { query: rawQuery }))}</div>
           </button>
         ` : "");
       }
@@ -5067,11 +5305,11 @@
         showToast(`Semana ${getWeekRangeLabel(state.weekOffset)} criada vazia.`);
       });
 
-      // AI Recipe Assistant (via Home Assistant ai_task.generate_data)
+      // AI Recipe Assistant (backend plan_my_meals.generate_recipe_ai + resilient direct fallback)
       async function askAIRecipe(dishName, hintText, existingIngredients, mealType = "refeicao", equipment = null, onStatus = null) {
         const hass = getHass();
         if (!hass) {
-          throw new Error("Abre o painel no Home Assistant para usar a ajuda da IA.");
+          throw new Error(t("ai.open_in_ha"));
         }
 
         const hasExplicitEquip = Boolean(equipment && Array.isArray(equipment.appliances) && equipment.appliances.length);
@@ -5086,53 +5324,161 @@
         const usesBimby = useApps.includes("bimby");
         const bimbyAcc = Array.isArray(useAcc.bimby) ? useAcc.bimby : [];
         const hasFriend = usesBimby && bimbyAcc.includes("bimby_friend");
-        const typeLabel = mealType === "pequeno_almoco" ? "pequeno-almoço" : (mealType === "sobremesa" ? "sobremesa" : "refeição principal (almoço/jantar)");
+
+        const parseNum = (val) => {
+          if (typeof val === "number" && Number.isFinite(val)) return Math.max(0, Math.round(val));
+          const m = String(val || "").match(/(\d+(?:[.,]\d+)?)/);
+          return m ? Math.max(0, Math.round(parseFloat(m[1].replace(",", ".")))) : 0;
+        };
+
+        const normalizePayload = (raw) => {
+          if (!raw || typeof raw !== "object") return null;
+          const rawIng = raw.ingredients_csv || raw.ingredients || "";
+          const ingredients_csv = Array.isArray(rawIng)
+            ? rawIng.map(it => (typeof it === "object" && it ? `${it.qty || it.quantity || ""}${it.unit || ""} ${it.name || it.ingredient || ""}`.trim() : String(it || "").trim())).filter(Boolean).join(", ")
+            : String(rawIng).trim();
+          const rawSteps = raw.steps || raw.instructions || raw.preparation || "";
+          const steps = Array.isArray(rawSteps)
+            ? rawSteps.map(s => String(s || "").trim()).filter(Boolean).join("\n")
+            : formatStepsText(rawSteps);
+          const out = {
+            name: String(raw.name || raw.title || "").trim(),
+            category: normalizeAICategory(raw.category, mealType),
+            cuisine: String(raw.cuisine || "").trim(),
+            method: String(raw.method || "").trim(),
+            prep_time: String(raw.prep_time || raw.prepTime || "").trim(),
+            cook_time: String(raw.cook_time || raw.cookTime || "").trim(),
+            total_time: String(raw.total_time || raw.time || "").trim(),
+            kcal: parseNum(raw.kcal),
+            protein_g: parseNum(raw.protein_g),
+            carbs_g: parseNum(raw.carbs_g),
+            fat_g: parseNum(raw.fat_g),
+            fiber_g: parseNum(raw.fiber_g),
+            ingredients_csv,
+            steps,
+            _ai_entity: raw._ai_entity || ""
+          };
+          return (out.name || out.ingredients_csv || out.steps) ? out : null;
+        };
+
+        // 1) Prefer backend service (logs attempts in HA logs & survives mobile tab suspend)
+        try {
+          if (typeof onStatus === "function") {
+            onStatus(t("ai.consulting_ha"));
+          }
+          const svcResp = await hass.callWS({
+            type: "call_service",
+            domain: "plan_my_meals",
+            service: "generate_recipe_ai",
+            service_data: {
+              dish_name: dishName || "",
+              hint_text: hintText || "",
+              existing_ingredients: existingIngredients || "",
+              meal_type: mealType || "refeicao",
+              appliances_desc: appliancesList,
+              has_explicit_equipment: hasExplicitEquip,
+              uses_bimby: usesBimby,
+              has_bimby_friend: hasFriend,
+              language: currentLang || "pt"
+            },
+            return_response: true
+          });
+          const payload = (svcResp && svcResp.response) || svcResp || {};
+          if (payload.ok && payload.recipe) {
+            const norm = normalizePayload(payload.recipe);
+            if (norm) return norm;
+          }
+          if (payload && payload.ok === false) {
+            console.warn("Backend generate_recipe_ai attempts:", payload.attempts || payload.error);
+            const firstErr = (Array.isArray(payload.attempts) && payload.attempts[0] && payload.attempts[0].error) || payload.error || "";
+            throw new Error(t("ai.all_failed", { detail: firstErr || "no response" }));
+          }
+        } catch (backendErr) {
+          const msg = String((backendErr && (backendErr.code || backendErr.message)) || backendErr || "");
+          // Only fall back to direct browser call if the backend service is not yet registered
+          const isMissingService = /not_found|unknown_command|service.*not found/i.test(msg);
+          if (!isMissingService) {
+            throw backendErr;
+          }
+          console.info("plan_my_meals.generate_recipe_ai not registered yet; using direct fallback.");
+        }
+
+        // 2) Direct browser fallback (with 60s/90s timeouts, relaxed text structure & JSON retry)
+        const isPt = (currentLang || "pt").toLowerCase().startsWith("pt");
+        const typeLabel = isPt
+          ? (mealType === "pequeno_almoco" ? "pequeno-almoço" : (mealType === "sobremesa" ? "sobremesa" : "refeição principal (almoço/jantar)"))
+          : (mealType === "pequeno_almoco" ? "breakfast" : (mealType === "sobremesa" ? "dessert" : "main meal (lunch/dinner)"));
 
         const bimbyInstructions = usesBimby
-          ? (hasFriend
-              ? "A cozinha dispõe de Bimby e Bimby Friend: se for a opção mais eficiente para este prato, trabalha em paralelo com [Bimby] e [Bimby Friend] usando a notação real (Tempo / Temperatura / Velocidade, respeitando os limites da Bimby Friend: até 100°C/Varoma e Colher a Vel. 2 inversa)."
-              : "A cozinha dispõe de Bimby: se for a opção mais eficiente para este prato, usa a notação real da Bimby em cada passo (Tempo / Temperatura / Velocidade e acessórios disponíveis).")
+          ? (isPt
+              ? (hasFriend
+                  ? "A cozinha dispõe de Bimby e Bimby Friend: trabalha em paralelo com [Bimby] e [Bimby Friend] usando a notação real (Tempo / Temperatura / Velocidade)."
+                  : "A cozinha dispõe de Bimby: usa a notação real da Bimby em cada passo (Tempo / Temperatura / Velocidade).")
+              : (hasFriend
+                  ? "The kitchen has a Thermomix and Friend: use parallel [Thermomix] and [Friend] steps with real notation (Time / Temp / Speed)."
+                  : "The kitchen has a Thermomix: use real Thermomix notation in each step (Time / Temp / Speed)."))
           : "";
 
         const equipPrompt = appliancesList.length
-          ? (hasExplicitEquip
-              ? `Eletrodomésticos e acessórios selecionados para esta receita: ${appliancesList.join("; ")}. Utiliza estes equipamentos e acessórios na confeção.`
-              : `Eletrodomésticos e acessórios disponíveis na cozinha: ${appliancesList.join("; ")}. Escolhe automaticamente a combinação mais eficiente destes equipamentos e acessórios disponíveis para este prato (ex.: Airfryer, Forno, Fogão, Bimby, Varoma, Bimby Friend) e indica claramente no campo 'method' quais os equipamentos utilizados.`)
+          ? (isPt
+              ? (hasExplicitEquip
+                  ? `Eletrodomésticos e acessórios selecionados: ${appliancesList.join("; ")}. Utiliza-os na confeção.`
+                  : `Eletrodomésticos disponíveis na cozinha: ${appliancesList.join("; ")}. Escolhe a combinação mais eficiente e indica no campo 'method'.`)
+              : (hasExplicitEquip
+                  ? `Selected appliances and accessories: ${appliancesList.join("; ")}. Use them in the cooking method and steps.`
+                  : `Available kitchen appliances: ${appliancesList.join("; ")}. Choose the most efficient combination and state it in 'method'.`))
           : "";
 
-        const promptParts = [
-          "Responde em português de Portugal.",
-          dishName
-            ? `Cria ou completa a receita de ${typeLabel} para 2 pessoas de: "${dishName}".`
-            : `Sugere uma receita prática e equilibrada de ${typeLabel} caseira portuguesa para 2 pessoas.`,
-          equipPrompt,
-          bimbyInstructions,
-          hintText && normalize(hintText) !== normalize(dishName) ? `Preferências / notas: ${hintText}.` : "",
-          existingIngredients ? `Ingredientes já indicados: ${existingIngredients}.` : "",
-          "Indica categoria, forma de cozinhar com equipamento e temperatura, tempo de preparação, tempo de cozedura, tempo total, ingredientes para 2 pessoas separados por vírgula com quantidades, valores nutricionais estimados por 1 pessoa (kcal, protein_g, carbs_g, fat_g, fiber_g em números inteiros), e passos curtos numerados com dica de ponto de cozedura."
-        ].filter(Boolean).join(" ");
+        const promptParts = isPt
+          ? [
+              "Responde em português de Portugal.",
+              dishName
+                ? `Cria ou completa a receita de ${typeLabel} para 2 pessoas de: "${dishName}".`
+                : `Sugere uma receita prática e equilibrada de ${typeLabel} caseira portuguesa para 2 pessoas.`,
+              equipPrompt,
+              bimbyInstructions,
+              hintText && normalize(hintText) !== normalize(dishName) ? `Preferências / notas: ${hintText}.` : "",
+              existingIngredients ? `Ingredientes já indicados: ${existingIngredients}.` : "",
+              "Indica categoria, origem/cozinha, forma de cozinhar com equipamento e temperatura, tempo de preparação, tempo de cozedura, tempo total, ingredientes para 2 pessoas separados por vírgula com quantidades, valores nutricionais estimados por 1 pessoa (kcal, protein_g, carbs_g, fat_g, fiber_g em números inteiros), e passos curtos numerados com dica de ponto de cozedura."
+            ].filter(Boolean).join(" ")
+          : [
+              `Respond in ${currentLang === "en" ? "English" : currentLang}.`,
+              dishName
+                ? `Create or complete a ${typeLabel} recipe for 2 people for: "${dishName}".`
+                : `Suggest a practical, balanced homemade ${typeLabel} recipe for 2 people.`,
+              equipPrompt,
+              bimbyInstructions,
+              hintText && normalize(hintText) !== normalize(dishName) ? `Preferences / notes: ${hintText}.` : "",
+              existingIngredients ? `Existing ingredients: ${existingIngredients}.` : "",
+              "Provide category, cuisine, cooking method with equipment and temperature, prep_time, cook_time, total_time, ingredients_csv for 2 people comma-separated with quantities, estimated nutrition per 1 person as integers (kcal, protein_g, carbs_g, fat_g, fiber_g), and short numbered steps with a doneness tip."
+            ].filter(Boolean).join(" ");
 
+        // Relaxed structure: text selectors for all fields and only core fields required
         const structure = {
-          name: { description: "Nome do prato em português de Portugal", required: true, selector: { text: {} } },
-          category: { description: "Peixe, Aves, Carne, Vegetariano, Ovos, Rápido, Pequeno-Almoço ou Sobremesa", required: true, selector: { text: {} } },
-          cuisine: { description: "Origem ou tipo de cozinha (ex: Portuguesa, Mediterrânica, Italiana, Asiática, Indiana, Mexicana, Francesa, Saudável / Fit, Internacional)", required: true, selector: { text: {} } },
-          method: { description: "Forma de cozinhar e temperatura (ex: Airfryer 180°C, Forno a 190°C, Bimby + Varoma)", required: true, selector: { text: {} } },
-          prep_time: { description: "Tempo de preparação (ex: 15 min)", required: true, selector: { text: {} } },
-          cook_time: { description: "Tempo de cozedura (ex: 25 min)", required: true, selector: { text: {} } },
-          total_time: { description: "Tempo total (ex: 40 min)", required: true, selector: { text: {} } },
-          kcal: { description: "Calorias estimadas por 1 pessoa (número inteiro)", required: true, selector: { number: { min: 0, max: 2500 } } },
-          protein_g: { description: "Proteína em gramas por 1 pessoa (número inteiro)", required: true, selector: { number: { min: 0, max: 200 } } },
-          carbs_g: { description: "Hidratos de carbono em gramas por 1 pessoa (número inteiro)", required: true, selector: { number: { min: 0, max: 300 } } },
-          fat_g: { description: "Gordura em gramas por 1 pessoa (número inteiro)", required: true, selector: { number: { min: 0, max: 200 } } },
-          fiber_g: { description: "Fibra em gramas por 1 pessoa (número inteiro)", required: true, selector: { number: { min: 0, max: 80 } } },
-          ingredients_csv: { description: "Ingredientes para 2 pessoas separados por vírgula com quantidades (ex: 300g Bacalhau, 400g Batatas)", required: true, selector: { text: {} } },
-          steps: { description: "Passos numerados claros de confeção separados por quebras de linha, incluindo dica de ponto de cozedura", required: true, selector: { text: {} } }
+          name: { description: isPt ? "Nome do prato" : "Dish name", required: true, selector: { text: {} } },
+          category: { description: "Peixe, Aves, Carne, Vegetariano, Ovos, Rápido, Pequeno-Almoço ou Sobremesa", required: false, selector: { text: {} } },
+          cuisine: { description: isPt ? "Tipo de cozinha" : "Cuisine", required: false, selector: { text: {} } },
+          method: { description: isPt ? "Forma de cozinhar e temperatura" : "Cooking method & temperature", required: false, selector: { text: {} } },
+          prep_time: { description: "Ex: 15 min", required: false, selector: { text: {} } },
+          cook_time: { description: "Ex: 25 min", required: false, selector: { text: {} } },
+          total_time: { description: "Ex: 40 min", required: false, selector: { text: {} } },
+          kcal: { description: "Integer kcal per person", required: false, selector: { text: {} } },
+          protein_g: { description: "Integer protein g per person", required: false, selector: { text: {} } },
+          carbs_g: { description: "Integer carbs g per person", required: false, selector: { text: {} } },
+          fat_g: { description: "Integer fat g per person", required: false, selector: { text: {} } },
+          fiber_g: { description: "Integer fiber g per person", required: false, selector: { text: {} } },
+          ingredients_csv: { description: isPt ? "Ingredientes separados por vírgula com quantidades" : "Comma-separated ingredients with quantities", required: true, selector: { text: {} } },
+          steps: { description: isPt ? "Passos numerados claros de confeção" : "Clear numbered cooking steps", required: true, selector: { text: {} } }
         };
 
-        const AI_TIMEOUT_MS = 25000;
+        const timeoutMsFor = (entityId) =>
+          /(ollama|local|llama|mistral|qwen|gemma)/i.test(entityId) ? 90000 : 60000;
+
         const withTimeout = (promise, ms, entityId) => new Promise((resolve, reject) => {
           const timer = setTimeout(() => {
-            reject(new Error(`Tempo limite excedido (${Math.round(ms / 1000)}s) em ${entityId}.`));
+            const err = new Error(t("ai.timeout_err", { sec: Math.round(ms / 1000), entity: entityId }));
+            err.isTimeout = true;
+            reject(err);
           }, ms);
           promise.then(
             (val) => { clearTimeout(timer); resolve(val); },
@@ -5140,64 +5486,123 @@
           );
         });
 
-        const extractJsonObject = (text) => {
-          const s = String(text || "").trim();
+        const escapeNewlinesInStrings = (raw) => {
+          let out = "", inStr = false, escaped = false;
+          for (let i = 0; i < raw.length; i++) {
+            const ch = raw[i];
+            if (escaped) { out += ch; escaped = false; continue; }
+            if (ch === "\\" && inStr) { out += ch; escaped = true; continue; }
+            if (ch === '"') { inStr = !inStr; out += ch; continue; }
+            if (inStr && ch === "\n") { out += "\\n"; continue; }
+            if (inStr && ch === "\r") continue;
+            if (inStr && ch === "\t") { out += "\\t"; continue; }
+            out += ch;
+          }
+          return out;
+        };
+
+        const extractJsonObject = (raw) => {
+          if (raw && typeof raw === "object") return raw;
+          let s = String(raw || "").trim();
+          const fence = s.match(/```(?:json)?\s*([\s\S]*?)```/i);
+          if (fence) s = fence[1].trim();
           const start = s.indexOf("{");
           const end = s.lastIndexOf("}");
-          if (start >= 0 && end > start) {
+          if (start < 0 || end <= start) return null;
+          const cand = s.slice(start, end + 1);
+          const escaped = escapeNewlinesInStrings(cand);
+          for (const attempt of [cand, escaped, escaped.replace(/,\s*([}\]])/g, "$1")]) {
             try {
-              const parsed = JSON.parse(s.slice(start, end + 1));
+              const parsed = JSON.parse(attempt);
               if (parsed && typeof parsed === "object") return parsed;
             } catch (_) {}
           }
           return null;
         };
 
+        const jsonOnlyPrompt = `${promptParts} Return ONLY a single valid JSON object (no markdown fences, no extra prose) with exact keys: name, category, cuisine, method, prep_time, cook_time, total_time, kcal, protein_g, carbs_g, fat_g, fiber_g, ingredients_csv, steps.`;
+
         const callSingleAI = async (entityId) => {
+          const ms = timeoutMsFor(entityId);
           if (entityId.startsWith("conversation.")) {
-            const jsonPrompt = `${promptParts} Responde APENAS com um objeto JSON válido (sem texto extra nem markdown) com as chaves exatas: name, category, cuisine, method, prep_time, cook_time, total_time, kcal, protein_g, carbs_g, fat_g, fiber_g, ingredients_csv, steps.`;
             const resp = await withTimeout(
               hass.callWS({
                 type: "call_service",
                 domain: "conversation",
                 service: "process",
-                service_data: {
-                  agent_id: entityId,
-                  text: jsonPrompt
-                },
+                service_data: { agent_id: entityId, text: jsonOnlyPrompt },
                 return_response: true
               }),
-              AI_TIMEOUT_MS,
+              ms,
               entityId
             );
             const speech =
               (resp && resp.response && resp.response.response && resp.response.response.speech && resp.response.response.speech.plain && resp.response.response.speech.plain.speech) ||
               (resp && resp.response && resp.response.speech && resp.response.speech.plain && resp.response.speech.plain.speech) ||
               "";
-            const parsed = extractJsonObject(speech);
-            if (parsed) return parsed;
-            throw new Error(`Resposta da entidade ${entityId} não continha JSON de receita válido.`);
+            const norm = normalizePayload(extractJsonObject(speech));
+            if (norm) return norm;
+            throw new Error(`Invalid JSON response from ${entityId}`);
           }
 
-          const resp = await withTimeout(
+          // Stage A: relaxed structure
+          try {
+            const resp = await withTimeout(
+              hass.callWS({
+                type: "call_service",
+                domain: "ai_task",
+                service: "generate_data",
+                service_data: {
+                  entity_id: entityId,
+                  task_name: "Plan My Meals Recipe",
+                  instructions: promptParts,
+                  structure
+                },
+                return_response: true
+              }),
+              ms,
+              entityId
+            );
+            const rawData = (resp && resp.response && resp.response.data) || (resp && resp.data);
+            const norm = normalizePayload(extractJsonObject(rawData));
+            if (norm) return norm;
+            throw new Error(`Empty structured data from ${entityId}`);
+          } catch (stageAErr) {
+            if (stageAErr && stageAErr.isTimeout) throw stageAErr;
+            console.warn(`Structured ai_task failed on ${entityId}, retrying plain JSON:`, stageAErr);
+            if (typeof onStatus === "function") {
+              onStatus(t("ai.retrying_json", { entity: entityId }));
+            }
+          }
+
+          // Stage B: unstructured JSON on the same entity
+          const resp2 = await withTimeout(
             hass.callWS({
               type: "call_service",
               domain: "ai_task",
               service: "generate_data",
               service_data: {
                 entity_id: entityId,
-                task_name: "Sugerir receita Plan My Meals",
-                instructions: promptParts,
-                structure
+                task_name: "Plan My Meals Recipe JSON",
+                instructions: jsonOnlyPrompt
               },
               return_response: true
             }),
-            AI_TIMEOUT_MS,
+            ms,
             entityId
           );
-          const data = (resp && resp.response && resp.response.data) || (resp && resp.data);
-          if (data && typeof data === "object") return data;
-          throw new Error(`Sem dados estruturados devolvidos por ${entityId}.`);
+          const rawData2 = (resp2 && resp2.response && resp2.response.data) || (resp2 && resp2.data);
+          const norm2 = normalizePayload(extractJsonObject(rawData2));
+          if (norm2) return norm2;
+          throw new Error(`No usable JSON returned by ${entityId}`);
+        };
+
+        const isEntityAvailable = (e) => {
+          if (!hass.states) return true;
+          const st = hass.states[e];
+          if (!st) return false;
+          const s = String(st.state || "").toLowerCase();
+          return s !== "unavailable" && s !== "unknown";
         };
 
         const discoveredAI = Object.keys(hass.states || {}).filter(e => e.startsWith("ai_task."));
@@ -5208,10 +5613,10 @@
           "ai_task.google_ai_task",
           "ai_task.ollama_ai_task"
         ].map(x => String(x || "").trim()).filter(Boolean);
-        const aiEntities = [...new Set(rawCandidates)].filter(e => !hass.states || Boolean(hass.states[e]));
+        const aiEntities = [...new Set(rawCandidates)].filter(isEntityAvailable);
 
         if (!aiEntities.length) {
-          throw new Error("Nenhuma entidade de IA disponível no Home Assistant. Revê a configuração da IA em Definições → Dispositivos e Serviços → Plan My Meals → Configurar.");
+          throw new Error(t("ai.no_entities"));
         }
 
         const errors = [];
@@ -5219,8 +5624,8 @@
           const entityId = aiEntities[i];
           if (typeof onStatus === "function") {
             onStatus(i === 0
-              ? `⏳ A consultar IA (${entityId})…`
-              : `🔄 IA anterior não respondeu — a tentar IA de redundância (${entityId})…`
+              ? t("ai.consulting_entity", { entity: entityId })
+              : t("ai.retrying_fallback", { entity: entityId })
             );
           }
           try {
@@ -5234,23 +5639,29 @@
             console.warn(`AI entity ${entityId} failed:`, err);
           }
         }
-        throw new Error(
-          `A IA demorou demasiado tempo ou não respondeu (${errors[0] || "sem resposta"}). Revê a IA principal e define uma IA de redundância em Definições → Dispositivos e Serviços → Plan My Meals → Configurar.`
-        );
+        throw new Error(t("ai.all_failed", { detail: errors[0] || "no response" }));
       }
 
       function normalizeAICategory(cat, mealType = "refeicao") {
         if (mealType === "pequeno_almoco") return "Pequeno-Almoço";
         if (mealType === "sobremesa") return "Sobremesa";
         const valid = ["Peixe", "Aves", "Carne", "Vegetariano", "Ovos", "Rápido", "Pequeno-Almoço", "Sobremesa"];
+        const aliases = {
+          fish: "Peixe", seafood: "Peixe", poultry: "Aves", chicken: "Aves", meat: "Carne",
+          beef: "Carne", pork: "Carne", vegetarian: "Vegetariano", vegan: "Vegetariano",
+          eggs: "Ovos", egg: "Ovos", quick: "Rápido", fast: "Rápido",
+          breakfast: "Pequeno-Almoço", dessert: "Sobremesa"
+        };
         const n = normalize(cat);
-        return valid.find(v => normalize(v) === n) || "Rápido";
+        return valid.find(v => normalize(v) === n) || aliases[n] || "Rápido";
       }
 
       function formatStepsText(steps) {
+        if (Array.isArray(steps)) {
+          return steps.map(s => String(s || "").trim()).filter(Boolean).join("\n");
+        }
         const s = String(steps || "").trim();
         if (!s) return "";
-        // Se vier tudo numa linha "1. ... 2. ... 3. ...", quebra antes de cada número
         if (!s.includes("\n")) {
           return s.replace(/\s+(?=\d+\.\s)/g, "\n");
         }
@@ -5274,44 +5685,45 @@
 
         const hasSteps = Boolean(guide.steps);
         const btnAi = document.getElementById("btnDetailAiGen");
-        btnAi.textContent = hasSteps ? "✨ Adaptar / Regerar passos com IA" : "✨ Gerar passos e tempos com IA";
+        btnAi.textContent = hasSteps ? t("detail_dialog.ai_adapt_btn") : t("detail_dialog.ai_gen_btn");
         btnAi.disabled = false;
 
         const nut = getRecipeNutrition(rec);
+        const peopleWord = t(state.servings === 1 ? "topbar.person_one" : "topbar.person_other");
         document.getElementById("detailBody").innerHTML = `
           ${rec.image_url ? `<img class="recipe-cover" src="${esc(rec.image_url)}" alt="${esc(rec.name)}" onerror="this.style.display='none'">` : ""}
           <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
             ${renderStarsHTML(rec.id, getRecipeRating(rec))}
-            ${rec.variant_name ? `<span class="variant-pill-active">🔀 Variante: ${esc(rec.variant_name)}</span>` : ""}
+            ${rec.variant_name ? `<span class="variant-pill-active">${esc(t("recipes.variant_badge", { name: rec.variant_name }))}</span>` : ""}
           </div>
           ${nut.kcal ? `<div class="cooking-meta">
             <span class="cooking-chip">🔥 ${nut.kcal} kcal</span>
-            <span class="cooking-chip">💪 ${nut.protein_g}g Prot</span>
-            <span class="cooking-chip">🌾 ${nut.carbs_g}g HC</span>
-            <span class="cooking-chip">🥑 ${nut.fat_g}g Gord</span>
-            <span class="cooking-chip">🥦 ${nut.fiber_g}g Fibra</span>
+            <span class="cooking-chip">💪 ${nut.protein_g}g ${esc(t("stats.prot_short"))}</span>
+            <span class="cooking-chip">🌾 ${nut.carbs_g}g ${esc(t("stats.carbs_short"))}</span>
+            <span class="cooking-chip">🥑 ${nut.fat_g}g ${esc(t("stats.fat_short"))}</span>
+            <span class="cooking-chip">🥦 ${nut.fiber_g}g ${esc(t("stats.fiber_short"))}</span>
           </div>` : ""}
           <div class="cooking-meta">
-            ${rec.category ? `<span class="cooking-chip">🏷️ ${esc(rec.category)}</span>` : ""}
+            ${rec.category ? `<span class="cooking-chip">🏷️ ${esc(tCategory(rec.category))}</span>` : ""}
             ${rec.cuisine ? `<span class="cooking-chip">🌍 ${esc(rec.cuisine)}</span>` : ""}
             ${guide.method ? `<span class="cooking-chip">🍳 ${esc(guide.method)}</span>` : ""}
-            ${guide.prepTime ? `<span class="cooking-chip">🔪 Prep: ${esc(guide.prepTime)}</span>` : ""}
-            ${guide.cookTime ? `<span class="cooking-chip">🔥 Cozedura: ${esc(guide.cookTime)}</span>` : ""}
-            ${guide.time ? `<span class="cooking-chip">⏱️ Total: ${esc(guide.time)}</span>` : ""}
+            ${guide.prepTime ? `<span class="cooking-chip">${esc(t("detail_dialog.prep_chip", { val: guide.prepTime }))}</span>` : ""}
+            ${guide.cookTime ? `<span class="cooking-chip">${esc(t("detail_dialog.cook_chip", { val: guide.cookTime }))}</span>` : ""}
+            ${guide.time ? `<span class="cooking-chip">${esc(t("detail_dialog.total_chip", { val: guide.time }))}</span>` : ""}
           </div>
           <div class="recipe-appliances-box">
-            <label style="margin:0; font-size:0.8rem; font-weight:700;">🍳 Eletrodomésticos &amp; Acessórios desta receita</label>
+            <label style="margin:0; font-size:0.8rem; font-weight:700;">${esc(t("detail_dialog.equipment_label"))}</label>
             <div id="detailKitchenChips">${buildDetailEquipmentPickerHTML()}</div>
           </div>
           <div class="form-field">
-            <label>Ingredientes para ${state.servings} ${state.servings === 1 ? "pessoa" : "pessoas"}</label>
-            <div class="detail-ing-list">${ingPills || '<span class="form-hint">Sem ingredientes associados.</span>'}</div>
+            <label>${esc(t("detail_dialog.ingredients_for", { count: state.servings, people: peopleWord }))}</label>
+            <div class="detail-ing-list">${ingPills || `<span class="form-hint">${esc(t("detail_dialog.no_ingredients"))}</span>`}</div>
           </div>
           <div class="form-field">
-            <label>Modo de preparação</label>
+            <label>${esc(t("detail_dialog.steps_label"))}</label>
             ${hasSteps
               ? `<div class="steps-box">${esc(formatStepsText(guide.steps))}</div>`
-              : `<div class="steps-box" style="color:var(--text-muted);">Ainda sem passos detalhados. Seleciona acima os eletrodomésticos e acessórios para esta receita e clica no botão abaixo para gerar o guia de confeção e tempos de cozedura.</div>`
+              : `<div class="steps-box" style="color:var(--text-muted);">${esc(t("detail_dialog.no_steps"))}</div>`
             }
           </div>
         `;
@@ -5595,14 +6007,14 @@
         const dishName = nameEl.value.trim();
         const hintText = hintEl.value.trim();
         if (!dishName && !hintText) {
-          showToast("Escreve o nome do prato ou uma ideia/ingrediente para a IA sugerir.");
+          showToast(t("ai.write_dish_or_hint"));
           nameEl.focus();
           return;
         }
 
         btn.disabled = true;
-        btn.textContent = "⏳ A gerar…";
-        statusEl.textContent = "A consultar a IA do Home Assistant (ingredientes, nutrientes, forma de cozinhar e tempos)…";
+        btn.textContent = t("recipe_dialog.ai_generating_btn");
+        statusEl.textContent = t("ai.consulting_ha");
 
         try {
           const data = await askAIRecipe(dishName, hintText, itemsEl.value.trim(), mealType, {
@@ -5632,14 +6044,14 @@
             }
           }
 
-          statusEl.textContent = "✨ Sugestão preenchida (incluindo nutrientes e eletrodomésticos)! Revê os campos e clica em Guardar Receita.";
-          showToast("Receita sugerida pela IA!");
+          statusEl.textContent = t("ai.filled_status", { entity: data._ai_entity || "AI" });
+          showToast(t("ai.filled_toast"));
         } catch (err) {
-          statusEl.textContent = "Não foi possível obter resposta da IA: " + (err.message || err);
-          showToast("Erro ao consultar a IA.");
+          statusEl.textContent = t("ai.error_prefix") + (err.message || err);
+          showToast(t("ai.error_toast"));
         } finally {
           btn.disabled = false;
-          btn.textContent = "✨ Sugerir com IA";
+          btn.textContent = t("recipe_dialog.ai_suggest_btn");
         }
       });
 
@@ -5647,7 +6059,7 @@
         if (!detailRecipe) return;
         const btn = document.getElementById("btnDetailAiGen");
         btn.disabled = true;
-        btn.textContent = "⏳ A gerar guia…";
+        btn.textContent = t("detail_dialog.ai_generating_btn");
         try {
           const existingIngs = (detailRecipe.items || []).map(i => normalizeItem(i).name).filter(Boolean).join(", ");
           const data = await askAIRecipe(detailRecipe.name, "", existingIngs, detailRecipe.meal_type || "refeicao", {
@@ -5676,11 +6088,11 @@
           scheduleSharedSave();
           renderAll();
           openDetail(detailRecipe);
-          showToast("Guia de confeção e tempos gerados pela IA!");
+          showToast(t("ai.guide_generated"));
         } catch (err) {
-          showToast("Erro ao gerar passos com IA: " + (err.message || err));
+          showToast(t("ai.guide_error") + (err.message || err));
           btn.disabled = false;
-          btn.textContent = "✨ Gerar passos e tempos com IA";
+          btn.textContent = t("detail_dialog.ai_gen_btn");
         }
       });
 
@@ -5688,7 +6100,7 @@
         const finalObj = {
           ...draft,
           parent_recipe_id: parentId || null,
-          variant_name: parentId ? (variantName || "Variante Personalizada") : null,
+          variant_name: parentId ? (variantName || t("recipes.variant_custom")) : null,
           source: "app"
         };
         await upsertRecipe(finalObj);
@@ -5698,7 +6110,7 @@
         let assignedDayLabel = "";
         if (pendingAssignSlot && state.weeklyPlan[pendingAssignSlot.dayIdx]) {
           state.weeklyPlan[pendingAssignSlot.dayIdx][pendingAssignSlot.mealKey] = { ...finalObj, locked: true };
-          assignedDayLabel = `${state.weeklyPlan[pendingAssignSlot.dayIdx].day} — ${SLOT_LABELS[pendingAssignSlot.mealKey] || pendingAssignSlot.mealKey}`;
+          assignedDayLabel = `${tDay(pendingAssignSlot.dayIdx)} — ${tSlot(pendingAssignSlot.mealKey)}`;
           pendingAssignSlot = null;
           scheduleSharedSave();
         }
@@ -5708,16 +6120,16 @@
         document.getElementById("recipeDialog").close();
         renderAll();
         showToast(assignedDayLabel
-          ? `Receita "${finalObj.name}" guardada e adicionada a ${assignedDayLabel}!`
+          ? t("toasts.recipe_saved_assigned", { name: finalObj.name, slot: assignedDayLabel })
           : (parentId
-              ? `Variante "${finalObj.variant_name}" guardada!`
-              : `Receita "${finalObj.name}" guardada e sincronizada!`)
+              ? t("toasts.variant_saved", { name: finalObj.variant_name })
+              : t("toasts.recipe_saved", { name: finalObj.name }))
         );
       }
 
       document.getElementById("btnSaveAsVariant").addEventListener("click", async () => {
         if (!pendingRecipeDraft || !pendingSimilarity) return;
-        const vName = document.getElementById("recVariantName").value.trim() || pendingSimilarity.suggested_variant_name || "Variante";
+        const vName = document.getElementById("recVariantName").value.trim() || pendingSimilarity.suggested_variant_name || t("recipes.variant_custom");
         await finalizeRecipeSave(pendingRecipeDraft, pendingSimilarity.parent_id, vName);
       });
 
@@ -5779,7 +6191,7 @@
           editingRecipeId = null;
           document.getElementById("recipeDialog").close();
           renderAll();
-          showToast(`Receita "${name}" atualizada!`);
+          showToast(t("toasts.recipe_updated", { name }));
           return;
         }
 
@@ -5804,7 +6216,7 @@
         };
 
         if (creatingVariantParentId) {
-          const directVName = document.getElementById("recDirectVariantName").value.trim() || "Variante Personalizada";
+          const directVName = document.getElementById("recDirectVariantName").value.trim() || t("recipes.variant_custom");
           const parentId = creatingVariantParentId;
           creatingVariantParentId = null;
           document.getElementById("directVariantBox").classList.add("hidden");
@@ -5818,11 +6230,10 @@
           pendingSimilarity = sim;
           const pct = Math.round((sim.score || 0) * 100);
           document.getElementById("similarityTitle").textContent = sim.status === "duplicate"
-            ? `⚠️ Receita muito parecida (${pct}%)`
-            : `🔀 Candidata a variante (${pct}%)`;
-          document.getElementById("similarityDesc").innerHTML =
-            `Encontrámos a receita base <strong>${esc(sim.parent_name)}</strong>. Queres guardar esta como uma variante ligada a ela ou como receita independente?`;
-          document.getElementById("recVariantName").value = sim.suggested_variant_name || "Variante Personalizada";
+            ? t("recipe_dialog.similarity_duplicate", { pct })
+            : t("recipe_dialog.similarity_variant", { pct });
+          document.getElementById("similarityDesc").innerHTML = t("recipe_dialog.similarity_desc", { name: esc(sim.parent_name) });
+          document.getElementById("recVariantName").value = sim.suggested_variant_name || t("recipes.variant_custom");
           const box = document.getElementById("similarityBox");
           box.classList.remove("hidden");
           box.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -5848,6 +6259,7 @@
       // Init
       loadLocalState();
       applyTheme();
+      initI18n();
       renderAll();
       loadSharedState(false).then(() => refreshHAItems(true));
       setInterval(checkSensorForRemoteChanges, 15000);

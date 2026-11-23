@@ -198,3 +198,34 @@ save_state:
       name: Updated by
       selector:
         text:
+
+generate_recipe_ai:
+  name: Generate recipe with AI
+  description: Generates or completes a recipe using Home Assistant AI entities with structured + JSON fallback, redundancy, and server-side logging.
+  fields:
+    dish_name:
+      name: Dish name
+      example: "Bacalhau com Natas"
+      selector:
+        text:
+    hint_text:
+      name: Preferences / hints
+      example: "Quick, lactose-free"
+      selector:
+        text:
+    existing_ingredients:
+      name: Existing ingredients
+      selector:
+        text:
+    meal_type:
+      name: Meal type
+      default: "refeicao"
+      selector:
+        select:
+          options: ["refeicao", "pequeno_almoco", "sobremesa"]
+    language:
+      name: Language code
+      example: "en"
+      selector:
+        text:
+

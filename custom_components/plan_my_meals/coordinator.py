@@ -116,10 +116,20 @@ class PlanMyMealsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         cfg_fallback = str(self.cfg.get(CONF_AI_FALLBACK_ENTITY) or "").strip()
         candidates: list[str] = []
         for ent in (cfg_ai, cfg_fallback):
-            if ent and ent.startswith("ai_task.") and self.hass.states.get(ent) and ent not in candidates:
+            st = self.hass.states.get(ent) if ent else None
+            if (
+                ent
+                and ent.startswith("ai_task.")
+                and st is not None
+                and str(st.state).lower() not in ("unavailable", "unknown")
+                and ent not in candidates
+            ):
                 candidates.append(ent)
         for st in self.hass.states.async_all("ai_task"):
-            if st.entity_id not in candidates:
+            if (
+                st.entity_id not in candidates
+                and str(st.state).lower() not in ("unavailable", "unknown")
+            ):
                 candidates.append(st.entity_id)
         if not candidates:
             return 0
@@ -157,7 +167,7 @@ class PlanMyMealsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                         blocking=True,
                         return_response=True,
                     ),
-                    timeout=25,
+                    timeout=45,
                 )
                 data = (resp or {}).get("data") or resp or {}
                 raw_json = str(data.get("prices_json") or "").strip()
@@ -298,3 +308,54 @@ class PlanMyMealsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             added.append(item["ha_text"])
         await self.async_request_refresh()
         return {"ok": True, "todo_entity": todo_entity, "added": added, "total": len(added)}
+
+    async def async_generate_recipe_ai(
+        self,
+        *,
+        dish_name: str = "",
+        hint_text: str = "",
+        existing_ingredients: str = "",
+        meal_type: str = "refeicao",
+        appliances_desc: list[str] | None = None,
+        has_explicit_equipment: bool = False,
+        uses_bimby: bool = False,
+        has_bimby_friend: bool = False,
+        language: str = "pt",
+    ) -> dict[str, Any]:
+        """Generate a recipe via HA ai_task/conversation with two-stage fallback & logging."""
+        from .ai_recipes import async_generate_recipe_with_ai
+        from .const import CONF_AI_ENTITY, CONF_AI_FALLBACK_ENTITY
+
+        cfg = self.cfg
+        cfg_ai = str(cfg.get(CONF_AI_ENTITY) or "").strip()
+        cfg_fallback = str(cfg.get(CONF_AI_FALLBACK_ENTITY) or "").strip()
+        candidates: list[str] = []
+        for ent in (cfg_ai, cfg_fallback):
+            if ent and self.hass.states.get(ent) and ent not in candidates:
+                candidates.append(ent)
+        for st in self.hass.states.async_all("ai_task"):
+            if st.entity_id not in candidates:
+                candidates.append(st.entity_id)
+
+        if not candidates:
+            return {
+                "ok": False,
+                "error": "No AI entities available in Home Assistant.",
+                "attempts": [],
+            }
+
+        return await async_generate_recipe_with_ai(
+            self.hass,
+            candidates=candidates,
+            dish_name=dish_name,
+            hint_text=hint_text,
+            existing_ingredients=existing_ingredients,
+            meal_type=meal_type,
+            appliances_desc=appliances_desc,
+            has_explicit_equipment=has_explicit_equipment,
+            uses_bimby=uses_bimby,
+            has_bimby_friend=has_bimby_friend,
+            language=language or str(getattr(self.hass.config, "language", "pt") or "pt"),
+            base_servings=int(cfg.get(CONF_BASE_SERVINGS) or DEFAULT_BASE_SERVINGS),
+        )
+

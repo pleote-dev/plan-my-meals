@@ -53,5 +53,19 @@
         }
       }
     }
+  },
+  "entity": {
+    "sensor": {
+      "lunch_today": { "name": "Almoço de Hoje" },
+      "dinner_today": { "name": "Jantar de Hoje" },
+      "week_cost": { "name": "Custo Médio Semanal" },
+      "missing_ingredients": { "name": "Ingredientes em Falta" },
+      "recipes_count": { "name": "Biblioteca de Receitas" }
+    },
+    "button": {
+      "generate_week": { "name": "Gerar Plano Semanal" },
+      "sync_shopping": { "name": "Sincronizar Lista de Compras" },
+      "refresh_prices": { "name": "Atualizar Preços de Supermercados" }
+    }
   }
 }

@@ -361,6 +361,22 @@ def _register_services(hass: HomeAssistant) -> None:
         await coord.async_request_refresh()
         return {"ok": True, "price": reg}
 
+    async def handle_generate_recipe_ai(call: ServiceCall) -> ServiceResponse:
+        coord: PlanMyMealsCoordinator = hass.data[DOMAIN]["coordinator"]
+        raw_apps = call.data.get("appliances_desc")
+        appliances_desc = list(raw_apps) if isinstance(raw_apps, list) else []
+        return await coord.async_generate_recipe_ai(
+            dish_name=str(call.data.get("dish_name") or "").strip(),
+            hint_text=str(call.data.get("hint_text") or "").strip(),
+            existing_ingredients=str(call.data.get("existing_ingredients") or "").strip(),
+            meal_type=str(call.data.get("meal_type") or "refeicao").strip(),
+            appliances_desc=appliances_desc,
+            has_explicit_equipment=bool(call.data.get("has_explicit_equipment", False)),
+            uses_bimby=bool(call.data.get("uses_bimby", False)),
+            has_bimby_friend=bool(call.data.get("has_bimby_friend", False)),
+            language=str(call.data.get("language") or getattr(hass.config, "language", "pt") or "pt").strip(),
+        )
+
     services = {
         "save_state": handle_save_state,
         "get_plan": handle_get_plan,
@@ -374,6 +390,7 @@ def _register_services(hass: HomeAssistant) -> None:
         "sync_shopping_list": handle_sync_shopping_list,
         "refresh_prices": handle_refresh_prices,
         "set_ingredient_price": handle_set_ingredient_price,
+        "generate_recipe_ai": handle_generate_recipe_ai,
     }
     for name, handler in services.items():
         hass.services.async_register(

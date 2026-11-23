@@ -30,6 +30,7 @@ def _load(sub: str):
 const = _load("const")
 prices = _load("prices")
 database = _load("database")
+ai_recipes = _load("ai_recipes")
 
 
 class TestPlanMyMeals(unittest.TestCase):
@@ -272,6 +273,118 @@ class TestPlanMyMeals(unittest.TestCase):
             self.assertTrue(sim["suggested_variant_name"])
         finally:
             store.close()
+
+    def test_i18n_locales_parity_and_manifest(self) -> None:
+        locales_dir = PKG_DIR / "frontend" / "locales"
+        manifest = json.loads((locales_dir / "index.json").read_text(encoding="utf-8"))
+        codes = [lang["code"] for lang in manifest["languages"]]
+        self.assertIn("pt", codes)
+        self.assertIn("en", codes)
+
+        def flatten_keys(obj: dict, prefix: str = "") -> set[str]:
+            keys: set[str] = set()
+            for k, v in obj.items():
+                full = f"{prefix}.{k}" if prefix else k
+                if isinstance(v, dict):
+                    keys |= flatten_keys(v, full)
+                else:
+                    keys.add(full)
+            return keys
+
+        pt_keys = flatten_keys(json.loads((locales_dir / "pt.json").read_text(encoding="utf-8")))
+        en_keys = flatten_keys(json.loads((locales_dir / "en.json").read_text(encoding="utf-8")))
+        self.assertEqual(pt_keys, en_keys)
+        self.assertGreater(len(en_keys), 150)
+
+        # Also verify HA translations parity
+        ha_en = flatten_keys(json.loads((PKG_DIR / "translations" / "en.json").read_text(encoding="utf-8")))
+        ha_pt = flatten_keys(json.loads((PKG_DIR / "translations" / "pt.json").read_text(encoding="utf-8")))
+        ha_str = flatten_keys(json.loads((PKG_DIR / "strings.json").read_text(encoding="utf-8")))
+        self.assertEqual(ha_en, ha_pt)
+        self.assertEqual(ha_en, ha_str)
+
+        html = (PKG_DIR / "frontend" / "app.html").read_text(encoding="utf-8")
+        for marker in ('id="langSelect"', "data-i18n=", "initI18n()", "generate_recipe_ai"):
+            self.assertIn(marker, html)
+
+    def test_ai_recipe_resilient_parsing_and_fallback(self) -> None:
+        # 1) Tolerant JSON extraction (markdown fence + unescaped newline + trailing comma)
+        messy = (
+            "Here is your recipe:\n```json\n"
+            '{\n  "name": "Grilled Salmon",\n  "category": "Fish",\n'
+            '  "kcal": "480 kcal",\n  "protein_g": "42g",\n'
+            '  "ingredients_csv": ["300g Salmon", "200g Broccoli"],\n'
+            '  "steps": "1. Season salmon.\n2. Airfry at 180C for 12 min.",\n}\n```'
+        )
+        extracted = ai_recipes.extract_json_object(messy)
+        self.assertIsNotNone(extracted)
+        norm = ai_recipes.normalize_ai_recipe(extracted, meal_type="refeicao")
+        self.assertEqual(norm["name"], "Grilled Salmon")
+        self.assertEqual(norm["category"], "Peixe")
+        self.assertEqual(norm["kcal"], 480)
+        self.assertEqual(norm["protein_g"], 42)
+        self.assertEqual(norm["ingredients_csv"], "300g Salmon, 200g Broccoli")
+        self.assertIn("2. Airfry", norm["steps"])
+
+        # 2) Two-stage fallback: skip unavailable entity, recover when structured fails -> JSON fallback succeeds
+        calls: list[tuple[str, str, bool]] = []
+
+        class _FakeState:
+            def __init__(self, state: str) -> None:
+                self.state = state
+
+        class _FakeStates:
+            def __init__(self) -> None:
+                self._map = {
+                    "ai_task.offline": _FakeState("unavailable"),
+                    "ai_task.primary": _FakeState("idle"),
+                }
+
+            def get(self, eid: str):
+                return self._map.get(eid)
+
+        class _FakeServices:
+            async def async_call(self, domain: str, service: str, data: dict, **kwargs):
+                has_struct = "structure" in data
+                calls.append((data.get("entity_id", ""), service, has_struct))
+                if has_struct:
+                    raise RuntimeError("Schema validation error on structured output")
+                return {
+                    "data": '```json\n{"name": "Arroz de Pato", "category": "Aves", "ingredients_csv": "300g Pato, 200g Arroz", "steps": ["1. Cozer o pato.", "2. Levar ao forno."]}\n```'
+                }
+
+        fake_hass = types.SimpleNamespace(states=_FakeStates(), services=_FakeServices())
+        res = asyncio.run(
+            ai_recipes.async_generate_recipe_with_ai(
+                fake_hass,
+                candidates=["ai_task.offline", "ai_task.primary"],
+                dish_name="Arroz de Pato",
+                language="pt",
+            )
+        )
+        self.assertTrue(res["ok"])
+        self.assertEqual(res["recipe"]["name"], "Arroz de Pato")
+        self.assertEqual(res["recipe"]["_ai_mode"], "json_fallback")
+        # Offline entity was skipped; primary tried structured then json_fallback
+        self.assertEqual(
+            calls,
+            [
+                ("ai_task.primary", "generate_data", True),
+                ("ai_task.primary", "generate_data", False),
+            ],
+        )
+
+    def test_readmes_have_hacs_badge_and_language_links(self) -> None:
+        hacs_url = "https://my.home-assistant.io/redirect/hacs_repository/?owner=pleote-dev&repository=plan-my-meals&category=integration"
+        badge_img = "https://my.home-assistant.io/badges/hacs_repository.svg"
+        en_readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        pt_readme = (ROOT / "README.pt.md").read_text(encoding="utf-8")
+        self.assertIn(hacs_url, en_readme)
+        self.assertIn(badge_img, en_readme)
+        self.assertIn("README.pt.md", en_readme)
+        self.assertIn(hacs_url, pt_readme)
+        self.assertIn(badge_img, pt_readme)
+        self.assertIn("README.md", pt_readme)
 
 
 if __name__ == "__main__":
