@@ -225,11 +225,12 @@ class TestPlanMyMeals(unittest.TestCase):
             self.assertIn("bimby_friend", loaded["kitchen"]["accessories"]["bimby"])
 
             # A partial save_state (omitting recipes/mealHistoryStats/ingredientPrices) must not wipe them
+            # and starter recipes are automatically backfilled alongside the user's custom recipe
             store.save_state({"servings": 5, "kitchen": loaded["kitchen"]}, updated_by="Tester")
             after = store.get_state()
             self.assertEqual(after["servings"], 5)
-            self.assertEqual(len(after["recipes"]), 1)
-            self.assertEqual(after["recipes"][0]["name"], "Francesinha")
+            self.assertGreaterEqual(len(after["recipes"]), 61)
+            self.assertTrue(any(r["id"] == "custom-1" and r["name"] == "Francesinha" for r in after["recipes"]))
             self.assertEqual(after["mealHistoryStats"]["custom-1"], 4)
             self.assertEqual(after["recipeGuides"]["custom-1"]["steps"], "1. Grelhar o bife.")
         finally:
@@ -304,7 +305,8 @@ class TestPlanMyMeals(unittest.TestCase):
         self.assertEqual(ha_en, ha_str)
 
         html = (PKG_DIR / "frontend" / "app.html").read_text(encoding="utf-8")
-        for marker in ('id="langSelect"', "data-i18n=", "initI18n()", "generate_recipe_ai"):
+        self.assertNotIn('id="langSelect"', html)
+        for marker in ("resolvePreferredLanguage()", "syncLanguageWithHA()", "data-i18n=", "initI18n()", "generate_recipe_ai", "ingPricePopover", "data-ing-price-key"):
             self.assertIn(marker, html)
 
     def test_ai_recipe_resilient_parsing_and_fallback(self) -> None:

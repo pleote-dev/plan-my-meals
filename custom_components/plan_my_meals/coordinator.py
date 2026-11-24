@@ -30,7 +30,7 @@ from .const import (
     DOMAIN,
 )
 from .database import PlanMyMealsDB
-from .prices import normalize_text, search_supermarkets
+from .prices import compute_unit_price, extract_unit_from_text, normalize_text, search_supermarkets
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -114,24 +114,23 @@ class PlanMyMealsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
         cfg_ai = str(self.cfg.get(CONF_AI_ENTITY) or "").strip()
         cfg_fallback = str(self.cfg.get(CONF_AI_FALLBACK_ENTITY) or "").strip()
-        candidates: list[str] = []
+        ai_task_candidates: list[str] = []
+        conv_candidates: list[str] = []
         for ent in (cfg_ai, cfg_fallback):
             st = self.hass.states.get(ent) if ent else None
-            if (
-                ent
-                and ent.startswith("ai_task.")
-                and st is not None
-                and str(st.state).lower() not in ("unavailable", "unknown")
-                and ent not in candidates
-            ):
-                candidates.append(ent)
+            if not ent or st is None or str(st.state).lower() in ("unavailable", "unknown"):
+                continue
+            if ent.startswith("ai_task.") and ent not in ai_task_candidates:
+                ai_task_candidates.append(ent)
+            elif ent.startswith("conversation.") and ent not in conv_candidates:
+                conv_candidates.append(ent)
         for st in self.hass.states.async_all("ai_task"):
             if (
-                st.entity_id not in candidates
+                st.entity_id not in ai_task_candidates
                 and str(st.state).lower() not in ("unavailable", "unknown")
             ):
-                candidates.append(st.entity_id)
-        if not candidates:
+                ai_task_candidates.append(st.entity_id)
+        if not ai_task_candidates and not conv_candidates:
             return 0
 
         catalog = SUPERMARKETS_BY_COUNTRY.get(country, SUPERMARKETS_BY_COUNTRY["PT"])
@@ -139,12 +138,13 @@ class PlanMyMealsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         instructions = (
             f"Estimate current typical lowest retail supermarket prices in {country} (EUR) for these grocery items: "
             f"{', '.join(terms)}. Choose the most competitive store from: {stores_desc}. "
-            "Return JSON in the 'prices_json' field as a list of objects: "
-            '[{"ingredient": "...", "store_domain": "continente.pt", "supermarket": "Continente", "price": 2.49}].'
+            "Include the standard retail pack size/unit (e.g. '1 kg', '500 g', '1 L', '6 un'). "
+            "Return ONLY a JSON array of objects: "
+            '[{"ingredient": "...", "store_domain": "continente.pt", "supermarket": "Continente", "price": 2.49, "unit": "1 kg"}].'
         )
         structure = {
             "prices_json": {
-                "description": "JSON array of objects with ingredient, store_domain, supermarket, and numeric price in EUR",
+                "description": "JSON array of objects with ingredient, store_domain, supermarket, numeric price in EUR, and unit",
                 "required": True,
                 "selector": {"text": {}},
             }
@@ -152,7 +152,49 @@ class PlanMyMealsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         import asyncio as _asyncio
         import json as _json
 
-        for entity_id in candidates:
+        async def _save_rows(raw_json: str) -> int:
+            raw_json = str(raw_json or "").strip()
+            if not raw_json:
+                return 0
+            start = raw_json.find("[")
+            end = raw_json.rfind("]")
+            if start >= 0 and end > start:
+                raw_json = raw_json[start : end + 1]
+            parsed = _json.loads(raw_json)
+            if not isinstance(parsed, list):
+                return 0
+            saved = 0
+            for row in parsed:
+                if not isinstance(row, dict):
+                    continue
+                ing = str(row.get("ingredient") or "").strip()
+                dom = str(row.get("store_domain") or "").strip().lower()
+                store = str(row.get("supermarket") or catalog.get(dom, dom)).strip()
+                unit = extract_unit_from_text(str(row.get("unit") or "")) or str(row.get("unit") or "").strip()
+                try:
+                    price = float(row.get("price"))
+                except (TypeError, ValueError):
+                    continue
+                if not ing or price <= 0 or price > 500:
+                    continue
+                if not dom:
+                    dom = enabled_supermarkets[0] if enabled_supermarkets else "continente.pt"
+                unit_price = compute_unit_price(price, unit)
+                await self.hass.async_add_executor_job(
+                    self.db.upsert_supermarket_price,
+                    ing,
+                    store or dom,
+                    dom,
+                    price,
+                    f"{ing} (IA)",
+                    "",
+                    unit,
+                    unit_price,
+                )
+                saved += 1
+            return saved
+
+        for entity_id in ai_task_candidates:
             try:
                 resp = await _asyncio.wait_for(
                     self.hass.services.async_call(
@@ -167,55 +209,48 @@ class PlanMyMealsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                         blocking=True,
                         return_response=True,
                     ),
-                    timeout=45,
+                    timeout=25,
                 )
                 data = (resp or {}).get("data") or resp or {}
-                raw_json = str(data.get("prices_json") or "").strip()
-                if not raw_json:
-                    continue
-                start = raw_json.find("[")
-                end = raw_json.rfind("]")
-                if start >= 0 and end > start:
-                    raw_json = raw_json[start : end + 1]
-                parsed = _json.loads(raw_json)
-                if not isinstance(parsed, list):
-                    continue
-                saved = 0
-                for row in parsed:
-                    if not isinstance(row, dict):
-                        continue
-                    ing = str(row.get("ingredient") or "").strip()
-                    dom = str(row.get("store_domain") or "").strip().lower()
-                    store = str(row.get("supermarket") or catalog.get(dom, dom)).strip()
-                    try:
-                        price = float(row.get("price"))
-                    except (TypeError, ValueError):
-                        continue
-                    if not ing or price <= 0 or price > 500:
-                        continue
-                    if not dom:
-                        dom = enabled_supermarkets[0] if enabled_supermarkets else "continente.pt"
-                    await self.hass.async_add_executor_job(
-                        self.db.upsert_supermarket_price,
-                        ing,
-                        store or dom,
-                        dom,
-                        price,
-                        f"{ing} (IA)",
-                        "",
-                    )
-                    saved += 1
+                saved = await _save_rows(str(data.get("prices_json") or ""))
                 if saved:
                     return saved
             except Exception as exc:
                 _LOGGER.debug("AI price estimation failed on %s: %s", entity_id, exc)
+
+        for entity_id in conv_candidates:
+            try:
+                resp = await _asyncio.wait_for(
+                    self.hass.services.async_call(
+                        "conversation",
+                        "process",
+                        {
+                            "agent_id": entity_id,
+                            "text": instructions,
+                        },
+                        blocking=True,
+                        return_response=True,
+                    ),
+                    timeout=30,
+                )
+                speech = (
+                    ((resp or {}).get("response") or {})
+                    .get("speech", {})
+                    .get("plain", {})
+                    .get("speech", "")
+                )
+                saved = await _save_rows(speech)
+                if saved:
+                    return saved
+            except Exception as exc:
+                _LOGGER.debug("Conversation AI price estimation failed on %s: %s", entity_id, exc)
         return 0
 
     async def async_refresh_prices(
         self,
         *,
         all_recipes: bool = False,
-        max_items: int = 20,
+        max_items: int = 40,
         use_ai: bool | None = None,
         updated_by: str = "Home Assistant",
     ) -> dict[str, Any]:
@@ -234,7 +269,7 @@ class PlanMyMealsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             else [
                 (d.get(k) or {})
                 for d in (state.get("weeklyPlan") or [])
-                for k in ("lunch", "dinner")
+                for k in ("breakfast", "lunch", "lunchDessert", "dinner", "dinnerDessert")
             ]
         )
         for meal in sources:
@@ -271,6 +306,8 @@ class PlanMyMealsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                         of["price"],
                         of["title"],
                         of.get("url", ""),
+                        of.get("unit", ""),
+                        of.get("unit_price", ""),
                     )
             else:
                 missing_for_ai.append(term)
@@ -358,4 +395,3 @@ class PlanMyMealsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             language=language or str(getattr(self.hass.config, "language", "pt") or "pt"),
             base_servings=int(cfg.get(CONF_BASE_SERVINGS) or DEFAULT_BASE_SERVINGS),
         )
-

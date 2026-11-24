@@ -1619,5 +1619,1332 @@
     "rating": null,
     "image_url": "/plan_my_meals_static/img/peixe.svg",
     "source": "starter"
+  },
+  {
+    "id": "r23",
+    "name": "Risotto de Cogumelos e Parmesão",
+    "meal_type": "refeicao",
+    "category": "Vegetariano",
+    "cuisine": "Italiana",
+    "time": "30 min",
+    "prepTime": "10 min",
+    "cookTime": "20 min",
+    "method": "Fogão",
+    "appliances": [
+      "fogao"
+    ],
+    "steps": "1. Refogue a cebola e o alho picados em azeite até ficarem translúcidos.\n2. Junte os cogumelos laminados e salteie por 5 minutos.\n3. Adicione o arroz arbório, envolva bem por 2 minutos e refresque com caldo de legumes quente aos poucos.\n4. Mexa frequentemente durante 16–18 minutos até o arroz ficar cremoso al dente.\n5. Retire do lume, envolva o parmesão ralado e sirva de imediato.",
+    "items": [
+      {
+        "name": "Arroz arbório",
+        "qty": 180,
+        "unit": "g"
+      },
+      {
+        "name": "Cogumelos frescos",
+        "qty": 250,
+        "unit": "g"
+      },
+      {
+        "name": "Queijo parmesão",
+        "qty": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Cebola",
+        "qty": 1,
+        "unit": "un"
+      },
+      {
+        "name": "Caldo de legumes",
+        "qty": 600,
+        "unit": "ml"
+      },
+      {
+        "name": "Azeite",
+        "qty": 20,
+        "unit": "ml"
+      }
+    ],
+    "nutrition": {
+      "kcal": 520,
+      "protein_g": 18,
+      "carbs_g": 72,
+      "fat_g": 17,
+      "fiber_g": 4
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/vegetariano.svg",
+    "source": "starter"
+  },
+  {
+    "id": "r24",
+    "name": "Polvo à Lagareiro com Batata a Murro",
+    "meal_type": "refeicao",
+    "category": "Peixe",
+    "cuisine": "Portuguesa",
+    "time": "45 min",
+    "prepTime": "15 min",
+    "cookTime": "30 min",
+    "method": "Forno",
+    "appliances": [
+      "forno",
+      "fogao"
+    ],
+    "steps": "1. Coza o polvo previamente limpo em água com cebola até ficar tenro.\n2. Lave as batatas pequenas com pele, polvilhe com sal grosso e asse no forno a 200°C durante 25 minutos.\n3. Dê um pequeno murro nas batatas e disponha-as num tabuleiro com o polvo.\n4. Regue generosamente com azeite, alho laminado e leve ao forno mais 10 minutos para dourar.\n5. Polvilhe com coentros picados antes de servir.",
+    "items": [
+      {
+        "name": "Polvo",
+        "qty": 500,
+        "unit": "g"
+      },
+      {
+        "name": "Batata pequena",
+        "qty": 400,
+        "unit": "g"
+      },
+      {
+        "name": "Alho",
+        "qty": 4,
+        "unit": "dente"
+      },
+      {
+        "name": "Azeite",
+        "qty": 50,
+        "unit": "ml"
+      },
+      {
+        "name": "Coentros",
+        "qty": 1,
+        "unit": "maço"
+      }
+    ],
+    "nutrition": {
+      "kcal": 540,
+      "protein_g": 38,
+      "carbs_g": 42,
+      "fat_g": 24,
+      "fiber_g": 4
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/peixe.svg",
+    "source": "starter"
+  },
+  {
+    "id": "r25",
+    "name": "Shakshuka de Tomate, Pimento e Ovos",
+    "meal_type": "refeicao",
+    "category": "Ovos",
+    "cuisine": "Mediterrânica",
+    "time": "25 min",
+    "prepTime": "10 min",
+    "cookTime": "15 min",
+    "method": "Fogão",
+    "appliances": [
+      "fogao"
+    ],
+    "steps": "1. Salteie a cebola, o alho e o pimento vermelho em tiras numa frigideira larga com azeite.\n2. Tempere com cominhos e pimentão-doce e junte o tomate pelado.\n3. Deixe apurar 10 minutos até engrossar ligeiramente.\n4. Abra pequenas cavidades no molho, parta os ovos para dentro e tape 5–6 minutos até as claras firmarem.\n5. Sirva com salsa picada e pão rústico.",
+    "items": [
+      {
+        "name": "Ovos",
+        "qty": 4,
+        "unit": "un"
+      },
+      {
+        "name": "Tomate pelado",
+        "qty": 400,
+        "unit": "g"
+      },
+      {
+        "name": "Pimento vermelho",
+        "qty": 1,
+        "unit": "un"
+      },
+      {
+        "name": "Cebola",
+        "qty": 1,
+        "unit": "un"
+      },
+      {
+        "name": "Alho",
+        "qty": 2,
+        "unit": "dente"
+      },
+      {
+        "name": "Azeite",
+        "qty": 15,
+        "unit": "ml"
+      }
+    ],
+    "nutrition": {
+      "kcal": 360,
+      "protein_g": 20,
+      "carbs_g": 22,
+      "fat_g": 21,
+      "fiber_g": 5
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/ovos.svg",
+    "source": "starter"
+  },
+  {
+    "id": "r26",
+    "name": "Tacos de Carne Picada com Guacamole",
+    "meal_type": "refeicao",
+    "category": "Carne",
+    "cuisine": "Mexicana",
+    "time": "25 min",
+    "prepTime": "10 min",
+    "cookTime": "15 min",
+    "method": "Fogão",
+    "appliances": [
+      "fogao"
+    ],
+    "steps": "1. Salteie a carne picada numa frigideira quente com azeite, alho, cominhos e pimentão-doce.\n2. Junte o milho doce e o tomate em cubos e deixe cozinhar mais 5 minutos.\n3. Esmague o abacate com sumo de lima e sal para preparar o guacamole.\n4. Aqueça as tortilhas, recheie com a carne, alface e guacamole e sirva.",
+    "items": [
+      {
+        "name": "Carne picada",
+        "qty": 300,
+        "unit": "g"
+      },
+      {
+        "name": "Tortilhas de trigo",
+        "qty": 4,
+        "unit": "un"
+      },
+      {
+        "name": "Abacate",
+        "qty": 1,
+        "unit": "un"
+      },
+      {
+        "name": "Tomate",
+        "qty": 2,
+        "unit": "un"
+      },
+      {
+        "name": "Milho doce",
+        "qty": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Lima",
+        "qty": 1,
+        "unit": "un"
+      }
+    ],
+    "nutrition": {
+      "kcal": 610,
+      "protein_g": 34,
+      "carbs_g": 54,
+      "fat_g": 28,
+      "fiber_g": 8
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/carne.svg",
+    "source": "starter"
+  },
+  {
+    "id": "r27",
+    "name": "Frango Assado com Limão, Alecrim e Batata Doce",
+    "meal_type": "refeicao",
+    "category": "Aves",
+    "cuisine": "Portuguesa",
+    "time": "45 min",
+    "prepTime": "10 min",
+    "cookTime": "35 min",
+    "method": "Forno ou Airfryer",
+    "appliances": [
+      "forno",
+      "airfryer"
+    ],
+    "steps": "1. Tempere as pernas de frango com sal, pimenta, alho, sumo de limão, azeite e alecrim.\n2. Corte a batata doce em gomos e tempere com azeite e pimentão-doce.\n3. Disponha tudo num tabuleiro e leve ao forno a 200°C durante 35 minutos até dourar bem.",
+    "items": [
+      {
+        "name": "Pernas de frango",
+        "qty": 450,
+        "unit": "g"
+      },
+      {
+        "name": "Batata doce",
+        "qty": 400,
+        "unit": "g"
+      },
+      {
+        "name": "Limão",
+        "qty": 1,
+        "unit": "un"
+      },
+      {
+        "name": "Alho",
+        "qty": 3,
+        "unit": "dente"
+      },
+      {
+        "name": "Azeite",
+        "qty": 25,
+        "unit": "ml"
+      }
+    ],
+    "nutrition": {
+      "kcal": 560,
+      "protein_g": 42,
+      "carbs_g": 48,
+      "fat_g": 22,
+      "fiber_g": 6
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/aves.svg",
+    "source": "starter"
+  },
+  {
+    "id": "r28",
+    "name": "Pad Thai de Camarão e Legumes",
+    "meal_type": "refeicao",
+    "category": "Peixe",
+    "cuisine": "Asiática",
+    "time": "25 min",
+    "prepTime": "10 min",
+    "cookTime": "15 min",
+    "method": "Fogão (Wok)",
+    "appliances": [
+      "fogao"
+    ],
+    "steps": "1. Demolhe os noodles de arroz em água quente conforme a embalagem e escorra.\n2. Salteie o camarão num wok bem quente com alho e retire.\n3. Salteie a cenoura em juliana e os rebentos, junte os ovos batidos e mexa rapidamente.\n4. Envolva os noodles, o camarão e o molho de soja com sumo de lima. Finalize com amendoins picados.",
+    "items": [
+      {
+        "name": "Camarão descascado",
+        "qty": 250,
+        "unit": "g"
+      },
+      {
+        "name": "Noodles de arroz",
+        "qty": 180,
+        "unit": "g"
+      },
+      {
+        "name": "Cenoura",
+        "qty": 1,
+        "unit": "un"
+      },
+      {
+        "name": "Ovos",
+        "qty": 2,
+        "unit": "un"
+      },
+      {
+        "name": "Molho de soja",
+        "qty": 30,
+        "unit": "ml"
+      },
+      {
+        "name": "Amendoins",
+        "qty": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Lima",
+        "qty": 1,
+        "unit": "un"
+      }
+    ],
+    "nutrition": {
+      "kcal": 550,
+      "protein_g": 34,
+      "carbs_g": 68,
+      "fat_g": 15,
+      "fiber_g": 4
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/peixe.svg",
+    "source": "starter"
+  },
+  {
+    "id": "r29",
+    "name": "Caril Verde de Legumes e Tofu com Arroz",
+    "meal_type": "refeicao",
+    "category": "Vegetariano",
+    "cuisine": "Asiática",
+    "time": "30 min",
+    "prepTime": "10 min",
+    "cookTime": "20 min",
+    "method": "Fogão",
+    "appliances": [
+      "fogao"
+    ],
+    "steps": "1. Coza o arroz basmati em água com sal.\n2. Doure os cubos de tofu numa frigideira com um fio de azeite.\n3. Junte courgette, brócolos e pasta de caril verde; refogue 2 minutos.\n4. Verta o leite de coco e deixe cozinhar em lume brando 12 minutos. Sirva com o arroz.",
+    "items": [
+      {
+        "name": "Tofu firme",
+        "qty": 250,
+        "unit": "g"
+      },
+      {
+        "name": "Leite de coco",
+        "qty": 250,
+        "unit": "ml"
+      },
+      {
+        "name": "Brócolos",
+        "qty": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Courgette",
+        "qty": 1,
+        "unit": "un"
+      },
+      {
+        "name": "Arroz basmati",
+        "qty": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Pasta de caril",
+        "qty": 20,
+        "unit": "g"
+      }
+    ],
+    "nutrition": {
+      "kcal": 530,
+      "protein_g": 22,
+      "carbs_g": 62,
+      "fat_g": 22,
+      "fiber_g": 7
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/vegetariano.svg",
+    "source": "starter"
+  },
+  {
+    "id": "r30",
+    "name": "Robalo Grelhado com Legumes Salteados",
+    "meal_type": "refeicao",
+    "category": "Peixe",
+    "cuisine": "Portuguesa",
+    "time": "25 min",
+    "prepTime": "10 min",
+    "cookTime": "15 min",
+    "method": "Grelhador e Fogão",
+    "appliances": [
+      "grelhador",
+      "fogao"
+    ],
+    "steps": "1. Tempere os filetes ou postas de robalo com sal grosso, sumo de limão e azeite.\n2. Grelhe o robalo 4–5 minutos de cada lado até ficar dourado e suculento.\n3. Em paralelo, salteie courgette, cenoura e feijão-verde com alho e azeite.\n4. Sirva o peixe sobre os legumes com um gomo de limão.",
+    "items": [
+      {
+        "name": "Robalo",
+        "qty": 400,
+        "unit": "g"
+      },
+      {
+        "name": "Courgette",
+        "qty": 1,
+        "unit": "un"
+      },
+      {
+        "name": "Feijão verde",
+        "qty": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Cenoura",
+        "qty": 1,
+        "unit": "un"
+      },
+      {
+        "name": "Limão",
+        "qty": 1,
+        "unit": "un"
+      },
+      {
+        "name": "Azeite",
+        "qty": 20,
+        "unit": "ml"
+      }
+    ],
+    "nutrition": {
+      "kcal": 410,
+      "protein_g": 40,
+      "carbs_g": 16,
+      "fat_g": 20,
+      "fiber_g": 5
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/peixe.svg",
+    "source": "starter"
+  },
+  {
+    "id": "r31",
+    "name": "Lasanha de Courgette, Espinafres e Ricotta",
+    "meal_type": "refeicao",
+    "category": "Vegetariano",
+    "cuisine": "Italiana",
+    "time": "40 min",
+    "prepTime": "15 min",
+    "cookTime": "25 min",
+    "method": "Forno",
+    "appliances": [
+      "forno",
+      "fogao"
+    ],
+    "steps": "1. Corte a courgette em fatias finas ao comprido e salteie os espinafres com alho.\n2. Misture os espinafres com o queijo ricotta, sal, pimenta e noz-moscada.\n3. Num pyrex, alterne camadas de molho de tomate, placas de lasanha, courgette e creme de ricotta.\n4. Cubra com mozzarella ralada e leve ao forno a 190°C durante 25 minutos.",
+    "items": [
+      {
+        "name": "Placas de lasanha",
+        "qty": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Courgette",
+        "qty": 2,
+        "unit": "un"
+      },
+      {
+        "name": "Espinafres",
+        "qty": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Queijo ricotta",
+        "qty": 250,
+        "unit": "g"
+      },
+      {
+        "name": "Molho de tomate",
+        "qty": 350,
+        "unit": "ml"
+      },
+      {
+        "name": "Queijo mozzarella",
+        "qty": 100,
+        "unit": "g"
+      }
+    ],
+    "nutrition": {
+      "kcal": 510,
+      "protein_g": 26,
+      "carbs_g": 52,
+      "fat_g": 22,
+      "fiber_g": 6
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/vegetariano.svg",
+    "source": "starter"
+  },
+  {
+    "id": "r32",
+    "name": "Feijoada de Feijão Vermelho com Chouriço",
+    "meal_type": "refeicao",
+    "category": "Carne",
+    "cuisine": "Portuguesa",
+    "time": "40 min",
+    "prepTime": "10 min",
+    "cookTime": "30 min",
+    "method": "Fogão",
+    "appliances": [
+      "fogao"
+    ],
+    "steps": "1. Refogue cebola, alho, cenoura em rodelas e chouriço em azeite.\n2. Junte a carne de porco em cubos e deixe alourar.\n3. Adicione polpa de tomate, louro e água quente; cozinhe 20 minutos.\n4. Junte o feijão vermelho cozido e couve lombarda em tiras, apurando mais 10 minutos. Sirva com arroz branco.",
+    "items": [
+      {
+        "name": "Feijão vermelho cozido",
+        "qty": 400,
+        "unit": "g"
+      },
+      {
+        "name": "Carne de porco",
+        "qty": 300,
+        "unit": "g"
+      },
+      {
+        "name": "Chouriço",
+        "qty": 1,
+        "unit": "un"
+      },
+      {
+        "name": "Cenoura",
+        "qty": 2,
+        "unit": "un"
+      },
+      {
+        "name": "Polpa de tomate",
+        "qty": 150,
+        "unit": "ml"
+      },
+      {
+        "name": "Arroz",
+        "qty": 150,
+        "unit": "g"
+      }
+    ],
+    "nutrition": {
+      "kcal": 670,
+      "protein_g": 38,
+      "carbs_g": 68,
+      "fat_g": 26,
+      "fiber_g": 11
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/carne.svg",
+    "source": "starter"
+  },
+  {
+    "id": "r33",
+    "name": "Wrap de Peru Grelhado com Húmus e Alface",
+    "meal_type": "refeicao",
+    "category": "Rápido",
+    "cuisine": "Saudável / Fit",
+    "time": "15 min",
+    "prepTime": "5 min",
+    "cookTime": "10 min",
+    "method": "Grelhador ou Frigideira",
+    "appliances": [
+      "grelhador",
+      "fogao"
+    ],
+    "steps": "1. Tempere os bifes de peru com sal, limão e ervas e grelhe 3–4 minutos de cada lado; corte em tiras.\n2. Barre cada tortilha com húmus de grão.\n3. Disponha alface, tomate em cubos, pepino e o peru grelhado.\n4. Enrole bem firme, corte ao meio na diagonal e sirva.",
+    "items": [
+      {
+        "name": "Bifes de peru",
+        "qty": 250,
+        "unit": "g"
+      },
+      {
+        "name": "Tortilhas integrais",
+        "qty": 2,
+        "unit": "un"
+      },
+      {
+        "name": "Húmus",
+        "qty": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Alface",
+        "qty": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "qty": 1,
+        "unit": "un"
+      }
+    ],
+    "nutrition": {
+      "kcal": 430,
+      "protein_g": 36,
+      "carbs_g": 42,
+      "fat_g": 12,
+      "fiber_g": 7
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/rapido.svg",
+    "source": "starter"
+  },
+  {
+    "id": "r34",
+    "name": "Bacalhau com Natas no Forno",
+    "meal_type": "refeicao",
+    "category": "Peixe",
+    "cuisine": "Portuguesa",
+    "time": "45 min",
+    "prepTime": "15 min",
+    "cookTime": "30 min",
+    "method": "Forno e Fogão",
+    "appliances": [
+      "forno",
+      "fogao"
+    ],
+    "steps": "1. Escalde o bacalhau desfiado e escorra bem.\n2. Asse ou frite na airfryer a batata em cubos pequenos.\n3. Refogue cebola em meias-luas e alho em azeite; junte o bacalhau e a batata.\n4. Envolva com natas (e um toque de noz-moscada), passe para um tabuleiro, polvilhe com queijo ralado e leve ao forno a 200°C por 15 minutos até gratinar.",
+    "items": [
+      {
+        "name": "Bacalhau desfiado",
+        "qty": 350,
+        "unit": "g"
+      },
+      {
+        "name": "Batata",
+        "qty": 400,
+        "unit": "g"
+      },
+      {
+        "name": "Cebola",
+        "qty": 2,
+        "unit": "un"
+      },
+      {
+        "name": "Natas",
+        "qty": 200,
+        "unit": "ml"
+      },
+      {
+        "name": "Queijo ralado",
+        "qty": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Azeite",
+        "qty": 30,
+        "unit": "ml"
+      }
+    ],
+    "nutrition": {
+      "kcal": 620,
+      "protein_g": 36,
+      "carbs_g": 44,
+      "fat_g": 33,
+      "fiber_g": 4
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/peixe.svg",
+    "source": "starter"
+  },
+  {
+    "id": "b7",
+    "name": "Overnight Oats de Chia e Frutos Vermelhos",
+    "meal_type": "pequeno_almoco",
+    "category": "Pequeno-Almoço",
+    "cuisine": "Saudável / Fit",
+    "time": "5 min",
+    "prepTime": "5 min",
+    "cookTime": "0 min",
+    "method": "Sem cozedura",
+    "appliances": [],
+    "steps": "1. Num frasco, misture os flocos de aveia, as sementes de chia, o leite (ou bebida vegetal) e um fio de mel.\n2. Mexa bem e leve ao frigorífico durante a noite (mínimo 4 horas).\n3. De manhã, cubra com frutos vermelhos frescos e sirva.",
+    "items": [
+      {
+        "name": "Aveia",
+        "qty": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Sementes de chia",
+        "qty": 15,
+        "unit": "g"
+      },
+      {
+        "name": "Leite",
+        "qty": 200,
+        "unit": "ml"
+      },
+      {
+        "name": "Frutos vermelhos",
+        "qty": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Mel",
+        "qty": 15,
+        "unit": "g"
+      }
+    ],
+    "nutrition": {
+      "kcal": 340,
+      "protein_g": 12,
+      "carbs_g": 52,
+      "fat_g": 9,
+      "fiber_g": 10
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/pequeno_almoco.svg",
+    "source": "starter"
+  },
+  {
+    "id": "b8",
+    "name": "Tosta de Abacate com Ovo Escalfado",
+    "meal_type": "pequeno_almoco",
+    "category": "Pequeno-Almoço",
+    "cuisine": "Saudável / Fit",
+    "time": "10 min",
+    "prepTime": "5 min",
+    "cookTime": "5 min",
+    "method": "Fogão",
+    "appliances": [
+      "fogao"
+    ],
+    "steps": "1. Torre as fatias de pão integral.\n2. Esmague o abacate com sal, pimenta e umas gotas de limão e barre sobre o pão.\n3. Escalfar os ovos em água quente (sem ferver em cachão) durante 3 minutos.\n4. Coloque o ovo sobre a tosta de abacate e sirva de imediato.",
+    "items": [
+      {
+        "name": "Pão integral",
+        "qty": 2,
+        "unit": "un"
+      },
+      {
+        "name": "Abacate",
+        "qty": 1,
+        "unit": "un"
+      },
+      {
+        "name": "Ovos",
+        "qty": 2,
+        "unit": "un"
+      },
+      {
+        "name": "Limão",
+        "qty": 1,
+        "unit": "un"
+      }
+    ],
+    "nutrition": {
+      "kcal": 390,
+      "protein_g": 16,
+      "carbs_g": 32,
+      "fat_g": 22,
+      "fiber_g": 8
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/pequeno_almoco.svg",
+    "source": "starter"
+  },
+  {
+    "id": "b9",
+    "name": "Smoothie Bowl de Manga, Banana e Coco",
+    "meal_type": "pequeno_almoco",
+    "category": "Pequeno-Almoço",
+    "cuisine": "Saudável / Fit",
+    "time": "5 min",
+    "prepTime": "5 min",
+    "cookTime": "0 min",
+    "method": "Varinha Mágica / Liquidificador",
+    "appliances": [
+      "varinha_magica"
+    ],
+    "steps": "1. Triture a manga, a banana congelada e o iogurte natural até obter um creme espesso.\n2. Verta para uma taça e decore com granola e coco ralado.",
+    "items": [
+      {
+        "name": "Manga",
+        "qty": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Banana",
+        "qty": 1,
+        "unit": "un"
+      },
+      {
+        "name": "Iogurte natural",
+        "qty": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Granola",
+        "qty": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Coco ralado",
+        "qty": 10,
+        "unit": "g"
+      }
+    ],
+    "nutrition": {
+      "kcal": 350,
+      "protein_g": 10,
+      "carbs_g": 58,
+      "fat_g": 9,
+      "fiber_g": 6
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/pequeno_almoco.svg",
+    "source": "starter"
+  },
+  {
+    "id": "b10",
+    "name": "Crepes Integrais de Maçã e Canela",
+    "meal_type": "pequeno_almoco",
+    "category": "Pequeno-Almoço",
+    "cuisine": "Francesa",
+    "time": "15 min",
+    "prepTime": "5 min",
+    "cookTime": "10 min",
+    "method": "Fogão",
+    "appliances": [
+      "fogao"
+    ],
+    "steps": "1. Bata o ovo, o leite, a farinha integral e uma pitada de canela até ficar homogéneo.\n2. Cozinhe crepes finos numa frigideira antiaderente 1–2 minutos de cada lado.\n3. Recheie com maçã laminada salteada em canela e dobre.",
+    "items": [
+      {
+        "name": "Farinha integral",
+        "qty": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Leite",
+        "qty": 180,
+        "unit": "ml"
+      },
+      {
+        "name": "Ovos",
+        "qty": 1,
+        "unit": "un"
+      },
+      {
+        "name": "Maçã",
+        "qty": 1,
+        "unit": "un"
+      },
+      {
+        "name": "Canela",
+        "qty": 5,
+        "unit": "g"
+      }
+    ],
+    "nutrition": {
+      "kcal": 310,
+      "protein_g": 12,
+      "carbs_g": 52,
+      "fat_g": 6,
+      "fiber_g": 6
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/pequeno_almoco.svg",
+    "source": "starter"
+  },
+  {
+    "id": "b11",
+    "name": "Omelete Francesa com Queijo e Ervas Finas",
+    "meal_type": "pequeno_almoco",
+    "category": "Pequeno-Almoço",
+    "cuisine": "Francesa",
+    "time": "10 min",
+    "prepTime": "3 min",
+    "cookTime": "7 min",
+    "method": "Fogão",
+    "appliances": [
+      "fogao"
+    ],
+    "steps": "1. Bata os ovos com sal, pimenta e cebolinho ou salsa picada.\n2. Deite numa frigideira antiaderente quente com um fio de azeite ou manteiga.\n3. Quando começar a prender, junte o queijo ralado, dobre em meia-lua e sirva cremosa.",
+    "items": [
+      {
+        "name": "Ovos",
+        "qty": 3,
+        "unit": "un"
+      },
+      {
+        "name": "Queijo ralado",
+        "qty": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Salsa",
+        "qty": 10,
+        "unit": "g"
+      },
+      {
+        "name": "Manteiga",
+        "qty": 10,
+        "unit": "g"
+      }
+    ],
+    "nutrition": {
+      "kcal": 340,
+      "protein_g": 24,
+      "carbs_g": 2,
+      "fat_g": 26,
+      "fiber_g": 0
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/pequeno_almoco.svg",
+    "source": "starter"
+  },
+  {
+    "id": "b12",
+    "name": "Pão de Centeio com Queijo Fresco e Tomate",
+    "meal_type": "pequeno_almoco",
+    "category": "Pequeno-Almoço",
+    "cuisine": "Mediterrânica",
+    "time": "5 min",
+    "prepTime": "5 min",
+    "cookTime": "0 min",
+    "method": "Sem cozedura",
+    "appliances": [],
+    "steps": "1. Torre ligeiramente o pão de centeio.\n2. Disponha fatias de queijo fresco e tomate maduro.\n3. Tempere com um fio de azeite e orégãos.",
+    "items": [
+      {
+        "name": "Pão de centeio",
+        "qty": 2,
+        "unit": "un"
+      },
+      {
+        "name": "Queijo fresco",
+        "qty": 120,
+        "unit": "g"
+      },
+      {
+        "name": "Tomate",
+        "qty": 1,
+        "unit": "un"
+      },
+      {
+        "name": "Azeite",
+        "qty": 10,
+        "unit": "ml"
+      }
+    ],
+    "nutrition": {
+      "kcal": 310,
+      "protein_g": 15,
+      "carbs_g": 34,
+      "fat_g": 12,
+      "fiber_g": 5
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/pequeno_almoco.svg",
+    "source": "starter"
+  },
+  {
+    "id": "d7",
+    "name": "Panna Cotta de Baunilha com Frutos Vermelhos",
+    "meal_type": "sobremesa",
+    "category": "Sobremesa",
+    "cuisine": "Italiana",
+    "time": "20 min",
+    "prepTime": "10 min",
+    "cookTime": "10 min",
+    "method": "Fogão",
+    "appliances": [
+      "fogao"
+    ],
+    "steps": "1. Hidrate as folhas de gelatina em água fria.\n2. Aqueça as natas com o leite, açúcar e baunilha sem deixar ferver.\n3. Dissolva a gelatina escorrida no preparado quente, distribua por taças e leve ao frigorífico 4 horas.\n4. Sirva com frutos vermelhos por cima.",
+    "items": [
+      {
+        "name": "Natas",
+        "qty": 200,
+        "unit": "ml"
+      },
+      {
+        "name": "Leite",
+        "qty": 100,
+        "unit": "ml"
+      },
+      {
+        "name": "Açúcar",
+        "qty": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Folhas de gelatina",
+        "qty": 2,
+        "unit": "un"
+      },
+      {
+        "name": "Frutos vermelhos",
+        "qty": 100,
+        "unit": "g"
+      }
+    ],
+    "nutrition": {
+      "kcal": 290,
+      "protein_g": 4,
+      "carbs_g": 24,
+      "fat_g": 20,
+      "fiber_g": 2
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/sobremesa.svg",
+    "source": "starter"
+  },
+  {
+    "id": "d8",
+    "name": "Crumble de Maçã, Aveia e Canela",
+    "meal_type": "sobremesa",
+    "category": "Sobremesa",
+    "cuisine": "Internacional",
+    "time": "35 min",
+    "prepTime": "10 min",
+    "cookTime": "25 min",
+    "method": "Forno",
+    "appliances": [
+      "forno"
+    ],
+    "steps": "1. Descasque e corte as maçãs em cubos; envolva com canela e um pouco de açúcar num tabuleiro.\n2. Misture aveia, farinha, manteiga fria em cubos e açúcar com os dedos até formar areia grossa.\n3. Espalhe sobre a maçã e leve ao forno a 180°C durante 25 minutos até ficar crocante e dourado.",
+    "items": [
+      {
+        "name": "Maçã",
+        "qty": 3,
+        "unit": "un"
+      },
+      {
+        "name": "Aveia",
+        "qty": 60,
+        "unit": "g"
+      },
+      {
+        "name": "Farinha",
+        "qty": 50,
+        "unit": "g"
+      },
+      {
+        "name": "Manteiga",
+        "qty": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Açúcar",
+        "qty": 40,
+        "unit": "g"
+      },
+      {
+        "name": "Canela",
+        "qty": 5,
+        "unit": "g"
+      }
+    ],
+    "nutrition": {
+      "kcal": 280,
+      "protein_g": 4,
+      "carbs_g": 44,
+      "fat_g": 10,
+      "fiber_g": 5
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/sobremesa.svg",
+    "source": "starter"
+  },
+  {
+    "id": "d9",
+    "name": "Pudim de Chia com Manga e Coco",
+    "meal_type": "sobremesa",
+    "category": "Sobremesa",
+    "cuisine": "Saudável / Fit",
+    "time": "10 min",
+    "prepTime": "10 min",
+    "cookTime": "0 min",
+    "method": "Sem cozedura",
+    "appliances": [],
+    "steps": "1. Misture o leite de coco com as sementes de chia e o mel e leve ao frigorífico 3 horas (mexendo após 15 min).\n2. Triture a manga em puré e coloque em camadas nas taças com o pudim de chia.",
+    "items": [
+      {
+        "name": "Sementes de chia",
+        "qty": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Leite de coco",
+        "qty": 250,
+        "unit": "ml"
+      },
+      {
+        "name": "Manga",
+        "qty": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Mel",
+        "qty": 15,
+        "unit": "g"
+      }
+    ],
+    "nutrition": {
+      "kcal": 250,
+      "protein_g": 5,
+      "carbs_g": 26,
+      "fat_g": 14,
+      "fiber_g": 7
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/sobremesa.svg",
+    "source": "starter"
+  },
+  {
+    "id": "d10",
+    "name": "Bolo de Cenoura Húmido com Cacau",
+    "meal_type": "sobremesa",
+    "category": "Sobremesa",
+    "cuisine": "Portuguesa",
+    "time": "45 min",
+    "prepTime": "10 min",
+    "cookTime": "35 min",
+    "method": "Forno",
+    "appliances": [
+      "forno",
+      "varinha_magica"
+    ],
+    "steps": "1. Triture a cenoura descascada com os ovos e o azeite.\n2. Envolva a farinha, o açúcar, o fermento e o cacau em pó.\n3. Verta numa forma untada e leve ao forno a 180°C durante 30–35 minutos (faça o teste do palito).",
+    "items": [
+      {
+        "name": "Cenoura",
+        "qty": 200,
+        "unit": "g"
+      },
+      {
+        "name": "Ovos",
+        "qty": 3,
+        "unit": "un"
+      },
+      {
+        "name": "Farinha",
+        "qty": 150,
+        "unit": "g"
+      },
+      {
+        "name": "Açúcar",
+        "qty": 100,
+        "unit": "g"
+      },
+      {
+        "name": "Cacau em pó",
+        "qty": 25,
+        "unit": "g"
+      },
+      {
+        "name": "Azeite",
+        "qty": 60,
+        "unit": "ml"
+      }
+    ],
+    "nutrition": {
+      "kcal": 290,
+      "protein_g": 6,
+      "carbs_g": 38,
+      "fat_g": 12,
+      "fiber_g": 3
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/sobremesa.svg",
+    "source": "starter"
+  },
+  {
+    "id": "d11",
+    "name": "Gelado Rápido de Banana e Manteiga de Amendoim",
+    "meal_type": "sobremesa",
+    "category": "Sobremesa",
+    "cuisine": "Saudável / Fit",
+    "time": "5 min",
+    "prepTime": "5 min",
+    "cookTime": "0 min",
+    "method": "Varinha Mágica / Processador",
+    "appliances": [
+      "varinha_magica"
+    ],
+    "steps": "1. Coloque rodelas de banana previamente congeladas num processador com a manteiga de amendoim e o cacau.\n2. Triture até ficar com textura cremosa de gelado suave e sirva imediatamente.",
+    "items": [
+      {
+        "name": "Banana",
+        "qty": 2,
+        "unit": "un"
+      },
+      {
+        "name": "Manteiga de amendoim",
+        "qty": 30,
+        "unit": "g"
+      },
+      {
+        "name": "Cacau em pó",
+        "qty": 10,
+        "unit": "g"
+      }
+    ],
+    "nutrition": {
+      "kcal": 230,
+      "protein_g": 6,
+      "carbs_g": 32,
+      "fat_g": 9,
+      "fiber_g": 5
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/sobremesa.svg",
+    "source": "starter"
+  },
+  {
+    "id": "d12",
+    "name": "Leite Creme Queimado Tradicional",
+    "meal_type": "sobremesa",
+    "category": "Sobremesa",
+    "cuisine": "Portuguesa",
+    "time": "25 min",
+    "prepTime": "10 min",
+    "cookTime": "15 min",
+    "method": "Fogão",
+    "appliances": [
+      "fogao"
+    ],
+    "steps": "1. Aqueça o leite com a casca de limão e um pau de canela.\n2. Numa taça, misture as gemas, o açúcar e a farinha maisena; junte um pouco de leite morno para temperar.\n3. Leve tudo ao lume brando mexendo sempre até engrossar.\n4. Retire a casca e a canela, distribua por taças e, depois de frio, polvilhe com açúcar e queime com maçarico.",
+    "items": [
+      {
+        "name": "Leite",
+        "qty": 500,
+        "unit": "ml"
+      },
+      {
+        "name": "Ovos",
+        "qty": 4,
+        "unit": "un"
+      },
+      {
+        "name": "Açúcar",
+        "qty": 80,
+        "unit": "g"
+      },
+      {
+        "name": "Amido de milho",
+        "qty": 25,
+        "unit": "g"
+      },
+      {
+        "name": "Limão",
+        "qty": 1,
+        "unit": "un"
+      }
+    ],
+    "nutrition": {
+      "kcal": 270,
+      "protein_g": 7,
+      "carbs_g": 40,
+      "fat_g": 9,
+      "fiber_g": 0
+    },
+    "parent_recipe_id": null,
+    "variant_name": null,
+    "rating": null,
+    "image_url": "/plan_my_meals_static/img/sobremesa.svg",
+    "source": "starter"
   }
 ]

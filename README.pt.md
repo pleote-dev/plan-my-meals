@@ -10,21 +10,24 @@
 
 [![Abrir repositório no HACS do teu Home Assistant](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=pleote-dev&repository=plan-my-meals&category=integration)
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
+[![Validate with HACS](https://github.com/pleote-dev/plan-my-meals/actions/workflows/hacs.yml/badge.svg)](https://github.com/pleote-dev/plan-my-meals/actions/workflows/hacs.yml)
+[![Validate with hassfest](https://github.com/pleote-dev/plan-my-meals/actions/workflows/hassfest.yml/badge.svg)](https://github.com/pleote-dev/plan-my-meals/actions/workflows/hassfest.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Integração autónoma para **Home Assistant** dedicada ao planeamento semanal de refeições, gestão da biblioteca de receitas, suporte nativo para IA do Home Assistant, integração com agentes de IA externos (ex.: Hermes / OpenJarvis / MCP) e **pesquisa de preços de supermercados** (Continente, Auchan, Pingo Doce, Aldi, Lidl, Intermarché, Minipreço, El Corte Inglés, Mercadona).
+Integração autónoma para **Home Assistant** dedicada ao planeamento semanal de refeições, gestão da biblioteca de receitas, suporte nativo para IA do Home Assistant, integração com agentes de IA externos (ex.: Hermes / OpenJarvis / MCP) e **pesquisa de preços e unidades de supermercados** (Continente, Auchan, Pingo Doce, Aldi, Lidl, Intermarché, Minipreço, El Corte Inglés, Mercadona).
 
 ---
 
 ## Funcionalidades
 
-- **Integração 100% Nativa no Home Assistant (sem precisar de Pyscript):** instala via HACS com configuração completa por interface (**Config Flow & Options Flow**).
+- **Integração 100% Nativa no Home Assistant:** instala via HACS com configuração completa por interface (**Config Flow & Options Flow**).
 - **Aplicação Web Embutida e Painel na Barra Lateral:** serve automaticamente a interface interativa do Plan My Meals na barra lateral do Home Assistant (sem configuração manual em `/config/www/`).
-- **Preparada para Múltiplos Idiomas (Português e Inglês incluídos):** deteta automaticamente o idioma do Home Assistant, inclui seletor de idioma na barra superior e utiliza ficheiros JSON simples para facilitar novas traduções.
-- **36 Receitas Base Sem Direitos de Autor:** refeições principais, pequenos-almoços e sobremesas com ingredientes estruturados, valores nutricionais e ilustrações originais sob licença MIT (ver `ATTRIBUTIONS.md`).
+- **Idioma Automático do Home Assistant (Português e Inglês incluídos):** segue automaticamente o idioma definido no perfil do utilizador do Home Assistant (Português quando o HA está em Português; Inglês quando o HA está em Inglês ou noutro idioma não disponível) e utiliza ficheiros JSON simples para facilitar novas traduções.
+- **60 Receitas Base Sem Direitos de Autor:** 36 refeições principais, 12 pequenos-almoços e 12 sobremesas com ingredientes estruturados, valores nutricionais, modo de preparação e ilustrações originais sob licença MIT (ver `ATTRIBUTIONS.md`), com reposição automática em atualizações para nunca perderes receitas base.
 - **Gerador Semanal Inteligente:** 80% favoritas (4–5★), 20% receitas novas/sem avaliação, exclui 1–3★, evita repetir categorias no mesmo dia e preserva refeições fixadas.
-- **Preços de Supermercado e Custo da Ementa:**
-  - Acompanha os principais supermercados em Portugal (Continente, Auchan, Pingo Doce / Mercadão, Aldi, Lidl, Intermarché, Minipreço, El Corte Inglés, Mercadona; extensível a outros países).
+- **Preços e Unidades de Supermercado em Tempo Real + Janela Interativa:**
+  - Obtém preços reais, unidade da embalagem (ex.: `1 kg`, `500 g`, `1 L`, `6 un`) e preço por unidade (ex.: `1,89 €/kg`) nos principais supermercados em Portugal (Continente, Auchan, Pingo Doce / Mercadão, Aldi, Lidl, Intermarché, Minipreço, El Corte Inglés, Mercadona; extensível a outros países), com fallback automático de IA via `ai_task.*` ou `conversation.*`.
+  - **Janela Flutuante de Preços por Ingrediente:** passa o rato por cima ou clica em qualquer ingrediente na **Lista de Compras** ou nos **Detalhes da Receita** para ver o melhor preço, unidade, preço por kg/L/un, preço médio e a comparação completa entre supermercados com ligações diretas para a loja.
   - Calcula o **custo médio por refeição**, **custo médio semanal** e **custo por pessoa**.
   - Anota os itens da lista de compras com quantidade + melhor preço e supermercado, ex.: **`Ovomaltine (2 un) (9€ Auchan)`**, e guarda ligações diretas para a loja.
 - **IA Nativa do Home Assistant + Agentes Externos:**
@@ -55,6 +58,25 @@ Integração autónoma para **Home Assistant** dedicada ao planeamento semanal d
 3. Pesquisa por **Plan My Meals** e clica em **Transferir**.
 4. Reinicia o Home Assistant.
 5. Vai a **Definições → Dispositivos e Serviços → Adicionar Integração → Plan My Meals** e configura a lista de compras (`todo.*`), número de pessoas, equipamentos de cozinha, entidade de IA e supermercados.
+
+---
+
+## Guia de Utilização
+
+1. **Plano Semanal (separador `Plano Semanal`):**
+   - Clica em **Gerar Semana** para preencher automaticamente os dias desbloqueados com base nas tuas avaliações (80% favoritas 4–5★, 20% novas/sem avaliação).
+   - Usa o botão de **cadeado** para fixar qualquer refeição, ou clica num prato para trocar, escolher outra receita ou abrir o modo de preparação.
+   - Ajusta o **número de pessoas** na barra superior para recalcular automaticamente todas as quantidades de ingredientes.
+2. **Biblioteca de Receitas, Edição e Eliminação Segura (separador `Receitas`):**
+   - Explora **Refeições**, **Pequenos-Almoços** e **Sobremesas** (60 receitas base incluídas), avalia pratos (1–5★) e cria **variantes** ligadas através do canto dobrado de cada cartão.
+   - Clica em **Editar** em qualquer receita para alterar ingredientes, eletrodomésticos, passos, nutrição ou foto — ou usa **✨ Sugerir com IA** para preencher automaticamente.
+   - **Apagar uma receita:** para evitar eliminações acidentais, o botão **Apagar** não fica exposto nos cartões; encontra-se protegido **dentro da janela de Edição da Receita** (canto inferior esquerdo) e pede sempre confirmação antes de remover a receita e eventuais variantes associadas.
+3. **Lista de Compras & Preços por Ingrediente (separador `Compras & HA`):**
+   - Os ingredientes da semana são agrupados por corredor de supermercado e sincronizados diretamente com a tua lista `todo.*` do Home Assistant.
+   - **Passa o rato por cima ou clica em qualquer ingrediente** (na Lista de Compras ou nos Detalhes da Receita) para abrir a janela flutuante com o **melhor preço**, **unidade da embalagem** (ex.: `1 kg`, `500 g`, `1 L`), **preço por unidade** (`€/kg`, `€/L`, `€/un`), preço médio e a comparação completa entre supermercados com link direto para a loja.
+   - Abre **Compras → Opções** para escolher se incluis quantidades/preços na lista do HA, alternar o modo de pesquisa com IA ou clicar em **Correr pesquisa agora**.
+4. **Idioma:**
+   - O Plan My Meals segue automaticamente o **idioma do perfil do utilizador no Home Assistant** (Português se o HA estiver em Português; Inglês se o HA estiver em Inglês ou noutro idioma não disponível).
 
 ---
 

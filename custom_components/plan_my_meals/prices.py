@@ -88,6 +88,124 @@ def format_short_price(price: float, currency: str = DEFAULT_CURRENCY) -> str:
     return f"{val:.2f}".replace(".", ",") + currency
 
 
+def extract_unit_from_text(text: str) -> str:
+    """Extract normalized pack/quantity unit (e.g. '1 kg', '500 g', '1 L', '6 un') from product text."""
+    s = re.sub(r"\s+", " ", unescape(str(text or ""))).strip()
+    if not s:
+        return ""
+    # Strip leading "emb." / "embalagem" / "aprox."
+    s_clean = re.sub(r"^(?:emb\.?|embalagem|aprox\.?)\s*", "", s, flags=re.IGNORECASE).strip()
+
+    # Multipack like "4x125g" or "6 x 33 cl"
+    m_multi = re.search(
+        r"\b(\d+)\s*[x×]\s*(\d+(?:[.,]\d+)?)\s*(kg|g|gr|ml|cl|dl|l|lt|un|unid|unidades?)\b",
+        s_clean,
+        flags=re.IGNORECASE,
+    )
+    if m_multi:
+        cnt, qty, unit = m_multi.group(1), m_multi.group(2).replace(".", ","), m_multi.group(3).lower()
+        u_norm = {"gr": "g", "lt": "L", "l": "L", "unid": "un", "unidade": "un", "unidades": "un"}.get(unit, unit)
+        return f"{cnt}x{qty} {u_norm}"
+
+    # Single quantity like "1 kg", "500g", "1,5 L", "750 ml", "6 un"
+    m = re.search(
+        r"\b(\d+(?:[.,]\d+)?)\s*(kg|g|gr|ml|cl|dl|l|lt|un|unid|unidades?|d[uú]zia|latas?|doses?)\b",
+        s_clean,
+        flags=re.IGNORECASE,
+    )
+    if m:
+        qty_raw, unit = m.group(1).replace(".", ","), m.group(2).lower()
+        # Drop trailing ,0 or ,00
+        qty_clean = re.sub(r",0+$", "", qty_raw)
+        u_map = {
+            "gr": "g",
+            "lt": "L",
+            "l": "L",
+            "unid": "un",
+            "unidade": "un",
+            "unidades": "un",
+            "duzia": "dúzia",
+            "dúzia": "dúzia",
+            "lata": "lata",
+            "latas": "latas",
+            "dose": "dose",
+            "doses": "doses",
+        }
+        u_norm = u_map.get(unit, unit)
+        return f"{qty_clean} {u_norm}"
+
+    # Standalone weight/volume label like "kg" or "un"
+    m_bare = re.search(r"\b(kg|un|unid|litro)\b", s_clean, flags=re.IGNORECASE)
+    if m_bare:
+        u = m_bare.group(1).lower()
+        return {"unid": "un", "litro": "1 L", "kg": "1 kg", "un": "1 un"}.get(u, u)
+    return ""
+
+
+def normalize_unit_price(raw: str, currency: str = DEFAULT_CURRENCY) -> str:
+    """Normalize scraped unit price strings like '1.89 €/Kg' -> '1,89 €/kg'."""
+    txt = re.sub(r"\s+", " ", unescape(str(raw or ""))).strip()
+    if not txt:
+        return ""
+    m = re.search(
+        r"(\d+(?:[.,]\d{1,2})?)\s*(?:€|eur)?\s*/\s*(kg|g|100\s*g|l|lt|ml|100\s*ml|un|unid|dose)",
+        txt,
+        flags=re.IGNORECASE,
+    )
+    if not m:
+        return ""
+    pr = parse_price(m.group(1))
+    if pr is None:
+        return ""
+    u_raw = re.sub(r"\s+", "", m.group(2).lower())
+    u_map = {"lt": "L", "l": "L", "unid": "un"}
+    u_norm = u_map.get(u_raw, u_raw)
+    pr_str = f"{pr:.2f}".replace(".", ",")
+    return f"{pr_str} {currency}/{u_norm}"
+
+
+def compute_unit_price(price: float | None, unit_str: str, currency: str = DEFAULT_CURRENCY) -> str:
+    """Compute price per kg / L / un from pack price and pack unit string."""
+    if price is None or price <= 0 or not unit_str:
+        return ""
+    s = unit_str.strip().lower()
+    # Multipack e.g. 4x125 g
+    m_multi = re.match(r"^(\d+)\s*[x×]\s*(\d+(?:[.,]\d+)?)\s*(kg|g|ml|cl|dl|l|un)$", s)
+    if m_multi:
+        mult = float(m_multi.group(1))
+        qty = float(m_multi.group(2).replace(",", ".")) * mult
+        u = m_multi.group(3)
+    else:
+        m = re.match(r"^(\d+(?:[.,]\d+)?)\s*(kg|g|ml|cl|dl|l|un|dúzia)$", s)
+        if not m:
+            return ""
+        qty = float(m.group(1).replace(",", "."))
+        u = m.group(2)
+    if qty <= 0:
+        return ""
+    if u == "kg":
+        val, base = price / qty, "kg"
+    elif u == "g":
+        val, base = price / (qty / 1000.0), "kg"
+    elif u == "l":
+        val, base = price / qty, "L"
+    elif u == "ml":
+        val, base = price / (qty / 1000.0), "L"
+    elif u == "cl":
+        val, base = price / (qty / 100.0), "L"
+    elif u == "dl":
+        val, base = price / (qty / 10.0), "L"
+    elif u == "un":
+        val, base = price / qty, "un"
+    elif u == "dúzia":
+        val, base = price / (qty * 12.0), "un"
+    else:
+        return ""
+    if val <= 0 or val >= 10000:
+        return ""
+    return f"{val:.2f}".replace(".", ",") + f" {currency}/{base}"
+
+
 def format_price_tag(
     price: float | None,
     supermarket: str,
@@ -181,9 +299,16 @@ def extract_json_ld_offers(html: str, base_url: str) -> list[dict[str, Any]]:
                 if u and not u.startswith(("http://", "https://")):
                     u = urllib.parse.urljoin(base_url, u)
                 if name:
+                    unit = extract_unit_from_text(name)
+                    if not unit and isinstance(item.get("weight"), dict):
+                        w = item["weight"]
+                        unit = extract_unit_from_text(f"{w.get('value', '')} {w.get('unitCode', '')}")
+                    unit_price = compute_unit_price(pr, unit)
                     offers.append({
                         "title": name[:200],
                         "price": pr,
+                        "unit": unit,
+                        "unit_price": unit_price,
                         "url": u or base_url,
                         "domain": extract_domain(u or base_url),
                     })
@@ -191,23 +316,95 @@ def extract_json_ld_offers(html: str, base_url: str) -> list[dict[str, Any]]:
 
 
 def extract_continente(html: str, query: str, base_url: str) -> list[dict[str, Any]]:
-    """Extract offers from Continente search HTML."""
+    """Extract offers (with pack unit & unit price) from Continente search HTML."""
     offers = [o for o in extract_json_ld_offers(html, base_url) if is_relevant(query, o["title"])]
     if offers:
         return offers
     res: list[dict[str, Any]] = []
+    text = html or ""
+
+    # Primary: Continente SFCC product tiles embed clean JSON in data-product-tile-impression
+    imp_matches = list(
+        re.finditer(
+            r'data-product-tile-impression=(["\'])(.*?)\1',
+            text,
+            flags=re.DOTALL | re.IGNORECASE,
+        )
+    )
+    for idx, m in enumerate(imp_matches[:30]):
+        try:
+            data = json.loads(unescape(m.group(2)))
+        except ValueError:
+            continue
+        if not isinstance(data, dict):
+            continue
+        title = re.sub(r"\s+", " ", unescape(str(data.get("name") or ""))).strip()
+        pr = parse_price(data.get("price"))
+        if not title or pr is None or not is_relevant(query, title):
+            continue
+        pid = str(data.get("id") or "").strip()
+        end_pos = imp_matches[idx + 1].start() if idx + 1 < len(imp_matches) else m.end() + 12000
+        tile_chunk = text[m.end() : min(end_pos, m.end() + 12000)]
+
+        # Pack quantity e.g. <p class="pwc-tile--quantity"> emb. 1 kg </p>
+        unit = ""
+        m_qty = re.search(r'class="[^"]*pwc-tile--quantity[^"]*"[^>]*>([\s\S]*?)</p>', tile_chunk, flags=re.I)
+        if m_qty:
+            qty_txt = re.sub(r"<[^>]+>", " ", m_qty.group(1))
+            unit = extract_unit_from_text(qty_txt)
+        if not unit:
+            unit = extract_unit_from_text(title)
+
+        # Secondary price (price per kg/L/un) if rendered
+        unit_price = ""
+        m_sec = re.search(r'class="[^"]*pwc-tile--price-secondary[^"]*"[^>]*>([\s\S]*?)</div>', tile_chunk, flags=re.I)
+        if m_sec:
+            sec_txt = re.sub(r"<[^>]+>", " ", m_sec.group(1))
+            unit_price = normalize_unit_price(sec_txt)
+        if not unit_price:
+            unit_price = compute_unit_price(pr, unit)
+
+        # Direct product URL
+        url = ""
+        if pid:
+            m_url = re.search(rf'href="([^"]*?/produto/[^"]*{re.escape(pid)}[^"]*\.html)"', tile_chunk, flags=re.I)
+            if m_url:
+                url = urllib.parse.urljoin("https://www.continente.pt/", m_url.group(1))
+        if not url:
+            m_url = re.search(r'href="([^"]*?/produto/[^"]+\.html)"', tile_chunk, flags=re.I)
+            if m_url:
+                url = urllib.parse.urljoin("https://www.continente.pt/", m_url.group(1))
+
+        res.append({
+            "title": title[:200],
+            "price": pr,
+            "unit": unit,
+            "unit_price": unit_price,
+            "url": url or base_url,
+            "domain": "continente.pt",
+        })
+        if len(res) >= 12:
+            break
+
+    if res:
+        return res
+
+    # Legacy fallback regex
     matches = re.findall(
         r'href="([^"]*?/produto/[^"]+)"[^>]*>([^<]{3,140})</a>([\s\S]{0,1500}?)(\d[\d.]*,\d{2})\s*€',
-        html or "",
+        text,
         flags=re.IGNORECASE,
     )
     for href, title_raw, _mid, pr_raw in matches[:8]:
         title = re.sub(r"\s+", " ", unescape(title_raw)).strip()
         pr = parse_price(pr_raw)
         if pr is not None and is_relevant(query, title):
+            unit = extract_unit_from_text(title)
             res.append({
                 "title": title[:200],
                 "price": pr,
+                "unit": unit,
+                "unit_price": compute_unit_price(pr, unit),
                 "url": urllib.parse.urljoin("https://www.continente.pt/", href),
                 "domain": "continente.pt",
             })
@@ -215,23 +412,98 @@ def extract_continente(html: str, query: str, base_url: str) -> list[dict[str, A
 
 
 def extract_auchan(html: str, query: str, base_url: str) -> list[dict[str, Any]]:
-    """Extract offers from Auchan search HTML."""
+    """Extract offers (with pack unit & unit price) from Auchan search HTML."""
     offers = [o for o in extract_json_ld_offers(html, base_url) if is_relevant(query, o["title"])]
     if offers:
         return offers
     res: list[dict[str, Any]] = []
+    text = html or ""
+
+    # Primary: Auchan SFCC product tiles embed clean JSON in data-gtm and data-urls
+    gtm_matches = list(
+        re.finditer(
+            r'data-gtm=(["\'])(.*?)\1',
+            text,
+            flags=re.DOTALL | re.IGNORECASE,
+        )
+    )
+    for idx, m in enumerate(gtm_matches[:30]):
+        try:
+            data = json.loads(unescape(m.group(2)))
+        except ValueError:
+            continue
+        if not isinstance(data, dict):
+            continue
+        title = re.sub(r"\s+", " ", unescape(str(data.get("name") or ""))).strip()
+        pr = parse_price(data.get("price"))
+        if not title or pr is None or not is_relevant(query, title):
+            continue
+        pid = str(data.get("id") or "").strip()
+        start_ctx = max(0, m.start() - 2500)
+        end_pos = gtm_matches[idx + 1].start() if idx + 1 < len(gtm_matches) else m.end() + 10000
+        tile_chunk = text[start_ctx : min(end_pos, m.end() + 10000)]
+
+        # Product URL from data-urls JSON or href
+        url = ""
+        m_urls = re.search(r'data-urls=(["\'])(.*?)\1', tile_chunk[:3500], flags=re.DOTALL | re.I)
+        if m_urls:
+            try:
+                uobj = json.loads(unescape(m_urls.group(2)))
+                if isinstance(uobj, dict):
+                    raw_u = str(uobj.get("absoluteProductUrl") or uobj.get("productUrl") or "").strip()
+                    if raw_u:
+                        url = urllib.parse.urljoin("https://www.auchan.pt/", raw_u)
+            except ValueError:
+                pass
+        if not url and pid:
+            m_href = re.search(rf'href="([^"]*?/pt/[^"]*/{re.escape(pid)}\.html[^"]*)"', tile_chunk, flags=re.I)
+            if m_href:
+                url = urllib.parse.urljoin("https://www.auchan.pt/", m_href.group(1))
+
+        # Unit price e.g. <span class="auc-measures--price-per-unit">1.89 €/Kg</span>
+        unit_price = ""
+        m_up = re.search(r'measures--price-per-unit[^>]*>([^<]+)', tile_chunk, flags=re.I)
+        if m_up:
+            unit_price = normalize_unit_price(m_up.group(1))
+
+        unit = extract_unit_from_text(title)
+        if not unit and unit_price:
+            m_base = re.search(r"/\s*(kg|L|un)\b", unit_price)
+            if m_base:
+                unit = f"1 {m_base.group(1)}"
+        if not unit_price:
+            unit_price = compute_unit_price(pr, unit)
+
+        res.append({
+            "title": title[:200],
+            "price": pr,
+            "unit": unit,
+            "unit_price": unit_price,
+            "url": url or base_url,
+            "domain": "auchan.pt",
+        })
+        if len(res) >= 12:
+            break
+
+    if res:
+        return res
+
+    # Legacy fallback regex
     matches = re.findall(
         r'href="([^"]*?/pt/[^"]+/\d+\.html[^"]*)"[^>]*>([^<]{3,140})</a>([\s\S]{0,1500}?)(\d[\d.]*,\d{2})\s*€',
-        html or "",
+        text,
         flags=re.IGNORECASE,
     )
     for href, title_raw, _mid, pr_raw in matches[:8]:
         title = re.sub(r"\s+", " ", unescape(title_raw)).strip()
         pr = parse_price(pr_raw)
         if pr is not None and is_relevant(query, title):
+            unit = extract_unit_from_text(title)
             res.append({
                 "title": title[:200],
                 "price": pr,
+                "unit": unit,
+                "unit_price": compute_unit_price(pr, unit),
                 "url": urllib.parse.urljoin("https://www.auchan.pt/", href),
                 "domain": "auchan.pt",
             })
@@ -261,6 +533,7 @@ async def _search_duckduckgo_stores(
     fetch_fn: FetchAsyncFn,
     allowed_domains: set[str],
     country: str,
+    skip_domains: set[str] | None = None,
 ) -> list[dict[str, Any]]:
     """Use DuckDuckGo Lite to discover product pages on supermarkets (Pingo Doce, Lidl, Aldi, etc.)."""
     q = urllib.parse.quote_plus(f"{query} supermercado preço")
@@ -269,15 +542,25 @@ async def _search_duckduckgo_stores(
         html = await fetch_fn(ddg_url, 10)
     except Exception:
         return []
-    links = re.findall(r'href="(https?://[^"]+)"', html or "")
+    raw_links: list[str] = []
+    # DDG Lite wraps result links in //duckduckgo.com/l/?uddg=<url_encoded>
+    for enc in re.findall(r'uddg=([^&"\']+)', html or ""):
+        dec = urllib.parse.unquote(unescape(enc))
+        if dec.startswith(("http://", "https://")):
+            raw_links.append(dec)
+    raw_links.extend(re.findall(r'href="(https?://[^"]+)"', html or ""))
+
+    skip = skip_domains or set()
     candidate_urls: list[str] = []
     seen_domains: set[str] = set()
-    for link in links:
+    for link in raw_links:
         dom = extract_domain(link)
         canon = canonical_supermarket(dom, country=country)
         if not canon:
             continue
         c_dom, _name = canon
+        if c_dom in skip:
+            continue
         if allowed_domains and c_dom not in allowed_domains:
             continue
         if c_dom in seen_domains:
@@ -335,9 +618,12 @@ async def search_supermarkets(
     try:
         q = urllib.parse.quote_plus(query)
         tasks: list[Awaitable[list[dict[str, Any]]]] = []
+        direct_domains: set[str] = set()
 
         if country.upper() == "PT":
             if not allowed or "continente.pt" in allowed:
+                direct_domains.add("continente.pt")
+
                 async def _cont() -> list[dict[str, Any]]:
                     u = f"https://www.continente.pt/pesquisa/?q={q}"
                     try:
@@ -347,6 +633,8 @@ async def search_supermarkets(
                 tasks.append(_cont())
 
             if not allowed or "auchan.pt" in allowed:
+                direct_domains.add("auchan.pt")
+
                 async def _auchan() -> list[dict[str, Any]]:
                     u = f"https://www.auchan.pt/pt/pesquisa?q={q}"
                     try:
@@ -355,7 +643,7 @@ async def search_supermarkets(
                         return []
                 tasks.append(_auchan())
 
-        tasks.append(_search_duckduckgo_stores(query, fetch_fn, allowed, country))
+        tasks.append(_search_duckduckgo_stores(query, fetch_fn, allowed, country, skip_domains=direct_domains))
         batches = await asyncio.gather(*tasks, return_exceptions=True)
 
         by_store: dict[str, dict[str, Any]] = {}
@@ -373,11 +661,16 @@ async def search_supermarkets(
                 pr = parse_price(offer.get("price"))
                 if pr is None:
                     continue
+                title = str(offer.get("title") or term).strip()[:200]
+                unit = str(offer.get("unit") or "").strip() or extract_unit_from_text(title)
+                unit_price = str(offer.get("unit_price") or "").strip() or compute_unit_price(pr, unit)
                 cand = {
                     "supermarket": store_name,
                     "store_domain": c_dom,
-                    "title": str(offer.get("title") or term).strip()[:200],
+                    "title": title,
                     "price": pr,
+                    "unit": unit,
+                    "unit_price": unit_price,
                     "url": str(offer.get("url") or "").strip(),
                 }
                 cur = by_store.get(store_name)
@@ -395,7 +688,7 @@ def summarize_offers(
     offers: list[dict[str, Any]],
     currency: str = DEFAULT_CURRENCY,
 ) -> dict[str, Any]:
-    """Compute min price, store, direct URL, average price, and formatted tag."""
+    """Compute min price, store, unit, direct URL, average price, and formatted tag."""
     if not offers:
         return {
             "term": term,
@@ -404,12 +697,23 @@ def summarize_offers(
             "min_store": "",
             "min_domain": "",
             "min_url": "",
+            "min_unit": "",
+            "min_unit_price": "",
             "avg_price": None,
             "store_count": 0,
             "tag": "",
             "offers": [],
         }
-    ordered = sorted(offers, key=lambda o: (float(o["price"]), o["supermarket"]))
+    enriched: list[dict[str, Any]] = []
+    for o in offers:
+        item = dict(o)
+        pr = float(item["price"])
+        unit = str(item.get("unit") or "").strip() or extract_unit_from_text(str(item.get("title") or ""))
+        unit_price = str(item.get("unit_price") or "").strip() or compute_unit_price(pr, unit, currency=currency)
+        item["unit"] = unit
+        item["unit_price"] = unit_price
+        enriched.append(item)
+    ordered = sorted(enriched, key=lambda o: (float(o["price"]), o["supermarket"]))
     best = ordered[0]
     avg = round(sum(float(o["price"]) for o in ordered) / len(ordered), 2)
     return {
@@ -419,6 +723,8 @@ def summarize_offers(
         "min_store": best["supermarket"],
         "min_domain": best["store_domain"],
         "min_url": best.get("url") or "",
+        "min_unit": best.get("unit") or "",
+        "min_unit_price": best.get("unit_price") or "",
         "avg_price": avg,
         "store_count": len(ordered),
         "tag": format_price_tag(best["price"], best["supermarket"], currency=currency),

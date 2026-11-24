@@ -227,19 +227,6 @@
       font-size: 0.78rem;
     }
 
-    .lang-select {
-      min-height: 38px;
-      padding: 6px 10px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--text);
-      font-size: 0.8rem;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .lang-select:hover { border-color: var(--primary); }
-
     /* Sticky Navigation Tabs */
     .nav-bar {
       position: sticky;
@@ -1727,6 +1714,249 @@
       }
       .toast-region { left: 12px; right: 12px; max-width: none; }
     }
+    /* Ingredient price & unit inline pill + hover/click popover */
+    .ing-price-trigger {
+      appearance: none;
+      background: transparent;
+      border: none;
+      padding: 0;
+      margin: 0;
+      font: inherit;
+      color: inherit;
+      text-align: left;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      border-radius: 6px;
+      transition: color 0.15s ease, background-color 0.15s ease;
+    }
+    .ing-price-trigger:hover .ing-name-label,
+    .ing-price-trigger:focus-visible .ing-name-label {
+      color: var(--accent);
+      text-decoration: underline;
+      text-decoration-style: dotted;
+      text-underline-offset: 3px;
+    }
+    .ing-price-trigger:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    .ing-price-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--accent) 13%, transparent);
+      color: var(--accent);
+      border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
+      white-space: nowrap;
+      line-height: 1.3;
+    }
+    .ing-price-pill.is-empty {
+      background: var(--surface-2, rgba(128, 128, 128, 0.12));
+      color: var(--text-muted);
+      border-color: var(--border);
+      font-weight: 600;
+    }
+    .detail-ing-pill.ing-price-trigger {
+      background: var(--surface-2, rgba(128, 128, 128, 0.1));
+      border: 1px solid var(--border);
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+    .detail-ing-pill.ing-price-trigger:hover,
+    .detail-ing-pill.ing-price-trigger:focus-visible {
+      border-color: var(--accent);
+      background: color-mix(in srgb, var(--accent) 10%, var(--surface, #fff));
+    }
+    .ing-price-popover {
+      position: fixed;
+      inset: auto;
+      margin: 0;
+      padding: 0;
+      width: min(340px, calc(100vw - 24px));
+      max-height: min(400px, calc(100vh - 24px));
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface, #fff);
+      color: var(--text, #111);
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.22), 0 2px 8px rgba(0, 0, 0, 0.1);
+      font-size: 0.84rem;
+      line-height: 1.4;
+      z-index: 99999;
+    }
+    @supports not selector(:popover-open) {
+      .ing-price-popover:not(.\:popover-open) {
+        display: none;
+      }
+    }
+    .ing-price-popover:is(:popover-open, .\:popover-open) {
+      display: block;
+    }
+    .ing-price-pop-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 14px 10px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface-2, rgba(128, 128, 128, 0.06));
+    }
+    .ing-price-pop-title {
+      font-weight: 800;
+      font-size: 0.94rem;
+      color: var(--text);
+      margin: 0;
+    }
+    .ing-price-pop-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .ing-price-pop-close {
+      appearance: none;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      line-height: 1;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+    .ing-price-pop-close:hover {
+      background: var(--border);
+      color: var(--text);
+    }
+    .ing-price-pop-body {
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .ing-price-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .ing-price-stat {
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: var(--surface-2, rgba(128, 128, 128, 0.08));
+      border: 1px solid var(--border);
+    }
+    .ing-price-stat-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+    .ing-price-stat-val {
+      font-size: 0.96rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-top: 2px;
+    }
+    .ing-price-stat-sub {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+    .ing-price-offers-label {
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .ing-price-offer-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .ing-price-offer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface, #fff);
+    }
+    .ing-price-offer-row.is-best {
+      border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+      background: color-mix(in srgb, var(--accent) 7%, var(--surface, #fff));
+    }
+    .ing-price-offer-main {
+      min-width: 0;
+      flex: 1;
+    }
+    .ing-price-offer-store {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+      font-size: 0.83rem;
+    }
+    .ing-price-best-badge {
+      font-size: 0.66rem;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #fff;
+    }
+    .ing-price-offer-title {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 2px;
+    }
+    .ing-price-offer-right {
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .ing-price-offer-price {
+      font-weight: 800;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+    .ing-price-offer-unit {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+    .ing-price-offer-link {
+      display: inline-block;
+      margin-top: 2px;
+      font-size: 0.72rem;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .ing-price-offer-link:hover {
+      text-decoration: underline;
+    }
+    .ing-price-empty {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      padding: 4px 0;
+    }
+    .ing-price-empty strong {
+      display: block;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
   </style>
 </head>
 <body>
@@ -1747,10 +1977,6 @@
       </div>
       <button type="button" class="btn btn-primary" id="btnRandomize" data-i18n="topbar.generate_week">🎲 Gerar Semana</button>
       <button type="button" class="btn" id="btnNewRecipe" data-i18n="topbar.new_recipe">➕ Receita</button>
-      <select id="langSelect" class="lang-select" aria-label="Idioma" data-i18n-aria="topbar.language_label" data-i18n-title="topbar.language_label">
-        <option value="pt">🇵🇹 PT</option>
-        <option value="en">🇬🇧 EN</option>
-      </select>
       <button type="button" class="btn btn-icon" id="btnTheme" title="Alternar tema claro/escuro" aria-label="Alternar tema claro/escuro" data-i18n-title="topbar.toggle_theme" data-i18n-aria="topbar.toggle_theme">🌙</button>
     </div>
   </header>
@@ -2016,6 +2242,7 @@
         </div>
       </div>
       <div class="dialog-footer">
+        <button type="button" class="btn btn-danger-ghost hidden" id="btnDeleteRecipeInDialog" data-i18n="recipes.delete_btn" style="margin-right:auto;">🗑️ Apagar</button>
         <button type="button" class="btn" data-close-dialog="recipeDialog" data-i18n="recipe_dialog.cancel_btn">Cancelar</button>
         <button type="submit" class="btn btn-primary" data-i18n="recipe_dialog.save_btn">Guardar Receita</button>
       </div>
@@ -2241,34 +2468,38 @@
         });
       }
 
-      function populateLangSelector() {
-        const sel = document.getElementById("langSelect");
-        if (!sel) return;
-        const langs = (i18nManifest && Array.isArray(i18nManifest.languages) && i18nManifest.languages.length)
-          ? i18nManifest.languages
-          : [{ code: "pt", nativeName: "Português", flag: "🇵🇹" }, { code: "en", nativeName: "English", flag: "🇬🇧" }];
-        sel.innerHTML = langs.map(l =>
-          `<option value="${esc(l.code)}">${l.flag ? `${l.flag} ` : ""}${esc(l.code.toUpperCase())}</option>`
-        ).join("");
-        sel.value = currentLang;
+      function resolvePreferredLanguage() {
+        const available = (i18nManifest.languages || []).map(l => l.code);
+        const fallback = i18nManifest.fallback || "en";
+        const hass = getHass();
+        const haLang = (hass && (hass.selectedLanguage || hass.language || (hass.locale && hass.locale.language))) || "";
+        if (haLang) {
+          return normalizeLangCode(haLang, available) || fallback;
+        }
+        const navLang = (navigator.languages && navigator.languages[0]) || navigator.language || "";
+        return normalizeLangCode(navLang, available) || fallback;
       }
 
-      async function setLanguage(code, notify = true) {
+      async function setLanguage(code, notify = false) {
         const available = (i18nManifest.languages || []).map(l => l.code);
-        const target = normalizeLangCode(code, available) || i18nManifest.default || "en";
+        const target = normalizeLangCode(code, available) || i18nManifest.fallback || "en";
         const dict = await loadLocaleDict(target);
         if (dict) {
           currentLang = target;
           i18nDict = dict;
-          try { localStorage.setItem(I18N_STORAGE_KEY, target); } catch (_) {}
         }
-        const sel = document.getElementById("langSelect");
-        if (sel) sel.value = currentLang;
         applyI18nToDOM();
         renderAll();
         if (notify) {
           const langMeta = (i18nManifest.languages || []).find(l => l.code === currentLang);
           showToast(t("toasts.language_changed", { lang: (langMeta && langMeta.nativeName) || currentLang.toUpperCase() }));
+        }
+      }
+
+      async function syncLanguageWithHA() {
+        const target = resolvePreferredLanguage();
+        if (target && target !== currentLang) {
+          await setLanguage(target, false);
         }
       }
 
@@ -2281,29 +2512,14 @@
         if (manifest && Array.isArray(manifest.languages) && manifest.languages.length) {
           i18nManifest = manifest;
         }
-        const available = i18nManifest.languages.map(l => l.code);
-        const saved = (() => { try { return localStorage.getItem(I18N_STORAGE_KEY) || ""; } catch (_) { return ""; } })();
-        const hass = getHass();
-        const haLang = (hass && (hass.language || (hass.locale && hass.locale.language))) || "";
-        const navLang = (navigator.languages && navigator.languages[0]) || navigator.language || "";
-        const detected =
-          normalizeLangCode(saved, available) ||
-          normalizeLangCode(haLang, available) ||
-          normalizeLangCode(navLang, available) ||
-          i18nManifest.default ||
-          "en";
+        try { localStorage.removeItem(I18N_STORAGE_KEY); } catch (_) {}
 
         const fbCode = i18nManifest.fallback || "en";
+        const detected = resolvePreferredLanguage();
         i18nFallbackDict = (await loadLocaleDict(fbCode)) || {};
         i18nDict = (detected === fbCode ? i18nFallbackDict : (await loadLocaleDict(detected))) || i18nFallbackDict;
         currentLang = detected;
 
-        populateLangSelector();
-        const sel = document.getElementById("langSelect");
-        if (sel && !sel.dataset.bound) {
-          sel.dataset.bound = "1";
-          sel.addEventListener("change", (e) => setLanguage(e.target.value, true));
-        }
         applyI18nToDOM();
         renderAll();
       }
@@ -2548,6 +2764,7 @@
           .replace(/\s*\([^)]*\)\s*/g, " ")
           .normalize("NFD")
           .replace(/[\u0300-\u036f]/g, "")
+          .replace(/\s+/g, " ")
           .toLowerCase()
           .trim();
       }
@@ -3475,7 +3692,7 @@
             if (f) qtyParts.push(f);
           });
           const qtyLabel = qtyParts.join(" + ");
-          const priceInfo = (state.ingredientPrices || {})[entry.normKey] || null;
+          const priceInfo = (state.ingredientPrices || {})[entry.key] || null;
           const priceTag = (state.includePriceInHA && priceInfo && priceInfo.tag) ? priceInfo.tag : "";
           const parts = [entry.name];
           if (state.includeQtyInHA && qtyLabel) parts.push(`(${qtyLabel})`);
@@ -4262,13 +4479,18 @@
                   <span>${esc(tAisle(aisle))}</span>
                   <span>${list.length}</span>
                 </div>
-                ${list.map(it => `
+                ${list.map(it => {
+                  const pPill = buildIngredientPricePillHTML(it.priceInfo);
+                  return `
                   <div class="ing-row">
                     <div class="ing-info">
                       <div class="ing-name ${it.inPantry ? "in-pantry" : ""}">
-                        <span>${esc(it.name)}</span>
-                        ${it.qtyLabel ? `<span class="ing-qty">${esc(it.qtyLabel)}</span>` : ""}
-                        ${!it.qtyLabel && it.count > 1 ? `<span class="ing-qty">×${it.count}</span>` : ""}
+                        <button type="button" class="ing-price-trigger" data-ing-price-key="${esc(it.key)}" data-ing-price-name="${esc(it.name)}" aria-expanded="false">
+                          <span class="ing-name-label">${esc(it.name)}</span>
+                          ${it.qtyLabel ? `<span class="ing-qty">${esc(it.qtyLabel)}</span>` : ""}
+                          ${!it.qtyLabel && it.count > 1 ? `<span class="ing-qty">×${it.count}</span>` : ""}
+                          ${pPill}
+                        </button>
                       </div>
                       <div class="ing-days">${esc(Array.from(it.days).join(", "))}${it.count > 1 ? ` · ${esc(t("shopping.meals_count", { count: it.count }))}` : ""}</div>
                     </div>
@@ -4282,7 +4504,8 @@
                       }
                     </div>
                   </div>
-                `).join("")}
+                `;
+                }).join("")}
               </div>
             `;
           }).join("");
@@ -4716,7 +4939,6 @@
                   <button type="button" class="btn btn-sm" data-view-recipe="${esc(active.id)}">${esc(t("recipes.prep_btn"))}</button>
                   <button type="button" class="btn btn-sm" data-edit-recipe="${esc(active.id)}" title="${esc(t("recipes.edit_title"))}">${esc(t("recipes.edit_btn"))}</button>
                 </div>
-                ${isCustom ? `<button type="button" class="btn btn-sm btn-danger-ghost" data-delete-recipe="${esc(active.id)}">${esc(t("recipes.delete_btn"))}</button>` : ""}
               </div>
             </article>
           `;
@@ -4928,7 +5150,7 @@
             service: "refresh_prices",
             service_data: {
               all_recipes: false,
-              max_items: 25,
+              max_items: 40,
               use_ai: state.priceSearchMode === "ai",
               updated_by: getCurrentUserName()
             },
@@ -4939,6 +5161,7 @@
           await loadSharedState(false);
           renderShoppingOptionsUI();
           renderIngredients();
+          if (typeof renderWeekGrid === "function") renderWeekGrid();
           const found = typeof out.priced === "number" ? out.priced : 0;
           const searched = typeof out.searched === "number" ? out.searched : 0;
           showToast(`Pesquisa concluída: ${found} preço${found === 1 ? "" : "s"} obtido${found === 1 ? "" : "s"} (${searched} pesquisados).`);
@@ -5040,6 +5263,7 @@
         updateImagePreview("");
         renderRecipeAppliancesPicker();
         document.getElementById("similarityBox").classList.add("hidden");
+        document.getElementById("btnDeleteRecipeInDialog").classList.add("hidden");
         document.getElementById("aiSuggestStatus").textContent =
           "Indica o nome da variante (ex: Low-Carb, Airfryer, Bimby) e seleciona os eletrodomésticos necessários.";
         document.getElementById("recipeDialog").showModal();
@@ -5058,6 +5282,7 @@
         dialogShowAllAppliances = false;
         document.getElementById("recipeForm").reset();
         document.getElementById("directVariantBox").classList.add("hidden");
+        document.getElementById("btnDeleteRecipeInDialog").classList.remove("hidden");
         document.getElementById("recipeDialogTitle").textContent = `Editar Receita`;
         document.getElementById("recName").value = rec.name || "";
         document.getElementById("recMealType").value = rec.meal_type || "refeicao";
@@ -5095,6 +5320,7 @@
         dialogShowAllAppliances = false;
         document.getElementById("recipeForm").reset();
         document.getElementById("directVariantBox").classList.add("hidden");
+        document.getElementById("btnDeleteRecipeInDialog").classList.add("hidden");
         const cleanPrefill = String(prefillName || "").trim();
         const formattedName = cleanPrefill ? (cleanPrefill.charAt(0).toUpperCase() + cleanPrefill.slice(1)) : "";
         document.getElementById("recipeDialogTitle").textContent = formattedName
@@ -5680,7 +5906,10 @@
         const ingPills = (rec.items || []).map(raw => {
           const it = normalizeItem(raw);
           const q = formatQuantity(scaleQty(it.qty), it.unit);
-          return `<span class="detail-ing-pill">${esc(it.name)}${q ? ` · ${esc(q)}` : ""}</span>`;
+          const key = normalize(it.name);
+          const pInfo = getIngredientPriceInfo(key, it.name);
+          const pPill = buildIngredientPricePillHTML(pInfo, true);
+          return `<button type="button" class="detail-ing-pill ing-price-trigger" data-ing-price-key="${esc(key)}" data-ing-price-name="${esc(it.name)}" aria-expanded="false"><span class="ing-name-label">${esc(it.name)}${q ? ` · ${esc(q)}` : ""}</span>${pPill}</button>`;
         }).join("");
 
         const hasSteps = Boolean(guide.steps);
@@ -5884,9 +6113,14 @@
           if (rec) openDetail(rec);
           return;
         }
-        const del = e.target.closest("[data-delete-recipe]");
-        if (!del) return;
-        const id = del.dataset.deleteRecipe;
+      });
+
+      document.getElementById("btnDeleteRecipeInDialog").addEventListener("click", async () => {
+        if (!editingRecipeId) return;
+        const id = editingRecipeId;
+        const rec = getAllRecipes().find(r => r.id === id);
+        const name = (rec && rec.name) || document.getElementById("recName").value || id;
+        if (!window.confirm(t("recipe_dialog.delete_confirm", { name }))) return;
         const hass = getHass();
         if (hass) {
           try {
@@ -5897,16 +6131,18 @@
             await loadSharedState(false);
           } catch (err) {
             state.recipes = getAllRecipes().filter(r => r.id !== id && r.parent_recipe_id !== id);
-            state.customRecipes = state.recipes.filter(r => r.source !== "default");
+            state.customRecipes = state.recipes.filter(r => r.source !== "default" && r.source !== "starter");
             scheduleSharedSave();
           }
         } else {
           state.recipes = getAllRecipes().filter(r => r.id !== id && r.parent_recipe_id !== id);
-          state.customRecipes = state.recipes.filter(r => r.source !== "default");
+          state.customRecipes = state.recipes.filter(r => r.source !== "default" && r.source !== "starter");
           scheduleSharedSave();
         }
-        renderRecipesTab();
-        showToast("Receita removida.");
+        editingRecipeId = null;
+        document.getElementById("recipeDialog").close();
+        renderAll();
+        showToast(t("toasts.recipe_removed"));
       });
 
       // Picker Dialog Events
@@ -6251,10 +6487,308 @@
 
       document.addEventListener("visibilitychange", () => {
         if (!document.hidden) {
+          syncLanguageWithHA();
           loadSharedState(true);
           refreshHAItems(true);
         }
       });
+
+      // ---- Ingredient Price & Unit Popover (hover + click, WCAG 1.4.13 compliant) ----
+      function formatEurPrice(val) {
+        if (val === null || val === undefined || Number.isNaN(Number(val))) return "";
+        const num = Math.round(Number(val) * 100) / 100;
+        const cur = (INTEGRATION_CONFIG && INTEGRATION_CONFIG.currency) || "€";
+        return `${num.toFixed(2).replace(".", ",")}${cur}`;
+      }
+
+      function getIngredientPriceInfo(normKey, rawName) {
+        const prices = state.ingredientPrices || {};
+        const key = normKey || normalize(rawName || "");
+        if (!key) return null;
+        if (prices[key]) return prices[key];
+        // Soft fallback: match by normalized key if caller passed slightly different punctuation
+        const clean = normalize(key);
+        return prices[clean] || null;
+      }
+
+      function buildIngredientPricePillHTML(priceInfo, compact = false) {
+        if (priceInfo && priceInfo.min_price !== null && priceInfo.min_price !== undefined) {
+          const pStr = formatEurPrice(priceInfo.min_price);
+          const unitStr = priceInfo.min_unit || "";
+          const storeStr = priceInfo.min_store || "";
+          if (compact) {
+            return `<span class="ing-price-pill">🏷️ ${esc(pStr)}${unitStr ? ` / ${esc(unitStr)}` : ""}</span>`;
+          }
+          const parts = [pStr];
+          if (unitStr) parts.push(unitStr);
+          if (storeStr) parts.push(storeStr);
+          return `<span class="ing-price-pill">🏷️ ${esc(parts.join(" · "))}</span>`;
+        }
+        return compact
+          ? ""
+          : `<span class="ing-price-pill is-empty" title="${esc(t("price_popover.view_prices_hint"))}">🏷️ —</span>`;
+      }
+
+      const _ingPop = (() => {
+        let el = document.getElementById("ingPricePopover");
+        if (!el) {
+          el = document.createElement("div");
+          el.id = "ingPricePopover";
+          el.className = "ing-price-popover";
+          el.setAttribute("popover", "auto");
+          el.setAttribute("role", "dialog");
+          document.body.appendChild(el);
+        }
+        const supportsPopover = Object.hasOwn(HTMLElement.prototype, "popover");
+        let activeTrigger = null;
+        let pinned = false;
+        let openTimer = null;
+        let closeTimer = null;
+
+        function clearTimers() {
+          if (openTimer) { clearTimeout(openTimer); openTimer = null; }
+          if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
+        }
+
+        function isOpen() {
+          if (supportsPopover) {
+            try { return el.matches(":popover-open"); } catch { /* ignore */ }
+          }
+          return el.classList.contains(":popover-open");
+        }
+
+        function setExpanded(trigger, expanded) {
+          if (trigger && trigger.hasAttribute("aria-expanded")) {
+            trigger.setAttribute("aria-expanded", expanded ? "true" : "false");
+          }
+        }
+
+        function positionNear(trigger) {
+          if (!trigger || !trigger.getBoundingClientRect) return;
+          const rect = trigger.getBoundingClientRect();
+          const vw = window.innerWidth;
+          const vh = window.innerHeight;
+          const gap = 8;
+          // Measure popover after making it visible
+          const popRect = el.getBoundingClientRect();
+          const popW = popRect.width || 320;
+          const popH = popRect.height || 180;
+
+          let left = rect.left;
+          if (left + popW > vw - 12) left = vw - popW - 12;
+          if (left < 12) left = 12;
+
+          let top = rect.bottom + gap;
+          if (top + popH > vh - 12 && rect.top - gap - popH >= 12) {
+            top = rect.top - gap - popH;
+          } else if (top + popH > vh - 12) {
+            top = Math.max(12, vh - popH - 12);
+          }
+
+          el.style.left = `${Math.round(left)}px`;
+          el.style.top = `${Math.round(top)}px`;
+        }
+
+        function renderContent(name, key) {
+          const info = getIngredientPriceInfo(key, name);
+          const offers = info && Array.isArray(info.offers) ? info.offers : [];
+          el.setAttribute("aria-label", `${name} — ${t("price_popover.aria_label")}`);
+
+          if (!info || info.min_price === null || info.min_price === undefined) {
+            el.innerHTML = `
+              <div class="ing-price-pop-head">
+                <div>
+                  <div class="ing-price-pop-title">🛒 ${esc(name)}</div>
+                  <div class="ing-price-pop-sub">${esc(t("price_popover.aria_label"))}</div>
+                </div>
+                <button type="button" class="ing-price-pop-close" data-ing-pop-close aria-label="${esc(t("common.close"))}">×</button>
+              </div>
+              <div class="ing-price-pop-body">
+                <div class="ing-price-empty">
+                  <strong>${esc(t("price_popover.no_price_title"))}</strong>
+                  ${esc(t("price_popover.no_price_hint"))}
+                </div>
+              </div>
+            `;
+            return;
+          }
+
+          const bestPrice = formatEurPrice(info.min_price);
+          const avgPrice = info.avg_price != null ? formatEurPrice(info.avg_price) : "";
+          const bestUnit = info.min_unit || t("price_popover.unit_unknown");
+          const bestUnitPrice = info.min_unit_price || "";
+          const bestStore = info.min_store || "";
+
+          const offersHTML = offers.map((of, idx) => {
+            const prStr = formatEurPrice(of.price);
+            const uStr = of.unit || "";
+            const upStr = of.unit_price || "";
+            const unitMeta = [uStr, upStr].filter(Boolean).join(" · ");
+            const hasUrl = of.url && /^https?:\/\//i.test(of.url);
+            return `
+              <div class="ing-price-offer-row ${idx === 0 ? "is-best" : ""}">
+                <div class="ing-price-offer-main">
+                  <div class="ing-price-offer-store">
+                    <span>${esc(of.supermarket || of.store_domain || "")}</span>
+                    ${idx === 0 ? `<span class="ing-price-best-badge">${esc(t("price_popover.cheapest_badge"))}</span>` : ""}
+                  </div>
+                  ${of.title ? `<div class="ing-price-offer-title" title="${esc(of.title)}">${esc(of.title)}</div>` : ""}
+                </div>
+                <div class="ing-price-offer-right">
+                  <div class="ing-price-offer-price">${esc(prStr)}</div>
+                  ${unitMeta ? `<div class="ing-price-offer-unit">${esc(unitMeta)}</div>` : ""}
+                  ${hasUrl ? `<a class="ing-price-offer-link" href="${esc(of.url)}" target="_blank" rel="noopener noreferrer">${esc(t("price_popover.open_store"))} ↗</a>` : ""}
+                </div>
+              </div>
+            `;
+          }).join("");
+
+          el.innerHTML = `
+            <div class="ing-price-pop-head">
+              <div>
+                <div class="ing-price-pop-title">🏷️ ${esc(name)}</div>
+                <div class="ing-price-pop-sub">${esc(bestStore)}${bestUnit ? ` · ${esc(bestUnit)}` : ""}${bestUnitPrice ? ` (${esc(bestUnitPrice)})` : ""}</div>
+              </div>
+              <button type="button" class="ing-price-pop-close" data-ing-pop-close aria-label="${esc(t("common.close"))}">×</button>
+            </div>
+            <div class="ing-price-pop-body">
+              <div class="ing-price-summary-grid">
+                <div class="ing-price-stat">
+                  <div class="ing-price-stat-label">${esc(t("price_popover.best_price"))}</div>
+                  <div class="ing-price-stat-val">${esc(bestPrice)}</div>
+                  <div class="ing-price-stat-sub">${esc(bestStore)}${avgPrice && offers.length > 1 ? ` · ${esc(t("price_popover.avg_price"))}: ${esc(avgPrice)}` : ""}</div>
+                </div>
+                <div class="ing-price-stat">
+                  <div class="ing-price-stat-label">${esc(t("price_popover.unit_label"))}</div>
+                  <div class="ing-price-stat-val">${esc(bestUnit)}</div>
+                  <div class="ing-price-stat-sub">${esc(bestUnitPrice || "—")}</div>
+                </div>
+              </div>
+              ${offers.length ? `
+                <div class="ing-price-offers-label">${esc(t("price_popover.offers_title", { count: offers.length }))}</div>
+                <div class="ing-price-offer-list">${offersHTML}</div>
+              ` : ""}
+            </div>
+          `;
+        }
+
+        function openFor(trigger, pin = false) {
+          clearTimers();
+          if (activeTrigger && activeTrigger !== trigger) {
+            setExpanded(activeTrigger, false);
+          }
+          activeTrigger = trigger;
+          pinned = Boolean(pin);
+          const name = trigger.dataset.ingPriceName || trigger.textContent.trim();
+          const key = trigger.dataset.ingPriceKey || normalize(name);
+          renderContent(name, key);
+          if (supportsPopover) {
+            try {
+              if (!isOpen()) el.showPopover();
+            } catch {
+              el.classList.add(":popover-open");
+            }
+          } else {
+            el.classList.add(":popover-open");
+          }
+          setExpanded(trigger, true);
+          requestAnimationFrame(() => positionNear(trigger));
+        }
+
+        function closeNow() {
+          clearTimers();
+          pinned = false;
+          if (activeTrigger) {
+            setExpanded(activeTrigger, false);
+            activeTrigger = null;
+          }
+          if (supportsPopover) {
+            try { if (isOpen()) el.hidePopover(); } catch { /* ignore */ }
+          }
+          el.classList.remove(":popover-open");
+        }
+
+        function scheduleClose(delayMs = 220) {
+          if (pinned) return;
+          clearTimers();
+          closeTimer = setTimeout(closeNow, delayMs);
+        }
+
+        // Sync aria-expanded when light-dismissed or closed via Escape
+        el.addEventListener("toggle", (e) => {
+          if (e.newState === "closed") {
+            pinned = false;
+            if (activeTrigger) {
+              setExpanded(activeTrigger, false);
+              activeTrigger = null;
+            }
+          }
+        });
+
+        // Keep open while pointer is over the popover (WCAG 1.4.13 Hoverable)
+        el.addEventListener("pointerenter", () => {
+          if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
+        });
+        el.addEventListener("pointerleave", () => {
+          scheduleClose(200);
+        });
+        el.addEventListener("click", (e) => {
+          if (e.target.closest("[data-ing-pop-close]")) {
+            closeNow();
+          }
+        });
+
+        // Delegated hover, focus, and click handlers for all ingredient triggers
+        document.addEventListener("pointerover", (e) => {
+          if (e.pointerType === "touch") return;
+          const trig = e.target.closest("[data-ing-price-key]");
+          if (!trig) return;
+          if (pinned && activeTrigger === trig) return;
+          clearTimers();
+          const delay = isOpen() ? 40 : 180;
+          openTimer = setTimeout(() => openFor(trig, false), delay);
+        });
+
+        document.addEventListener("pointerout", (e) => {
+          if (e.pointerType === "touch") return;
+          const trig = e.target.closest("[data-ing-price-key]");
+          if (!trig) return;
+          if (e.relatedTarget && (trig.contains(e.relatedTarget) || el.contains(e.relatedTarget))) return;
+          scheduleClose(220);
+        });
+
+        document.addEventListener("click", (e) => {
+          const trig = e.target.closest("[data-ing-price-key]");
+          if (trig) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (isOpen() && pinned && activeTrigger === trig) {
+              closeNow();
+            } else {
+              openFor(trig, true);
+            }
+            return;
+          }
+          if (!supportsPopover && isOpen() && !el.contains(e.target)) {
+            closeNow();
+          }
+        });
+
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && isOpen()) {
+            closeNow();
+          }
+        });
+
+        window.addEventListener("scroll", () => {
+          if (isOpen() && activeTrigger) positionNear(activeTrigger);
+        }, true);
+        window.addEventListener("resize", () => {
+          if (isOpen() && activeTrigger) positionNear(activeTrigger);
+        });
+
+        return { openFor, closeNow };
+      })();
 
       // Init
       loadLocalState();

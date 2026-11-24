@@ -329,7 +329,8 @@
     "save_as_variant_btn": "🔀 Save as Variant",
     "save_as_independent_btn": "✨ Save as Independent",
     "cancel_btn": "Cancel",
-    "save_btn": "Save Recipe"
+    "save_btn": "Save Recipe",
+    "delete_confirm": "Are you sure you want to delete the recipe \"{name}\"? This also removes any linked variants and cannot be undone."
   },
   "detail_dialog": {
     "title": "Recipe Preparation",
@@ -383,6 +384,19 @@
     "accessory_added": "Accessory \"{name}\" added!",
     "appliance_added": "\"{name}\" added to kitchen!",
     "language_changed": "Language switched to {lang}."
+  },
+  "price_popover": {
+    "aria_label": "Supermarket prices",
+    "best_price": "Best price",
+    "avg_price": "Average",
+    "unit_label": "Unit",
+    "unit_unknown": "Pack",
+    "offers_title": "Supermarkets ({count})",
+    "cheapest_badge": "Cheapest",
+    "open_store": "View in store",
+    "no_price_title": "No cached price",
+    "no_price_hint": "Run \"Search prices\" in Shopping Options to fetch current supermarket prices.",
+    "view_prices_hint": "View prices"
   },
   "common": {
     "close": "Close"

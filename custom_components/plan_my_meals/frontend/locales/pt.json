@@ -329,7 +329,8 @@
     "save_as_variant_btn": "🔀 Guardar como Variante",
     "save_as_independent_btn": "✨ Guardar como Independente",
     "cancel_btn": "Cancelar",
-    "save_btn": "Guardar Receita"
+    "save_btn": "Guardar Receita",
+    "delete_confirm": "Tens a certeza que queres apagar a receita \"{name}\"? Esta ação também remove eventuais variantes associadas e não pode ser desfeita."
   },
   "detail_dialog": {
     "title": "Preparação da Receita",
@@ -383,6 +384,19 @@
     "accessory_added": "Acessório \"{name}\" adicionado!",
     "appliance_added": "\"{name}\" adicionado à cozinha!",
     "language_changed": "Idioma alterado para {lang}."
+  },
+  "price_popover": {
+    "aria_label": "Preços por supermercado",
+    "best_price": "Melhor preço",
+    "avg_price": "Média",
+    "unit_label": "Unidade",
+    "unit_unknown": "Embalagem",
+    "offers_title": "Supermercados ({count})",
+    "cheapest_badge": "Mais barato",
+    "open_store": "Ver na loja",
+    "no_price_title": "Sem preço em cache",
+    "no_price_hint": "Executa \"Pesquisar preços\" nas Opções de Compras para obter os preços atuais nos supermercados.",
+    "view_prices_hint": "Ver preços"
   },
   "common": {
     "close": "Fechar"

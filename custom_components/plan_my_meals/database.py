@@ -38,6 +38,8 @@ CREATE TABLE IF NOT EXISTS supermarket_prices (
     store_domain TEXT NOT NULL,
     title TEXT NOT NULL,
     price REAL NOT NULL,
+    unit TEXT DEFAULT '',
+    unit_price TEXT DEFAULT '',
     url TEXT DEFAULT '',
     fetched_at TEXT NOT NULL,
     UNIQUE (term_norm, store_domain)
@@ -184,6 +186,14 @@ class PlanMyMealsDB:
         self._conn.row_factory = sqlite3.Row
         with self._lock:
             self._conn.executescript(SCHEMA_SQL)
+            cols = {
+                row["name"]
+                for row in self._conn.execute("PRAGMA table_info(supermarket_prices)").fetchall()
+            }
+            if "unit" not in cols:
+                self._conn.execute("ALTER TABLE supermarket_prices ADD COLUMN unit TEXT DEFAULT ''")
+            if "unit_price" not in cols:
+                self._conn.execute("ALTER TABLE supermarket_prices ADD COLUMN unit_price TEXT DEFAULT ''")
             self._conn.commit()
 
     def close(self) -> None:
@@ -200,6 +210,26 @@ class PlanMyMealsDB:
                 pass
         return []
 
+    def _backfill_starter_recipes(self, state: dict[str, Any]) -> bool:
+        """Ensure starter recipes from starter_recipes.json exist unless explicitly deleted by the user."""
+        starter = self._load_starter_recipes()
+        if not starter:
+            return False
+        existing = list(state.get("recipes") or [])
+        existing_ids = {str(r.get("id") or "") for r in existing if isinstance(r, dict)}
+        deleted_ids = {str(x) for x in (state.get("deletedStarterIds") or [])}
+        added = 0
+        for rec in starter:
+            rid = str(rec.get("id") or "")
+            if rid and rid not in existing_ids and rid not in deleted_ids:
+                existing.append(dict(rec))
+                existing_ids.add(rid)
+                added += 1
+        if added:
+            state["recipes"] = existing
+            return True
+        return False
+
     def initialize(self, config: dict[str, Any] | None = None) -> dict[str, Any]:
         """Ensure state exists: migrate legacy JSON if present, otherwise seed starter recipes."""
         with self._lock:
@@ -207,6 +237,8 @@ class PlanMyMealsDB:
             if row:
                 state = json.loads(row["value"])
                 state["kitchen"] = normalize_kitchen(state.get("kitchen"), config=config)
+                if self._backfill_starter_recipes(state):
+                    self._save_raw(state)
                 return state
 
             # One-time automatic migration from legacy Pyscript /local/plan_my_meals_state.json
@@ -217,6 +249,7 @@ class PlanMyMealsDB:
                         legacy.setdefault("ingredientPrices", {})
                         legacy["kitchen"] = normalize_kitchen(legacy.get("kitchen"), config=config)
                         legacy["migrated_from_legacy"] = True
+                        self._backfill_starter_recipes(legacy)
                         self._save_raw(legacy)
                         return legacy
                 except (OSError, ValueError):
@@ -442,6 +475,12 @@ class PlanMyMealsDB:
             ]
             state["recipes"] = recipes
             state["customRecipes"] = [r for r in recipes if r.get("source") not in ("default", "starter")]
+            starter_ids = {str(r.get("id") or "") for r in self._load_starter_recipes()}
+            if recipe_id in starter_ids:
+                deleted = list(state.get("deletedStarterIds") or [])
+                if recipe_id not in deleted:
+                    deleted.append(recipe_id)
+                state["deletedStarterIds"] = deleted
             self.save_state(state, updated_by=updated_by)
             return {"ok": True, "deleted": before - len(recipes)}
 
@@ -578,6 +617,8 @@ class PlanMyMealsDB:
         price: float,
         title: str = "",
         url: str = "",
+        unit: str = "",
+        unit_price: str = "",
     ) -> dict[str, Any]:
         t_clean = str(term or "").strip()
         t_norm = normalize_text(t_clean)
@@ -588,17 +629,30 @@ class PlanMyMealsDB:
         with self._lock:
             self._conn.execute(
                 """
-                INSERT INTO supermarket_prices (term_norm, term, supermarket, store_domain, title, price, url, fetched_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO supermarket_prices (term_norm, term, supermarket, store_domain, title, price, unit, unit_price, url, fetched_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(term_norm, store_domain) DO UPDATE SET
                     term = excluded.term,
                     supermarket = excluded.supermarket,
                     title = excluded.title,
                     price = excluded.price,
+                    unit = CASE WHEN excluded.unit != '' THEN excluded.unit ELSE supermarket_prices.unit END,
+                    unit_price = CASE WHEN excluded.unit_price != '' THEN excluded.unit_price ELSE supermarket_prices.unit_price END,
                     url = CASE WHEN excluded.url != '' THEN excluded.url ELSE supermarket_prices.url END,
                     fetched_at = excluded.fetched_at
                 """,
-                (t_norm, t_clean, supermarket.strip() or dom, dom, (title or t_clean)[:200], round(float(price), 2), url.strip(), now),
+                (
+                    t_norm,
+                    t_clean,
+                    supermarket.strip() or dom,
+                    dom,
+                    (title or t_clean)[:200],
+                    round(float(price), 2),
+                    str(unit or "").strip()[:40],
+                    str(unit_price or "").strip()[:40],
+                    url.strip(),
+                    now,
+                ),
             )
             self._conn.commit()
             row = self._conn.execute(
@@ -765,8 +819,11 @@ class PlanMyMealsDB:
                 "min_price": min_price,
                 "min_store": min_store,
                 "min_url": min_url,
+                "min_unit": str(pinfo.get("min_unit") or ""),
+                "min_unit_price": str(pinfo.get("min_unit_price") or ""),
                 "avg_price": avg_price,
                 "tag": str(pinfo.get("tag") or ""),
+                "offers": pinfo.get("offers") or [],
                 "days": entry["days"],
                 "in_ha": in_ha,
                 "in_pantry": in_pantry,

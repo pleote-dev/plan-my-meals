@@ -353,10 +353,12 @@ def _register_services(hass: HomeAssistant) -> None:
         store = str(call.data["store"]).strip()
         price = float(call.data["price"])
         url = str(call.data.get("url") or "").strip()
+        unit = str(call.data.get("unit") or "").strip()
+        unit_price = str(call.data.get("unit_price") or "").strip()
         canon = canonical_supermarket(store, country=coord.cfg.get(CONF_COUNTRY, DEFAULT_COUNTRY))
         dom, name = canon if canon else (store.lower(), store)
         reg = await hass.async_add_executor_job(
-            coord.db.upsert_supermarket_price, term, name, dom, price, term, url
+            coord.db.upsert_supermarket_price, term, name, dom, price, term, url, unit, unit_price
         )
         await coord.async_request_refresh()
         return {"ok": True, "price": reg}
