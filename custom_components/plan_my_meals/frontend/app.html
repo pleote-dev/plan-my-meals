@@ -3120,7 +3120,9 @@
 
           const remoteTs = remote.updated_at || "";
           const localTs = state.updated_at || "";
-          if (!localTs || remoteTs > localTs) {
+          const remoteCount = Array.isArray(remote.recipes) ? remote.recipes.length : 0;
+          const localCount = Array.isArray(state.recipes) ? state.recipes.length : 0;
+          if (!localTs || remoteTs > localTs || remoteCount > localCount) {
             adoptStateData(remote);
             saveLocal();
             sharedSynced = true;

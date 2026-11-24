@@ -238,6 +238,7 @@ class PlanMyMealsDB:
                 state = json.loads(row["value"])
                 state["kitchen"] = normalize_kitchen(state.get("kitchen"), config=config)
                 if self._backfill_starter_recipes(state):
+                    state["updated_at"] = utc_now_iso()
                     self._save_raw(state)
                 return state
 
