@@ -4621,35 +4621,20 @@
 
       function buildDetailEquipmentPickerHTML() {
         const catalog = getAllAppliancesCatalog();
-        const homeSet = new Set(state.kitchen.appliances || []);
         const selectedSet = new Set(detailRecipeAppliances || []);
-        const apps = catalog.filter(a => homeSet.has(a.id) || selectedSet.has(a.id));
-        const list = apps.length ? apps : catalog;
         const selectedDefs = catalog.filter(a => selectedSet.has(a.id));
-        return `
-          <div class="appliance-chips">
-            ${list.map(a => {
-              const on = selectedSet.has(a.id);
-              const selAccs = (detailRecipeAccessories && detailRecipeAccessories[a.id]) || [];
-              return `<button type="button" class="appliance-chip ${on ? "active" : ""}" data-detail-app-toggle="${esc(a.id)}" aria-pressed="${on}">${esc(tApplianceLabel(a))}${on ? " ✓" : ""}${selAccs.length ? ` <span class="appliance-chip-count">+${selAccs.length}</span>` : ""}</button>`;
-            }).join("")}
-          </div>
-          ${selectedDefs.map(app => {
-            if (!(app.accessories || []).length) return "";
-            const selAccSet = new Set((detailRecipeAccessories && detailRecipeAccessories[app.id]) || []);
-            return `
-              <div class="recipe-app-subpanel" style="margin-top:6px;">
-                <div class="accessory-drawer-title">${esc(t("kitchen.detail_acc_title", { app: stripLeadingEmoji(tApplianceLabel(app)) }))}</div>
-                <div class="accessory-chips">
-                  ${app.accessories.map(acc => {
-                    const accOn = selAccSet.has(acc.id);
-                    return `<button type="button" class="accessory-chip ${accOn ? "active" : ""}" data-detail-acc-app="${esc(app.id)}" data-detail-acc-id="${esc(acc.id)}" aria-pressed="${accOn}">${esc(tAccessoryLabel(acc))}${accOn ? " ✓" : ""}</button>`;
-                  }).join("")}
-                </div>
-              </div>
-            `;
-          }).join("")}
-        `;
+        if (!selectedDefs.length) return "";
+        const pills = [];
+        selectedDefs.forEach(app => {
+          pills.push(`<span class="appliance-chip active" style="cursor:default;">${esc(tApplianceLabel(app))}</span>`);
+          const selAccIds = (detailRecipeAccessories && detailRecipeAccessories[app.id]) || [];
+          const accMap = new Map((app.accessories || []).map(acc => [acc.id, acc]));
+          selAccIds.forEach(accId => {
+            const acc = accMap.get(accId);
+            pills.push(`<span class="accessory-chip active" style="cursor:default;">${esc(acc ? tAccessoryLabel(acc) : accId)}</span>`);
+          });
+        });
+        return `<div class="appliance-chips">${pills.join("")}</div>`;
       }
 
       function handleDetailEquipmentClick(e) {
@@ -6257,7 +6242,9 @@
 
       document.getElementById("btnDetailEdit").addEventListener("click", () => {
         if (!detailRecipe) return;
-        const full = getAllRecipes().find(r => r.id === detailRecipe.id) || detailRecipe;
+        const full = (detailRecipe.id && getAllRecipes().find(r => r.id === detailRecipe.id))
+          || getAllRecipes().find(r => normalize(r.name) === normalize(detailRecipe.name))
+          || detailRecipe;
         document.getElementById("detailDialog").close();
         openEditRecipe(full);
       });
@@ -6764,14 +6751,24 @@
 
       function openDetail(rec) {
         if (!rec) return;
-        detailRecipe = rec;
-        const guide = getRecipeGuide(rec);
-        const equip = getRecipeEquipment(rec);
+        const fullRec = (rec.id && getAllRecipes().find(r => r.id === rec.id))
+          || getAllRecipes().find(r => normalize(r.name) === normalize(rec.name))
+          || null;
+        const merged = fullRec
+          ? {
+              ...rec,
+              ...fullRec,
+              image_url: fullRec.image_url || rec.image_url || ""
+            }
+          : rec;
+        detailRecipe = merged;
+        const guide = getRecipeGuide(merged);
+        const equip = getRecipeEquipment(merged);
         detailRecipeAppliances = [...equip.appliances];
         detailRecipeAccessories = JSON.parse(JSON.stringify(equip.accessories || {}));
-        document.getElementById("detailTitle").textContent = rec.name;
+        document.getElementById("detailTitle").textContent = merged.name;
 
-        const ingPills = (rec.items || []).map(raw => {
+        const ingPills = (merged.items || []).map(raw => {
           const it = normalizeItem(raw);
           const q = formatQuantity(scaleQty(it.qty), it.unit);
           const key = normalize(it.name);
@@ -6785,13 +6782,14 @@
         btnAi.textContent = hasSteps ? t("detail_dialog.ai_adapt_btn") : t("detail_dialog.ai_gen_btn");
         btnAi.disabled = false;
 
-        const nut = getRecipeNutrition(rec);
+        const nut = getRecipeNutrition(merged);
+        const equipHTML = buildDetailEquipmentPickerHTML();
         const peopleWord = t(state.servings === 1 ? "topbar.person_one" : "topbar.person_other");
         document.getElementById("detailBody").innerHTML = `
-          ${rec.image_url ? `<img class="recipe-cover" src="${esc(rec.image_url)}" alt="${esc(rec.name)}" onerror="this.style.display='none'">` : ""}
+          ${merged.image_url ? `<img class="recipe-cover" style="height:200px; object-fit:cover; width:100%; border-radius:var(--radius);" src="${esc(merged.image_url)}" alt="${esc(merged.name)}" onerror="this.style.display='none'">` : ""}
           <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
-            ${renderStarsHTML(rec.id, getRecipeRating(rec))}
-            ${rec.variant_name ? `<span class="variant-pill-active">${esc(t("recipes.variant_badge", { name: rec.variant_name }))}</span>` : ""}
+            ${renderStarsHTML(merged.id, getRecipeRating(merged))}
+            ${merged.variant_name ? `<span class="variant-pill-active">${esc(t("recipes.variant_badge", { name: merged.variant_name }))}</span>` : ""}
           </div>
           ${nut.kcal ? `<div class="cooking-meta">
             <span class="cooking-chip">🔥 ${nut.kcal} kcal</span>
@@ -6801,17 +6799,18 @@
             <span class="cooking-chip">🥦 ${nut.fiber_g}g ${esc(t("stats.fiber_short"))}</span>
           </div>` : ""}
           <div class="cooking-meta">
-            ${rec.category ? `<span class="cooking-chip">🏷️ ${esc(tCategory(rec.category))}</span>` : ""}
-            ${rec.cuisine ? `<span class="cooking-chip">🌍 ${esc(rec.cuisine)}</span>` : ""}
+            ${merged.category ? `<span class="cooking-chip">🏷️ ${esc(tCategory(merged.category))}</span>` : ""}
+            ${merged.cuisine ? `<span class="cooking-chip">🌍 ${esc(merged.cuisine)}</span>` : ""}
             ${guide.method ? `<span class="cooking-chip">🍳 ${esc(guide.method)}</span>` : ""}
             ${guide.prepTime ? `<span class="cooking-chip">${esc(t("detail_dialog.prep_chip", { val: guide.prepTime }))}</span>` : ""}
             ${guide.cookTime ? `<span class="cooking-chip">${esc(t("detail_dialog.cook_chip", { val: guide.cookTime }))}</span>` : ""}
             ${guide.time ? `<span class="cooking-chip">${esc(t("detail_dialog.total_chip", { val: guide.time }))}</span>` : ""}
           </div>
-          <div class="recipe-appliances-box">
-            <label style="margin:0; font-size:0.8rem; font-weight:700;">${esc(t("detail_dialog.equipment_label"))}</label>
-            <div id="detailKitchenChips">${buildDetailEquipmentPickerHTML()}</div>
-          </div>
+          ${equipHTML ? `
+          <div class="recipe-appliances-box" style="padding:10px 12px;">
+            <label style="margin:0 0 6px 0; font-size:0.8rem; font-weight:700; display:block;">${esc(t("detail_dialog.equipment_label"))}</label>
+            <div id="detailKitchenChips">${equipHTML}</div>
+          </div>` : ""}
           <div class="form-field">
             <label>${esc(t("detail_dialog.ingredients_for", { count: state.servings, people: peopleWord }))}</label>
             <div class="detail-ing-list">${ingPills || `<span class="form-hint">${esc(t("detail_dialog.no_ingredients"))}</span>`}</div>
