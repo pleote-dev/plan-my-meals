@@ -229,3 +229,31 @@ generate_recipe_ai:
       selector:
         text:
 
+search_recipe_images:
+  name: Search recipe images on the web
+  description: Searches Wikimedia Commons and Openverse for recipe photos matching the dish name, cuisine, and category.
+  fields:
+    query:
+      name: Search query
+      required: true
+      example: "Bacalhau à Brás"
+      selector:
+        text:
+    cuisine:
+      name: Cuisine
+      example: "Portuguesa"
+      selector:
+        text:
+    category:
+      name: Category
+      example: "Peixe"
+      selector:
+        text:
+    limit:
+      name: Max results
+      default: 10
+      selector:
+        number:
+          min: 1
+          max: 20
+

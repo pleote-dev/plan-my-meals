@@ -730,3 +730,131 @@ def summarize_offers(
         "tag": format_price_tag(best["price"], best["supermarket"], currency=currency),
         "offers": ordered,
     }
+
+
+async def search_recipe_images(
+    query: str,
+    *,
+    cuisine: str = "",
+    category: str = "",
+    limit: int = 10,
+    session: aiohttp.ClientSession | None = None,
+) -> list[dict[str, str]]:
+    """Search Wikimedia Commons & Openverse for copyright-friendly recipe photos."""
+    q_clean = re.sub(r"\s+", " ", str(query or "")).strip()
+    if not q_clean:
+        return []
+    extra = " ".join(x.strip() for x in (cuisine, category) if x and x.strip())
+    search_q = q_clean
+    broad_q = f"{q_clean} {extra}".strip() if extra else q_clean
+
+    own_session = False
+    if session is None:
+        import aiohttp
+
+        session = aiohttp.ClientSession()
+        own_session = True
+
+    import aiohttp
+
+    headers = {
+        "User-Agent": "PlanMyMeals/0.1.6 (https://github.com/pleote-dev/plan-my-meals)",
+        "Accept": "application/json",
+    }
+
+    async def _fetch_wikimedia(term: str, max_res: int) -> list[dict[str, str]]:
+        params = urllib.parse.urlencode({
+            "action": "query",
+            "generator": "search",
+            "gsrsearch": f"{term} filetype:bitmap",
+            "gsrnamespace": "6",
+            "gsrlimit": str(max_res),
+            "prop": "imageinfo",
+            "iiprop": "url|mime|thumburl",
+            "iiurlwidth": "640",
+            "format": "json",
+        })
+        url = f"https://commons.wikimedia.org/w/api.php?{params}"
+        try:
+            async with session.get(url, headers=headers, timeout=aiohttp.ClientTimeout(total=10)) as resp:
+                if resp.status != 200:
+                    return []
+                data = await resp.json(content_type=None)
+        except Exception:
+            return []
+        pages = ((data or {}).get("query") or {}).get("pages") or {}
+        out: list[dict[str, str]] = []
+        for page in pages.values():
+            infos = page.get("imageinfo") or []
+            if not infos:
+                continue
+            ii = infos[0]
+            mime = str(ii.get("mime") or "").lower()
+            if mime and not mime.startswith(("image/jpeg", "image/png", "image/webp")):
+                continue
+            full_url = str(ii.get("url") or "").strip()
+            thumb_url = str(ii.get("thumburl") or full_url).strip()
+            if not thumb_url:
+                continue
+            title = re.sub(r"^File:", "", str(page.get("title") or ""), flags=re.I)
+            title = re.sub(r"\.[a-z0-9]{2,5}$", "", title, flags=re.I).replace("_", " ").strip()
+            out.append({
+                "title": title[:120] or q_clean,
+                "thumb_url": thumb_url,
+                "url": full_url or thumb_url,
+                "source": "Wikimedia Commons",
+            })
+        return out
+
+    async def _fetch_openverse(term: str, max_res: int) -> list[dict[str, str]]:
+        params = urllib.parse.urlencode({
+            "q": term,
+            "page_size": str(max_res),
+        })
+        url = f"https://api.openverse.org/v1/images/?{params}"
+        try:
+            async with session.get(url, headers=headers, timeout=aiohttp.ClientTimeout(total=10)) as resp:
+                if resp.status != 200:
+                    return []
+                data = await resp.json(content_type=None)
+        except Exception:
+            return []
+        out: list[dict[str, str]] = []
+        for item in (data or {}).get("results") or []:
+            if not isinstance(item, dict):
+                continue
+            full_url = str(item.get("url") or "").strip()
+            thumb_url = str(item.get("thumbnail") or full_url).strip()
+            if not thumb_url.startswith(("http://", "https://")):
+                continue
+            out.append({
+                "title": str(item.get("title") or q_clean).strip()[:120],
+                "thumb_url": thumb_url,
+                "url": full_url if full_url.startswith(("http://", "https://")) else thumb_url,
+                "source": "Openverse",
+            })
+        return out
+
+    try:
+        per_src = max(4, min(10, limit))
+        results = await asyncio.gather(
+            _fetch_wikimedia(search_q, per_src),
+            _fetch_openverse(broad_q, per_src),
+            return_exceptions=True,
+        )
+        merged: list[dict[str, str]] = []
+        seen: set[str] = set()
+        for batch in results:
+            if not isinstance(batch, list):
+                continue
+            for img in batch:
+                key = img.get("url") or img.get("thumb_url") or ""
+                if key and key not in seen:
+                    seen.add(key)
+                    merged.append(img)
+                if len(merged) >= limit:
+                    return merged
+        return merged[:limit]
+    finally:
+        if own_session and session is not None:
+            await session.close()

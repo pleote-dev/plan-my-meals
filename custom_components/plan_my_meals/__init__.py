@@ -56,7 +56,7 @@ from .const import (
 )
 from .coordinator import PlanMyMealsCoordinator
 from .database import PlanMyMealsDB
-from .prices import canonical_supermarket
+from .prices import canonical_supermarket, search_recipe_images
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -379,6 +379,21 @@ def _register_services(hass: HomeAssistant) -> None:
             language=str(call.data.get("language") or getattr(hass.config, "language", "pt") or "pt").strip(),
         )
 
+    async def handle_search_recipe_images(call: ServiceCall) -> ServiceResponse:
+        query = str(call.data.get("query") or "").strip()
+        cuisine = str(call.data.get("cuisine") or "").strip()
+        category = str(call.data.get("category") or "").strip()
+        limit = max(1, min(20, int(call.data.get("limit") or 10)))
+        session = async_get_clientsession(hass)
+        images = await search_recipe_images(
+            query,
+            cuisine=cuisine,
+            category=category,
+            limit=limit,
+            session=session,
+        )
+        return {"ok": True, "query": query, "images": images}
+
     services = {
         "save_state": handle_save_state,
         "get_plan": handle_get_plan,
@@ -389,6 +404,7 @@ def _register_services(hass: HomeAssistant) -> None:
         "rate_recipe": handle_rate_recipe,
         "check_similarity": handle_check_similarity,
         "upload_image": handle_upload_image,
+        "search_recipe_images": handle_search_recipe_images,
         "sync_shopping_list": handle_sync_shopping_list,
         "refresh_prices": handle_refresh_prices,
         "set_ingredient_price": handle_set_ingredient_price,

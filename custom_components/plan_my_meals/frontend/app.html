@@ -2096,6 +2096,266 @@
       color: var(--primary);
       opacity: 0.9;
     }
+
+    /* Cooking method combo-box + collapsible appliances panel */
+    .method-combo-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .method-combo-wrap .input {
+      flex: 1;
+      min-width: 0;
+    }
+    .method-combo-toggle {
+      flex-shrink: 0;
+      min-height: 38px;
+      padding: 0 10px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .recipe-appliances-dropdown {
+      margin-top: 6px;
+      border: 1px solid var(--primary);
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.14);
+      animation: fadeSlideDown 0.16s ease-out;
+    }
+    @keyframes fadeSlideDown {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Recipe image hero with 3-dots menu & vertical web image search list */
+    .rec-img-hero {
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      min-height: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .rec-img-hero img.recipe-cover {
+      margin: 0;
+      width: 100%;
+      height: 190px;
+      object-fit: cover;
+      display: block;
+    }
+    .rec-img-placeholder {
+      padding: 28px 16px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.84rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .rec-img-menu-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: rgba(15, 23, 42, 0.72);
+      color: #fff;
+      font-size: 1.15rem;
+      font-weight: 800;
+      line-height: 1;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(6px);
+      z-index: 4;
+      transition: background 0.15s ease, transform 0.15s ease;
+    }
+    .rec-img-menu-btn:hover {
+      background: rgba(15, 23, 42, 0.92);
+      transform: scale(1.05);
+    }
+    .rec-img-dropdown {
+      position: absolute;
+      top: 50px;
+      right: 10px;
+      min-width: 215px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      z-index: 10;
+    }
+    .rec-img-dropdown-item {
+      appearance: none;
+      border: none;
+      background: transparent;
+      color: var(--text);
+      text-align: left;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .rec-img-dropdown-item:hover {
+      background: var(--surface-2);
+      color: var(--primary);
+    }
+    .rec-img-url-panel {
+      margin-top: 8px;
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .rec-web-img-panel {
+      margin-top: 8px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface-2);
+      overflow: hidden;
+    }
+    .rec-web-img-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+    .rec-web-img-list {
+      max-height: 310px;
+      overflow-y: auto;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .rec-web-img-option {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: 10px;
+      overflow: hidden;
+      padding: 0;
+      cursor: pointer;
+      text-align: left;
+      transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .rec-web-img-option:hover,
+    .rec-web-img-option:focus-visible {
+      border-color: var(--primary);
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.18);
+      transform: translateY(-1px);
+    }
+    .rec-web-img-option img {
+      width: 100%;
+      height: 155px;
+      object-fit: cover;
+      display: block;
+      background: var(--surface-2);
+    }
+    .rec-web-img-caption {
+      padding: 7px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.76rem;
+      color: var(--text);
+    }
+    .rec-web-img-caption span:first-child {
+      font-weight: 600;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .rec-web-img-src {
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      flex-shrink: 0;
+    }
+
+    /* Highlighted Preparation Steps & Cooking Tips */
+    .steps-featured-box {
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      border: 1px solid color-mix(in srgb, var(--primary) 35%, var(--border));
+      border-left: 4px solid var(--primary);
+      background: color-mix(in srgb, var(--primary) 4%, var(--surface));
+      box-shadow: 0 2px 10px rgba(2, 132, 199, 0.06);
+    }
+    .steps-featured-box > label {
+      font-size: 0.94rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .steps-featured-box textarea.input {
+      min-height: 240px;
+      font-size: 0.95rem;
+      line-height: 1.75;
+      padding: 12px 14px;
+      background: var(--surface);
+      resize: vertical;
+    }
+    .detail-steps-featured {
+      padding: 16px 18px;
+      border-radius: var(--radius);
+      border: 1px solid color-mix(in srgb, var(--primary) 35%, var(--border));
+      border-left: 4px solid var(--primary);
+      background: color-mix(in srgb, var(--primary) 5%, var(--surface));
+      box-shadow: 0 3px 12px rgba(2, 132, 199, 0.08);
+    }
+    .detail-steps-featured > label {
+      font-size: 0.98rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .steps-box-rich {
+      font-size: 0.96rem;
+      line-height: 1.75;
+      color: var(--text);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+    }
+    .steps-box-rich .step-para {
+      margin: 0 0 14px 0;
+    }
+    .steps-box-rich .step-para:last-child {
+      margin-bottom: 0;
+    }
   </style>
 </head>
 <body>
@@ -2294,14 +2554,6 @@
           <input type="text" class="input" id="recName" required placeholder="Ex: Bacalhau com Natas, Frango na Airfryer…" data-i18n-placeholder="recipe_dialog.dish_name_placeholder">
         </div>
 
-        <div class="recipe-appliances-box" id="recipeAppliancesBox">
-          <div class="recipe-appliances-header">
-            <label style="margin:0; font-weight:700; font-size:0.84rem;" data-i18n="recipe_dialog.equipment_label">🍳 Eletrodomésticos &amp; Acessórios necessários nesta receita</label>
-            <button type="button" class="btn btn-sm" id="btnToggleAllRecipeApps" style="font-size:0.74rem; padding:3px 9px;" data-i18n="kitchen.show_all">Mostrar todos</button>
-          </div>
-          <div id="recipeAppliancesPicker"></div>
-        </div>
-
         <div class="ai-box">
           <div class="ai-box-top">
             <span class="ai-box-title" data-i18n="recipe_dialog.ai_title">✨ Assistente de IA (Ingredientes, Confeção &amp; Tempos)</span>
@@ -2353,10 +2605,24 @@
               <option value="Internacional"></option>
             </datalist>
           </div>
-          <div class="form-field">
+          <div class="form-field" id="recMethodFieldWrap">
             <label for="recMethod" data-i18n="recipe_dialog.method_label">Forma de cozinhar</label>
-            <input type="text" class="input" id="recMethod" placeholder="Ex: Bimby + Friend, Airfryer 180°C, Forno" data-i18n-placeholder="recipe_dialog.method_placeholder">
+            <div class="method-combo-wrap">
+              <input type="text" class="input" id="recMethod" placeholder="Ex: Bimby + Friend, Airfryer 180°C, Forno" data-i18n-placeholder="recipe_dialog.method_placeholder" autocomplete="off">
+              <button type="button" class="btn btn-sm method-combo-toggle" id="btnMethodComboToggle" aria-expanded="false" title="Selecionar eletrodomésticos e acessórios">🍳 <span id="methodAppCount">0</span> ▾</button>
+            </div>
           </div>
+        </div>
+
+        <div class="recipe-appliances-box recipe-appliances-dropdown hidden" id="recipeAppliancesBox">
+          <div class="recipe-appliances-header">
+            <label style="margin:0; font-weight:700; font-size:0.84rem;" data-i18n="recipe_dialog.equipment_label">🍳 Eletrodomésticos &amp; Acessórios necessários nesta receita</label>
+            <div style="display:flex; gap:6px; align-items:center;">
+              <button type="button" class="btn btn-sm" id="btnToggleAllRecipeApps" style="font-size:0.74rem; padding:3px 9px;" data-i18n="kitchen.show_all">Mostrar todos</button>
+              <button type="button" class="btn btn-sm btn-primary" id="btnCloseAppliancesCombo" style="font-size:0.74rem; padding:3px 9px;" data-i18n="common.close">Fechar</button>
+            </div>
+          </div>
+          <div id="recipeAppliancesPicker"></div>
         </div>
 
         <div class="form-row-3">
@@ -2397,18 +2663,37 @@
         </div>
 
         <div class="form-field">
-          <label for="recImageUrl" data-i18n="recipe_dialog.image_label">Imagem da receita (foto do telemóvel ou URL)</label>
-          <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-            <input type="text" class="input" id="recImageUrl" style="flex:1 1 180px;" placeholder="https://… ou /local/meals_img/…">
-            <input type="file" id="recImageFile" accept="image/*" class="hidden">
-            <button type="button" class="btn btn-sm" id="btnPickPhoto" data-i18n="recipe_dialog.pick_photo_btn">📷 Foto / Galeria</button>
+          <label data-i18n="recipe_dialog.image_label">Imagem da receita</label>
+          <input type="file" id="recImageFile" accept="image/*" class="hidden">
+          <div class="rec-img-hero" id="recImgHero">
+            <img id="recImagePreview" class="recipe-cover hidden" alt="Pré-visualização da receita">
+            <div class="rec-img-placeholder" id="recImgPlaceholder">
+              <span style="font-size:1.8rem;">🍽️</span>
+              <span data-i18n="recipe_dialog.no_image_hint">Sem imagem — usa o menu ⋮ para escolher ou pesquisar na web</span>
+            </div>
+            <button type="button" class="rec-img-menu-btn" id="btnRecImgMenu" aria-expanded="false" aria-label="Opções de imagem" title="Opções de imagem">⋮</button>
+            <div class="rec-img-dropdown hidden" id="recImgDropdown" role="menu">
+              <button type="button" class="rec-img-dropdown-item" id="btnPickPhoto" role="menuitem" data-i18n="recipe_dialog.pick_photo_btn">📷 Foto / Galeria</button>
+              <button type="button" class="rec-img-dropdown-item" id="btnToggleImgUrl" role="menuitem" data-i18n="recipe_dialog.edit_url_btn">🔗 Alterar URL / Caminho</button>
+              <button type="button" class="rec-img-dropdown-item" id="btnSearchWebImages" role="menuitem" data-i18n="recipe_dialog.web_search_img_btn">🌐 Pesquisar imagem na Web</button>
+            </div>
           </div>
-          <img id="recImagePreview" class="recipe-cover hidden" alt="Pré-visualização da receita" style="margin-top:6px;">
+          <div class="rec-img-url-panel hidden" id="recImgUrlPanel">
+            <input type="text" class="input" id="recImageUrl" style="flex:1 1 200px;" placeholder="https://… ou /local/meals_img/…">
+            <button type="button" class="btn btn-sm" id="btnCloseImgUrlPanel" data-i18n="common.close">Fechar</button>
+          </div>
+          <div class="rec-web-img-panel hidden" id="recWebImgPanel">
+            <div class="rec-web-img-header">
+              <span id="recWebImgStatus" data-i18n="recipe_dialog.web_img_title">🌐 Imagens encontradas na Web</span>
+              <button type="button" class="ing-price-pop-close" id="btnCloseWebImgPanel" aria-label="Fechar" data-i18n-aria="common.close">×</button>
+            </div>
+            <div class="rec-web-img-list" id="recWebImgList"></div>
+          </div>
         </div>
 
-        <div class="form-field">
-          <label for="recSteps" data-i18n="recipe_dialog.steps_label">Modo de preparação &amp; dicas de cozedura</label>
-          <textarea class="input" id="recSteps" rows="4" placeholder="Passos de confeção (preenchido automaticamente pela IA ou à mão)…" data-i18n-placeholder="recipe_dialog.steps_placeholder"></textarea>
+        <div class="form-field steps-featured-box">
+          <label for="recSteps" data-i18n="recipe_dialog.steps_label">📖 Modo de preparação &amp; dicas de cozedura</label>
+          <textarea class="input" id="recSteps" rows="9" placeholder="Passos de confeção (preenchido automaticamente pela IA ou à mão)…" data-i18n-placeholder="recipe_dialog.steps_placeholder"></textarea>
         </div>
 
         <div class="similarity-box hidden" id="similarityBox">
@@ -4261,6 +4546,8 @@
         if (toggleBtn) {
           toggleBtn.textContent = dialogShowAllAppliances ? t("kitchen.show_only_mine") : t("kitchen.show_all");
         }
+        const countBadge = document.getElementById("methodAppCount");
+        if (countBadge) countBadge.textContent = String(selectedSet.size);
 
         const selectedDefs = catalog.filter(a => selectedSet.has(a.id));
 
@@ -5578,15 +5865,33 @@
 
       function updateImagePreview(url) {
         const img = document.getElementById("recImagePreview");
+        const ph = document.getElementById("recImgPlaceholder");
         if (!img) return;
         const clean = String(url || "").trim();
         if (clean) {
           img.src = clean;
           img.classList.remove("hidden");
+          if (ph) ph.classList.add("hidden");
         } else {
           img.removeAttribute("src");
           img.classList.add("hidden");
+          if (ph) ph.classList.remove("hidden");
         }
+      }
+
+      function resetRecipeDialogAuxiliaryPanels() {
+        const appBox = document.getElementById("recipeAppliancesBox");
+        if (appBox) appBox.classList.add("hidden");
+        const comboBtn = document.getElementById("btnMethodComboToggle");
+        if (comboBtn) comboBtn.setAttribute("aria-expanded", "false");
+        const drop = document.getElementById("recImgDropdown");
+        if (drop) drop.classList.add("hidden");
+        const menuBtn = document.getElementById("btnRecImgMenu");
+        if (menuBtn) menuBtn.setAttribute("aria-expanded", "false");
+        const urlPanel = document.getElementById("recImgUrlPanel");
+        if (urlPanel) urlPanel.classList.add("hidden");
+        const webPanel = document.getElementById("recWebImgPanel");
+        if (webPanel) webPanel.classList.add("hidden");
       }
 
       function compressImageToJpegBase64(file, maxDim = 900, quality = 0.82) {
@@ -5653,6 +5958,7 @@
         document.getElementById("recItems").value = formatItemsForInput(baseRec.items);
         updateImagePreview("");
         renderRecipeAppliancesPicker();
+        resetRecipeDialogAuxiliaryPanels();
         document.getElementById("similarityBox").classList.add("hidden");
         document.getElementById("btnDeleteRecipeInDialog").classList.add("hidden");
         document.getElementById("aiSuggestStatus").textContent =
@@ -5697,6 +6003,7 @@
         updateImagePreview(rec.image_url || "");
         document.getElementById("recSteps").value = formatStepsText(guide.steps || "");
         renderRecipeAppliancesPicker();
+        resetRecipeDialogAuxiliaryPanels();
         document.getElementById("similarityBox").classList.add("hidden");
         document.getElementById("aiSuggestStatus").textContent =
           "Podes atualizar campos, indicar os eletrodomésticos/acessórios usados ou usar ✨ Sugerir com IA.";
@@ -5732,6 +6039,7 @@
         else if (mType === "sobremesa") document.getElementById("recCategory").value = "Sobremesa";
         else document.getElementById("recCategory").value = "Peixe";
         renderRecipeAppliancesPicker();
+        resetRecipeDialogAuxiliaryPanels();
         document.getElementById("similarityBox").classList.add("hidden");
         pendingRecipeDraft = null;
         pendingSimilarity = null;
@@ -5746,7 +6054,157 @@
       document.getElementById("btnNewRecipe").addEventListener("click", () => openNewRecipeDialog(""));
 
       document.getElementById("btnPickPhoto").addEventListener("click", () => {
+        document.getElementById("recImgDropdown").classList.add("hidden");
+        document.getElementById("btnRecImgMenu").setAttribute("aria-expanded", "false");
         document.getElementById("recImageFile").click();
+      });
+
+      // Cooking Method combobox -> show/hide Appliances & Accessories panel
+      function setAppliancesComboOpen(open) {
+        const box = document.getElementById("recipeAppliancesBox");
+        const btn = document.getElementById("btnMethodComboToggle");
+        if (!box) return;
+        box.classList.toggle("hidden", !open);
+        if (btn) btn.setAttribute("aria-expanded", open ? "true" : "false");
+      }
+
+      document.getElementById("recMethod").addEventListener("focus", () => {
+        setAppliancesComboOpen(true);
+      });
+      document.getElementById("recMethod").addEventListener("click", () => {
+        setAppliancesComboOpen(true);
+      });
+      document.getElementById("btnMethodComboToggle").addEventListener("click", (e) => {
+        e.stopPropagation();
+        const box = document.getElementById("recipeAppliancesBox");
+        setAppliancesComboOpen(box ? box.classList.contains("hidden") : true);
+      });
+      document.getElementById("btnCloseAppliancesCombo").addEventListener("click", () => {
+        setAppliancesComboOpen(false);
+      });
+
+      // Recipe Image 3-dots menu (Photo/Gallery, Edit URL, Web Image Search)
+      document.getElementById("btnRecImgMenu").addEventListener("click", (e) => {
+        e.stopPropagation();
+        const drop = document.getElementById("recImgDropdown");
+        const willOpen = drop.classList.contains("hidden");
+        drop.classList.toggle("hidden", !willOpen);
+        e.currentTarget.setAttribute("aria-expanded", willOpen ? "true" : "false");
+      });
+
+      document.getElementById("btnToggleImgUrl").addEventListener("click", () => {
+        document.getElementById("recImgDropdown").classList.add("hidden");
+        document.getElementById("btnRecImgMenu").setAttribute("aria-expanded", "false");
+        const panel = document.getElementById("recImgUrlPanel");
+        panel.classList.remove("hidden");
+        document.getElementById("recImageUrl").focus();
+      });
+
+      document.getElementById("btnCloseImgUrlPanel").addEventListener("click", () => {
+        document.getElementById("recImgUrlPanel").classList.add("hidden");
+      });
+
+      document.getElementById("btnCloseWebImgPanel").addEventListener("click", () => {
+        document.getElementById("recWebImgPanel").classList.add("hidden");
+      });
+
+      async function searchWebImagesForRecipe() {
+        const dishName = document.getElementById("recName").value.trim();
+        const cuisine = document.getElementById("recCuisine").value.trim();
+        const category = document.getElementById("recCategory").value.trim();
+        if (!dishName) {
+          showToast(t("recipe_dialog.web_img_need_name"));
+          document.getElementById("recName").focus();
+          return;
+        }
+        document.getElementById("recImgDropdown").classList.add("hidden");
+        document.getElementById("btnRecImgMenu").setAttribute("aria-expanded", "false");
+        const panel = document.getElementById("recWebImgPanel");
+        const statusEl = document.getElementById("recWebImgStatus");
+        const listEl = document.getElementById("recWebImgList");
+        panel.classList.remove("hidden");
+        statusEl.textContent = t("recipe_dialog.web_img_searching");
+        listEl.innerHTML = `<div class="kitchen-sub" style="padding:12px; text-align:center;">${esc(t("recipe_dialog.web_img_searching"))}</div>`;
+
+        let images = [];
+        const hass = getHass();
+        if (hass) {
+          try {
+            const resp = await hass.callWS({
+              type: "call_service",
+              domain: "plan_my_meals",
+              service: "search_recipe_images",
+              service_data: { query: dishName, cuisine, category, limit: 10 },
+              return_response: true
+            });
+            const payload = (resp && resp.response) || resp || {};
+            if (Array.isArray(payload.images)) images = payload.images;
+          } catch (err) {
+            console.warn("search_recipe_images service failed:", err);
+          }
+        }
+        // Client-side Wikimedia Commons fallback if HA service unavailable or returned empty
+        if (!images.length) {
+          try {
+            const url = `https://commons.wikimedia.org/w/api.php?action=query&origin=*&generator=search&gsrsearch=${encodeURIComponent(dishName + " filetype:bitmap")}&gsrnamespace=6&gsrlimit=8&prop=imageinfo&iiprop=url|mime|thumburl&iiurlwidth=640&format=json`;
+            const res = await fetch(url);
+            if (res.ok) {
+              const data = await res.json();
+              const pages = (data && data.query && data.query.pages) || {};
+              images = Object.values(pages).map(p => {
+                const ii = (p.imageinfo && p.imageinfo[0]) || {};
+                const thumb = ii.thumburl || ii.url || "";
+                if (!thumb) return null;
+                return {
+                  title: String(p.title || dishName).replace(/^File:/i, "").replace(/\.[a-z0-9]{2,5}$/i, "").replace(/_/g, " "),
+                  thumb_url: thumb,
+                  url: ii.url || thumb,
+                  source: "Wikimedia Commons"
+                };
+              }).filter(Boolean);
+            }
+          } catch (_) {}
+        }
+
+        statusEl.textContent = `${t("recipe_dialog.web_img_title")} (${images.length})`;
+        if (!images.length) {
+          listEl.innerHTML = `<div class="kitchen-sub" style="padding:12px; text-align:center;">${esc(t("recipe_dialog.web_img_none"))}</div>`;
+          return;
+        }
+        listEl.innerHTML = images.map(img => `
+          <button type="button" class="rec-web-img-option" data-pick-web-img="${esc(img.url || img.thumb_url)}">
+            <img src="${esc(img.thumb_url || img.url)}" alt="${esc(img.title || dishName)}" loading="lazy" onerror="this.closest('.rec-web-img-option').style.display='none'">
+            <div class="rec-web-img-caption">
+              <span>${esc(img.title || dishName)}</span>
+              <span class="rec-web-img-src">${esc(img.source || "Web")}</span>
+            </div>
+          </button>
+        `).join("");
+      }
+
+      document.getElementById("btnSearchWebImages").addEventListener("click", searchWebImagesForRecipe);
+
+      document.getElementById("recWebImgList").addEventListener("click", (e) => {
+        const opt = e.target.closest("[data-pick-web-img]");
+        if (!opt) return;
+        const pickedUrl = opt.dataset.pickWebImg;
+        document.getElementById("recImageUrl").value = pickedUrl;
+        updateImagePreview(pickedUrl);
+        document.getElementById("recWebImgPanel").classList.add("hidden");
+        showToast(t("recipe_dialog.web_img_selected"));
+      });
+
+      // Close image dropdown or appliances combobox when clicking elsewhere inside recipeDialog
+      document.getElementById("recipeDialog").addEventListener("click", (e) => {
+        const drop = document.getElementById("recImgDropdown");
+        if (drop && !drop.classList.contains("hidden") && !e.target.closest("#btnRecImgMenu") && !e.target.closest("#recImgDropdown")) {
+          drop.classList.add("hidden");
+          document.getElementById("btnRecImgMenu").setAttribute("aria-expanded", "false");
+        }
+        const appBox = document.getElementById("recipeAppliancesBox");
+        if (appBox && !appBox.classList.contains("hidden") && !e.target.closest("#recMethodFieldWrap") && !e.target.closest("#recipeAppliancesBox")) {
+          setAppliancesComboOpen(false);
+        }
       });
 
       document.getElementById("recImageUrl").addEventListener("input", (e) => {
@@ -6276,15 +6734,32 @@
       }
 
       function formatStepsText(steps) {
+        let lines = [];
         if (Array.isArray(steps)) {
-          return steps.map(s => String(s || "").trim()).filter(Boolean).join("\n");
+          lines = steps.map(s => String(s || "").trim()).filter(Boolean);
+        } else {
+          const s = String(steps || "").trim();
+          if (!s) return "";
+          const normalized = !s.includes("\n")
+            ? s.replace(/\s+(?=\d+\.\s)/g, "\n")
+            : s;
+          lines = normalized
+            .split(/\n+/)
+            .map(line => line.trim())
+            .filter(Boolean);
         }
-        const s = String(steps || "").trim();
-        if (!s) return "";
-        if (!s.includes("\n")) {
-          return s.replace(/\s+(?=\d+\.\s)/g, "\n");
-        }
-        return s;
+        return lines.join("\n\n");
+      }
+
+      function renderStepsRichHTML(steps) {
+        const formatted = formatStepsText(steps);
+        if (!formatted) return "";
+        return formatted
+          .split(/\n{2,}/)
+          .map(p => p.trim())
+          .filter(Boolean)
+          .map(p => `<p class="step-para">${esc(p).replace(/\n/g, "<br>")}</p>`)
+          .join("");
       }
 
       function openDetail(rec) {
@@ -6341,11 +6816,11 @@
             <label>${esc(t("detail_dialog.ingredients_for", { count: state.servings, people: peopleWord }))}</label>
             <div class="detail-ing-list">${ingPills || `<span class="form-hint">${esc(t("detail_dialog.no_ingredients"))}</span>`}</div>
           </div>
-          <div class="form-field">
-            <label>${esc(t("detail_dialog.steps_label"))}</label>
+          <div class="form-field detail-steps-featured">
+            <label>📖 ${esc(t("detail_dialog.steps_label"))}</label>
             ${hasSteps
-              ? `<div class="steps-box">${esc(formatStepsText(guide.steps))}</div>`
-              : `<div class="steps-box" style="color:var(--text-muted);">${esc(t("detail_dialog.no_steps"))}</div>`
+              ? `<div class="steps-box-rich">${renderStepsRichHTML(guide.steps)}</div>`
+              : `<div class="steps-box-rich" style="color:var(--text-muted);">${esc(t("detail_dialog.no_steps"))}</div>`
             }
           </div>
         `;
