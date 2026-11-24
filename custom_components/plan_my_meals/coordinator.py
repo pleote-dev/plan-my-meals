@@ -77,7 +77,8 @@ class PlanMyMealsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         todo_items = await self._async_get_todo_summaries()
 
         def _read() -> dict[str, Any]:
-            state = self.db.get_state(ttl_days=ttl, currency=currency)
+            base_servings = int(cfg.get(CONF_BASE_SERVINGS) or DEFAULT_BASE_SERVINGS)
+            state = self.db.get_state(ttl_days=ttl, currency=currency, base_servings=base_servings)
             inc_qty = state.get("includeQtyInHA")
             if inc_qty is None:
                 inc_qty = bool(cfg.get(CONF_INCLUDE_QTY, True))
@@ -86,7 +87,7 @@ class PlanMyMealsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 inc_price = bool(cfg.get(CONF_INCLUDE_PRICE, True))
             ingredients = self.db.aggregate_ingredients(
                 todo_items,
-                base_servings=int(cfg.get(CONF_BASE_SERVINGS) or DEFAULT_BASE_SERVINGS),
+                base_servings=base_servings,
                 currency=currency,
                 include_qty=bool(inc_qty),
                 include_price=bool(inc_price),
@@ -317,12 +318,14 @@ class PlanMyMealsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             priced += ai_saved
 
         mode = "ai" if ai_enabled else "supermarkets"
+        base_servings = int(cfg.get(CONF_BASE_SERVINGS) or DEFAULT_BASE_SERVINGS)
         meta = await self.hass.async_add_executor_job(
             self.db.record_price_refresh,
             updated,
             priced,
             mode,
             updated_by,
+            base_servings,
         )
         await self.async_request_refresh()
         return {"ok": True, "searched": updated, "priced": priced, "mode": mode, "meta": meta}

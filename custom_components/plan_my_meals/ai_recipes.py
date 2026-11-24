@@ -158,6 +158,8 @@ def build_recipe_prompt(
             f"Indica categoria, origem/cozinha, forma de cozinhar com equipamento e temperatura, tempo de preparação, tempo de cozedura, tempo total, "
             f"ingredientes para {base_servings} pessoas separados por vírgula com quantidades, "
             "valores nutricionais estimados por 1 pessoa (kcal, protein_g, carbs_g, fat_g, fiber_g em números inteiros), "
+            "todos os eletrodomésticos possíveis para confecionar este prato em 'possible_appliances' (IDs separados por vírgula entre: bimby, airfryer, forno, fogao, grelhador, microondas, panela_pressao, slow_cooker, varinha_magica, batedeira), "
+            "o(s) eletrodoméstico(s) recomendável(is) e mais rápido(s) em 'recommended_appliances', "
             "e passos curtos numerados com dica de ponto de cozedura.",
         ]
         return " ".join(p for p in parts if p)
@@ -198,6 +200,8 @@ def build_recipe_prompt(
         f"Provide category, cuisine, cooking method with equipment and temperature, prep_time, cook_time, total_time, "
         f"ingredients_csv for {base_servings} people comma-separated with quantities, "
         "estimated nutrition per 1 person as integers (kcal, protein_g, carbs_g, fat_g, fiber_g), "
+        "all compatible appliances that can cook this dish in 'possible_appliances' (comma-separated IDs from: bimby, airfryer, forno, fogao, grelhador, microondas, panela_pressao, slow_cooker, varinha_magica, batedeira), "
+        "the recommended and fastest appliance(s) in 'recommended_appliances', "
         "and short numbered cooking steps with a doneness tip.",
     ]
     return " ".join(p for p in parts if p)
@@ -277,6 +281,20 @@ def build_relaxed_structure(language: str = "pt") -> dict[str, Any]:
             if is_pt
             else "Comma-separated ingredients with quantities (e.g. 300g Cod, 400g Potatoes)",
             "required": True,
+            "selector": {"text": {}},
+        },
+        "possible_appliances": {
+            "description": "Todos os IDs de eletrodomésticos possíveis (ex: forno, airfryer, fogao, bimby)"
+            if is_pt
+            else "All compatible appliance IDs (e.g. forno, airfryer, fogao, bimby)",
+            "required": False,
+            "selector": {"text": {}},
+        },
+        "recommended_appliances": {
+            "description": "ID(s) do(s) eletrodoméstico(s) recomendável(is) e mais rápido(s) (ex: airfryer)"
+            if is_pt
+            else "Recommended and fastest appliance ID(s) (e.g. airfryer)",
+            "required": False,
             "selector": {"text": {}},
         },
         "steps": {
@@ -381,6 +399,65 @@ def normalize_category(cat: Any, meal_type: str = "refeicao") -> str:
     return "Rápido"
 
 
+APPLIANCE_ALIASES = {
+    "bimby": "bimby",
+    "thermomix": "bimby",
+    "airfryer": "airfryer",
+    "air fryer": "airfryer",
+    "forno": "forno",
+    "oven": "forno",
+    "fogao": "fogao",
+    "stovetop": "fogao",
+    "stove": "fogao",
+    "frigideira": "fogao",
+    "wok": "fogao",
+    "tacho": "fogao",
+    "grelhador": "grelhador",
+    "grill": "grelhador",
+    "microondas": "microondas",
+    "micro-ondas": "microondas",
+    "microwave": "microondas",
+    "panela_pressao": "panela_pressao",
+    "panela de pressao": "panela_pressao",
+    "pressure cooker": "panela_pressao",
+    "instant pot": "panela_pressao",
+    "slow_cooker": "slow_cooker",
+    "slow cooker": "slow_cooker",
+    "varinha_magica": "varinha_magica",
+    "varinha magica": "varinha_magica",
+    "blender": "varinha_magica",
+    "liquidificador": "varinha_magica",
+    "batedeira": "batedeira",
+    "stand mixer": "batedeira",
+    "mixer": "batedeira",
+}
+
+
+def _parse_appliance_ids(raw: Any) -> list[str]:
+    if not raw:
+        return []
+    tokens: list[str] = []
+    if isinstance(raw, list):
+        for item in raw:
+            tokens.extend(re.split(r"[,;/+|]+", str(item or "")))
+    else:
+        tokens = re.split(r"[,;/+|]+", str(raw))
+    out: list[str] = []
+    for tok in tokens:
+        n = _norm(tok)
+        if not n:
+            continue
+        matched = APPLIANCE_ALIASES.get(n)
+        if not matched:
+            for alias, canonical in APPLIANCE_ALIASES.items():
+                if alias in n:
+                    matched = canonical
+                    break
+        if matched and matched not in out:
+            out.append(matched)
+    return out
+
+
 def normalize_ai_recipe(raw: dict[str, Any], *, meal_type: str = "refeicao") -> dict[str, Any]:
     """Normalize heterogeneous AI recipe output into the exact shape expected by the UI."""
     # Ingredients may arrive as string, list of strings, or list of dicts
@@ -410,11 +487,20 @@ def normalize_ai_recipe(raw: dict[str, Any], *, meal_type: str = "refeicao") -> 
         if steps and "\n" not in steps:
             steps = re.sub(r"\s+(?=\d+\.\s)", "\n", steps)
 
+    method_str = str(raw.get("method") or "").strip()
+    recommended = _parse_appliance_ids(raw.get("recommended_appliances") or raw.get("appliances"))
+    possible = _parse_appliance_ids(raw.get("possible_appliances"))
+    if not recommended and method_str:
+        recommended = _parse_appliance_ids(method_str)
+    for app_id in recommended:
+        if app_id not in possible:
+            possible.append(app_id)
+
     return {
         "name": str(raw.get("name") or raw.get("title") or "").strip(),
         "category": normalize_category(raw.get("category"), meal_type=meal_type),
         "cuisine": str(raw.get("cuisine") or "").strip(),
-        "method": str(raw.get("method") or "").strip(),
+        "method": method_str,
         "prep_time": str(raw.get("prep_time") or raw.get("prepTime") or "").strip(),
         "cook_time": str(raw.get("cook_time") or raw.get("cookTime") or "").strip(),
         "total_time": str(raw.get("total_time") or raw.get("time") or "").strip(),
@@ -424,6 +510,8 @@ def normalize_ai_recipe(raw: dict[str, Any], *, meal_type: str = "refeicao") -> 
         "fat_g": _parse_int(raw.get("fat_g")),
         "fiber_g": _parse_int(raw.get("fiber_g")),
         "ingredients_csv": ingredients_csv,
+        "possible_appliances": possible,
+        "recommended_appliances": recommended,
         "steps": steps,
     }
 

@@ -398,6 +398,23 @@
     "no_price_hint": "Executa \"Pesquisar preços\" nas Opções de Compras para obter os preços atuais nos supermercados.",
     "view_prices_hint": "Ver preços"
   },
+  "picker_filters": {
+    "btn": "🎛️ Filtros",
+    "btn_active": "🎛️ Filtros ({count})",
+    "title": "Filtros de Pesquisa",
+    "price_range_label": "Custo médio por pessoa",
+    "price_any": "Qualquer preço",
+    "price_range_val": "{min}€ – {max}€ / pessoa",
+    "price_up_to": "Até {max}€ / pessoa",
+    "price_from": "Desde {min}€ / pessoa",
+    "include_unpriced": "Incluir receitas ainda sem preço calculado",
+    "appliances_label": "Eletrodomésticos disponíveis",
+    "appliances_hint": "Mostra receitas que podem ser feitas com os equipamentos selecionados.",
+    "clear_btn": "Limpar filtros",
+    "apply_btn": "Aplicar",
+    "per_person_tag": "{price}/pessoa",
+    "possible_badge": "possível"
+  },
   "common": {
     "close": "Fechar"
   }

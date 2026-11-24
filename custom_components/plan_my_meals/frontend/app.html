@@ -1957,6 +1957,145 @@
       color: var(--text);
       margin-bottom: 4px;
     }
+
+    /* Picker search row + Filter popup (price range & available appliances) */
+    .picker-search-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .picker-search-row .input {
+      flex: 1;
+      min-width: 0;
+    }
+    .picker-filter-btn {
+      flex-shrink: 0;
+      white-space: nowrap;
+      min-height: 40px;
+    }
+    .picker-filter-btn.has-filters {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
+    .picker-filter-popover {
+      position: fixed;
+      inset: auto;
+      margin: 0;
+      padding: 0;
+      width: min(370px, calc(100vw - 24px));
+      max-height: min(460px, calc(100vh - 24px));
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface, #fff);
+      color: var(--text, #111);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25), 0 2px 10px rgba(0, 0, 0, 0.12);
+      z-index: 99999;
+    }
+    @supports not selector(:popover-open) {
+      .picker-filter-popover:not(.\:popover-open) {
+        display: none;
+      }
+    }
+    .picker-filter-popover:is(:popover-open, .\:popover-open) {
+      display: block;
+    }
+    .picker-filter-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px 10px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface-2);
+      font-weight: 800;
+      font-size: 0.9rem;
+    }
+    .picker-filter-body {
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .picker-filter-section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .picker-filter-range-val {
+      color: var(--primary);
+      font-weight: 800;
+      font-size: 0.8rem;
+    }
+    .picker-range-sliders {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+    .picker-range-col {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+    .picker-range-col input[type="range"] {
+      width: 100%;
+      accent-color: var(--primary);
+    }
+    .picker-filter-check {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+      cursor: pointer;
+    }
+    .picker-filter-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-top: 1px solid var(--border);
+      background: var(--surface-2);
+    }
+    .picker-cost-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      white-space: nowrap;
+    }
+    .picker-item-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 5px;
+      margin-top: 4px;
+    }
+    .appliance-chip.is-possible:not(.active) {
+      border-style: dashed;
+      border-color: var(--primary);
+      background: color-mix(in srgb, var(--primary) 6%, var(--surface));
+    }
+    .appliance-possible-tag {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--primary);
+      opacity: 0.9;
+    }
   </style>
 </head>
 <body>
@@ -2087,11 +2226,55 @@
         <button type="button" class="btn btn-sm" data-quick-meal="Sobras" data-i18n="picker.quick_leftovers">♻️ Sobras</button>
         <button type="button" class="btn btn-sm" data-quick-meal="Sopa &amp; Sandes" data-i18n="picker.quick_light">🥣 Leve / Sopa</button>
       </div>
-      <input type="search" class="input" id="pickerSearch" placeholder="Filtrar receitas por nome ou ingrediente…" data-i18n-placeholder="picker.search_placeholder">
+      <div class="picker-search-row">
+        <input type="search" class="input" id="pickerSearch" placeholder="Filtrar receitas por nome ou ingrediente…" data-i18n-placeholder="picker.search_placeholder">
+        <button type="button" class="btn btn-sm picker-filter-btn" id="btnPickerFilters" aria-expanded="false" data-i18n="picker_filters.btn">🎛️ Filtros</button>
+      </div>
       <div class="filter-chips" id="pickerChips"></div>
       <div class="picker-list" id="pickerList"></div>
     </div>
   </dialog>
+
+  <!-- POPOVER: PICKER ADVANCED FILTERS (Price range per person + Available appliances) -->
+  <div id="pickerFilterPopover" class="picker-filter-popover" popover="auto" role="dialog" aria-label="Filtros de Pesquisa">
+    <div class="picker-filter-head">
+      <span data-i18n="picker_filters.title">Filtros de Pesquisa</span>
+      <button type="button" class="ing-price-pop-close" id="btnClosePickerFilters" aria-label="Fechar" data-i18n-aria="common.close">×</button>
+    </div>
+    <div class="picker-filter-body">
+      <div>
+        <div class="picker-filter-section-title">
+          <span data-i18n="picker_filters.price_range_label">Custo médio por pessoa</span>
+          <span class="picker-filter-range-val" id="pickerPriceRangeLabel">Qualquer preço</span>
+        </div>
+        <div class="picker-range-sliders">
+          <label class="picker-range-col">
+            <span>Min: <strong id="pickerMinPriceVal">0€</strong></span>
+            <input type="range" id="pickerMinPrice" min="0" max="20" step="0.5" value="0">
+          </label>
+          <label class="picker-range-col">
+            <span>Max: <strong id="pickerMaxPriceVal">20€+</strong></span>
+            <input type="range" id="pickerMaxPrice" min="0" max="20" step="0.5" value="20">
+          </label>
+        </div>
+        <label class="picker-filter-check">
+          <input type="checkbox" id="pickerIncludeUnpriced" checked>
+          <span data-i18n="picker_filters.include_unpriced">Incluir receitas ainda sem preço calculado</span>
+        </label>
+      </div>
+      <div>
+        <div class="picker-filter-section-title">
+          <span data-i18n="picker_filters.appliances_label">Eletrodomésticos disponíveis</span>
+        </div>
+        <div class="kitchen-sub" style="margin-bottom:8px;" data-i18n="picker_filters.appliances_hint">Mostra receitas que podem ser feitas com os equipamentos selecionados.</div>
+        <div class="appliance-chips" id="pickerApplianceChips"></div>
+      </div>
+    </div>
+    <div class="picker-filter-footer">
+      <button type="button" class="btn btn-sm" id="btnClearPickerFilters" data-i18n="picker_filters.clear_btn">Limpar filtros</button>
+      <button type="button" class="btn btn-sm btn-primary" id="btnApplyPickerFilters" data-i18n="picker_filters.apply_btn">Aplicar</button>
+    </div>
+  </div>
 
   <!-- DIALOG: NEW RECIPE -->
   <dialog id="recipeDialog" aria-labelledby="recipeDialogTitle">
@@ -2734,6 +2917,7 @@
       let kitchenEditMode = false;
       let kitchenExpandedAppId = null;
       let dialogRecipeAppliances = [];
+      let dialogPossibleAppliances = [];
       let dialogRecipeAccessories = {};
       let dialogShowAllAppliances = false;
       let detailRecipeAppliances = [];
@@ -3115,6 +3299,7 @@
           const remote = wsResp && wsResp.state;
           if (!remote || !Array.isArray(remote.weeklyPlan) || remote.weeklyPlan.length !== 7) return false;
           if (remote.ingredientPrices) state.ingredientPrices = remote.ingredientPrices;
+          if (remote.recipeCosts) state.recipeCosts = remote.recipeCosts;
           if (remote.costSummary) state.costSummary = remote.costSummary;
           if (remote.priceRefreshMeta) state.priceRefreshMeta = remote.priceRefreshMeta;
 
@@ -4066,10 +4251,11 @@
         const homeSet = new Set(state.kitchen.appliances || []);
         const homeAccMap = state.kitchen.accessories || {};
         const selectedSet = new Set(dialogRecipeAppliances || []);
+        const possibleSet = new Set(dialogPossibleAppliances || []);
 
         const visibleApps = dialogShowAllAppliances
           ? catalog
-          : catalog.filter(a => homeSet.has(a.id) || selectedSet.has(a.id));
+          : catalog.filter(a => homeSet.has(a.id) || selectedSet.has(a.id) || possibleSet.has(a.id));
         const appsToRender = visibleApps.length ? visibleApps : catalog;
 
         if (toggleBtn) {
@@ -4082,10 +4268,12 @@
           <div class="appliance-chips">
             ${appsToRender.map(a => {
               const on = selectedSet.has(a.id);
+              const isPossible = !on && possibleSet.has(a.id);
               const selAccs = (dialogRecipeAccessories && dialogRecipeAccessories[a.id]) || [];
               return `
-                <button type="button" class="appliance-chip ${on ? "active" : ""}" data-rec-app-toggle="${esc(a.id)}" aria-pressed="${on}">
+                <button type="button" class="appliance-chip ${on ? "active" : ""} ${isPossible ? "is-possible" : ""}" data-rec-app-toggle="${esc(a.id)}" aria-pressed="${on}">
                   <span>${esc(tApplianceLabel(a))}${on ? " ✓" : ""}</span>
+                  ${isPossible ? `<span class="appliance-possible-tag">· ${esc(t("picker_filters.possible_badge"))}</span>` : ""}
                   ${selAccs.length ? `<span class="appliance-chip-count">+${selAccs.length}</span>` : ""}
                 </button>
               `;
@@ -4965,12 +5153,175 @@
         dinnerDessert: "Sobremesa Jantar"
       };
 
+      const pickerFilters = {
+        minPrice: 0,
+        maxPrice: 20,
+        includeUnpriced: true,
+        appliances: new Set()
+      };
+
+      function getRecipeCostPerPerson(rec) {
+        if (!rec) return null;
+        if (typeof rec.cost_per_person_eur === "number" && !Number.isNaN(rec.cost_per_person_eur)) {
+          return rec.cost_per_person_eur;
+        }
+        const map = state.recipeCosts || {};
+        if (rec.id && map[rec.id] && typeof map[rec.id].cost_per_person_eur === "number") {
+          return map[rec.id].cost_per_person_eur;
+        }
+        // Fallback: compute live from state.ingredientPrices
+        const prices = state.ingredientPrices || {};
+        const items = Array.isArray(rec.items) ? rec.items : [];
+        const seen = new Set();
+        let total = 0;
+        let priced = 0;
+        items.forEach(raw => {
+          const it = normalizeItem(raw);
+          const nk = normalize(it.name);
+          if (!nk || seen.has(nk)) return;
+          seen.add(nk);
+          const p = prices[nk];
+          if (p && typeof p.avg_price === "number") {
+            total += p.avg_price;
+            priced++;
+          }
+        });
+        if (!priced) return null;
+        const baseServ = Number((INTEGRATION_CONFIG && INTEGRATION_CONFIG.base_servings) || BASE_SERVINGS || 2);
+        return Math.round((total / Math.max(1, baseServ)) * 100) / 100;
+      }
+
+      function getRecipeCompatibleAppliances(rec) {
+        const equip = getRecipeEquipment(rec || {});
+        const recommended = Array.isArray(equip.appliances) ? [...equip.appliances] : [];
+        const possible = Array.isArray(rec && rec.possible_appliances) ? [...rec.possible_appliances] : [];
+        recommended.forEach(a => { if (a && !possible.includes(a)) possible.push(a); });
+        return { recommended, possible };
+      }
+
+      function getActivePickerFilterCount() {
+        let count = 0;
+        if (pickerFilters.minPrice > 0 || pickerFilters.maxPrice < 20) count++;
+        if (!pickerFilters.includeUnpriced) count++;
+        if (pickerFilters.appliances.size > 0) count += pickerFilters.appliances.size;
+        return count;
+      }
+
+      function updatePickerFilterUI() {
+        const btn = document.getElementById("btnPickerFilters");
+        const activeCount = getActivePickerFilterCount();
+        if (btn) {
+          btn.textContent = activeCount > 0
+            ? t("picker_filters.btn_active", { count: activeCount })
+            : t("picker_filters.btn");
+          btn.classList.toggle("has-filters", activeCount > 0);
+        }
+
+        const minEl = document.getElementById("pickerMinPrice");
+        const maxEl = document.getElementById("pickerMaxPrice");
+        const minValEl = document.getElementById("pickerMinPriceVal");
+        const maxValEl = document.getElementById("pickerMaxPriceVal");
+        const rangeLabelEl = document.getElementById("pickerPriceRangeLabel");
+        const unpricedEl = document.getElementById("pickerIncludeUnpriced");
+        if (minEl) minEl.value = String(pickerFilters.minPrice);
+        if (maxEl) maxEl.value = String(pickerFilters.maxPrice);
+        if (minValEl) minValEl.textContent = `${String(pickerFilters.minPrice).replace(".", ",")}€`;
+        if (maxValEl) maxValEl.textContent = pickerFilters.maxPrice >= 20 ? "20€+" : `${String(pickerFilters.maxPrice).replace(".", ",")}€`;
+        if (unpricedEl) unpricedEl.checked = Boolean(pickerFilters.includeUnpriced);
+        if (rangeLabelEl) {
+          const fmt = (n) => String(n).replace(".", ",");
+          if (pickerFilters.minPrice <= 0 && pickerFilters.maxPrice >= 20) {
+            rangeLabelEl.textContent = t("picker_filters.price_any");
+          } else if (pickerFilters.minPrice <= 0) {
+            rangeLabelEl.textContent = t("picker_filters.price_up_to", { max: fmt(pickerFilters.maxPrice) });
+          } else if (pickerFilters.maxPrice >= 20) {
+            rangeLabelEl.textContent = t("picker_filters.price_from", { min: fmt(pickerFilters.minPrice) });
+          } else {
+            rangeLabelEl.textContent = t("picker_filters.price_range_val", { min: fmt(pickerFilters.minPrice), max: fmt(pickerFilters.maxPrice) });
+          }
+        }
+
+        const appsEl = document.getElementById("pickerApplianceChips");
+        if (appsEl) {
+          const catalog = getAllAppliancesCatalog();
+          const ownedSet = new Set((state.kitchen && state.kitchen.appliances) || []);
+          const ordered = [
+            ...catalog.filter(a => ownedSet.has(a.id)),
+            ...catalog.filter(a => !ownedSet.has(a.id))
+          ];
+          appsEl.innerHTML = ordered.map(a => {
+            const on = pickerFilters.appliances.has(a.id);
+            return `
+              <button type="button" class="appliance-chip ${on ? "active" : ""}" data-picker-app-filter="${esc(a.id)}" aria-pressed="${on}">
+                <span>${esc(tApplianceLabel(a))}${on ? " ✓" : ""}</span>
+              </button>
+            `;
+          }).join("");
+        }
+      }
+
+      function positionPickerFilterPopover() {
+        const pop = document.getElementById("pickerFilterPopover");
+        const btn = document.getElementById("btnPickerFilters");
+        if (!pop || !btn) return;
+        const rect = btn.getBoundingClientRect();
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        const popRect = pop.getBoundingClientRect();
+        const popW = popRect.width || 350;
+        const popH = popRect.height || 320;
+        let left = rect.right - popW;
+        if (left < 12) left = 12;
+        if (left + popW > vw - 12) left = vw - popW - 12;
+        let top = rect.bottom + 8;
+        if (top + popH > vh - 12 && rect.top - 8 - popH >= 12) {
+          top = rect.top - 8 - popH;
+        } else if (top + popH > vh - 12) {
+          top = Math.max(12, vh - popH - 12);
+        }
+        pop.style.left = `${Math.round(left)}px`;
+        pop.style.top = `${Math.round(top)}px`;
+      }
+
+      function closePickerFilterPopover() {
+        const pop = document.getElementById("pickerFilterPopover");
+        const btn = document.getElementById("btnPickerFilters");
+        if (!pop) return;
+        if (Object.hasOwn(HTMLElement.prototype, "popover")) {
+          try { if (pop.matches(":popover-open")) pop.hidePopover(); } catch {}
+        }
+        pop.classList.remove(":popover-open");
+        if (btn) btn.setAttribute("aria-expanded", "false");
+      }
+
+      function togglePickerFilterPopover() {
+        const pop = document.getElementById("pickerFilterPopover");
+        const btn = document.getElementById("btnPickerFilters");
+        if (!pop || !btn) return;
+        const supportsPop = Object.hasOwn(HTMLElement.prototype, "popover");
+        const isOpen = supportsPop ? (() => { try { return pop.matches(":popover-open"); } catch { return false; } })() : pop.classList.contains(":popover-open");
+        if (isOpen) {
+          closePickerFilterPopover();
+          return;
+        }
+        updatePickerFilterUI();
+        if (supportsPop) {
+          try { pop.showPopover(); } catch { pop.classList.add(":popover-open"); }
+        } else {
+          pop.classList.add(":popover-open");
+        }
+        btn.setAttribute("aria-expanded", "true");
+        requestAnimationFrame(positionPickerFilterPopover);
+      }
+
       function openPicker(dayIdx, mealKey) {
         pickerTarget = { dayIdx, mealKey };
         pickerCategory = "Todas";
+        closePickerFilterPopover();
         document.getElementById("pickerTitle").textContent =
           `${tDay(dayIdx)} — ${tSlot(mealKey)}`;
         document.getElementById("pickerSearch").value = "";
+        updatePickerFilterUI();
         renderPickerList();
         document.getElementById("pickerDialog").showModal();
       }
@@ -4997,11 +5348,35 @@
         const matchesCategory = (r) =>
           !(mType === "refeicao" && pickerCategory !== "Todas" && r.category !== pickerCategory);
 
-        let list = allTypeRecipes.filter(r => matchesCategory(r) && matchesTokens(recipeSearchHaystack(r), queryTokens, false));
+        const matchesAdvancedFilters = (r) => {
+          // 1) Price range per person
+          const hasPriceFilter = pickerFilters.minPrice > 0 || pickerFilters.maxPrice < 20 || !pickerFilters.includeUnpriced;
+          if (hasPriceFilter) {
+            const cpp = getRecipeCostPerPerson(r);
+            if (cpp === null) {
+              if (!pickerFilters.includeUnpriced) return false;
+            } else {
+              if (cpp < pickerFilters.minPrice) return false;
+              if (pickerFilters.maxPrice < 20 && cpp > pickerFilters.maxPrice) return false;
+            }
+          }
+          // 2) Available appliances (recipe can be cooked with at least one selected appliance, or needs none)
+          if (pickerFilters.appliances.size > 0) {
+            const { recommended, possible } = getRecipeCompatibleAppliances(r);
+            const allApps = new Set([...recommended, ...possible]);
+            if (allApps.size > 0) {
+              const hasMatch = Array.from(pickerFilters.appliances).some(a => allApps.has(a));
+              if (!hasMatch) return false;
+            }
+          }
+          return true;
+        };
+
+        let list = allTypeRecipes.filter(r => matchesCategory(r) && matchesAdvancedFilters(r) && matchesTokens(recipeSearchHaystack(r), queryTokens, false));
         let usedFuzzy = false;
         if (q && !list.length) {
           const fuzzyTokens = correctedTokens.length ? correctedTokens : queryTokens;
-          const fuzzyList = allTypeRecipes.filter(r => matchesCategory(r) && matchesTokens(recipeSearchHaystack(r), fuzzyTokens, true));
+          const fuzzyList = allTypeRecipes.filter(r => matchesCategory(r) && matchesAdvancedFilters(r) && matchesTokens(recipeSearchHaystack(r), fuzzyTokens, true));
           if (fuzzyList.length) {
             list = fuzzyList;
             usedFuzzy = true;
@@ -5034,15 +5409,28 @@
           return;
         }
 
-        listEl.innerHTML = corrBanner + list.map(r => `
+        const catalogById = new Map(getAllAppliancesCatalog().map(a => [a.id, a]));
+        listEl.innerHTML = corrBanner + list.map(r => {
+          const cpp = getRecipeCostPerPerson(r);
+          const costBadge = cpp !== null
+            ? `<span class="picker-cost-pill">💰 ${esc(t("picker_filters.per_person_tag", { price: formatEurPrice(cpp) }))}</span>`
+            : "";
+          const { recommended } = getRecipeCompatibleAppliances(r);
+          const appBadges = recommended.slice(0, 3).map(aid => {
+            const def = catalogById.get(aid);
+            return `<span class="cat-tag" style="font-size:0.7rem;">${esc(def ? tApplianceLabel(def) : aid)}</span>`;
+          }).join("");
+          return `
           <button type="button" class="picker-item" data-pick-recipe="${esc(r.id)}">
             <div class="picker-item-top">
               <span>${esc(r.name)}${r.variant_name ? ` (${esc(r.variant_name)})` : ""}</span>
               <span class="cat-tag">${r.rating ? `${r.rating}★ · ` : ""}${esc(tCategory(r.category))} · ${esc(r.time)}</span>
             </div>
+            ${(costBadge || appBadges) ? `<div class="picker-item-meta-row">${costBadge}${appBadges}</div>` : ""}
             <div class="picker-item-sub">${esc(formatMealItemsPreview(r.items))}</div>
           </button>
-        `).join("") + (rawQuery ? `
+        `;
+        }).join("") + (rawQuery ? `
           <button type="button" class="picker-item" style="border-style:dashed; background:var(--surface-2);" data-picker-create-search="${esc(rawQuery)}">
             <div class="picker-item-top">
               <span>${esc(t("picker.create_ai_named", { query: rawQuery }))}</span>
@@ -5248,6 +5636,7 @@
         openVariantDrawerId = null;
         const equip = getRecipeEquipment(baseRec);
         dialogRecipeAppliances = [...equip.appliances];
+        dialogPossibleAppliances = [...getRecipeCompatibleAppliances(baseRec).possible];
         dialogRecipeAccessories = JSON.parse(JSON.stringify(equip.accessories || {}));
         dialogShowAllAppliances = false;
         document.getElementById("recipeForm").reset();
@@ -5280,6 +5669,7 @@
         pendingSimilarity = null;
         const equip = getRecipeEquipment(rec);
         dialogRecipeAppliances = [...equip.appliances];
+        dialogPossibleAppliances = [...getRecipeCompatibleAppliances(rec).possible];
         dialogRecipeAccessories = JSON.parse(JSON.stringify(equip.accessories || {}));
         dialogShowAllAppliances = false;
         document.getElementById("recipeForm").reset();
@@ -5318,6 +5708,7 @@
         creatingVariantParentId = null;
         pendingAssignSlot = assignSlot || null;
         dialogRecipeAppliances = [];
+        dialogPossibleAppliances = [];
         dialogRecipeAccessories = {};
         dialogShowAllAppliances = false;
         document.getElementById("recipeForm").reset();
@@ -6149,6 +6540,56 @@
 
       // Picker Dialog Events
       document.getElementById("pickerSearch").addEventListener("input", renderPickerList);
+      document.getElementById("btnPickerFilters").addEventListener("click", (e) => {
+        e.stopPropagation();
+        togglePickerFilterPopover();
+      });
+      document.getElementById("btnClosePickerFilters").addEventListener("click", closePickerFilterPopover);
+      document.getElementById("btnApplyPickerFilters").addEventListener("click", () => {
+        renderPickerList();
+        closePickerFilterPopover();
+      });
+      document.getElementById("btnClearPickerFilters").addEventListener("click", () => {
+        pickerFilters.minPrice = 0;
+        pickerFilters.maxPrice = 20;
+        pickerFilters.includeUnpriced = true;
+        pickerFilters.appliances.clear();
+        updatePickerFilterUI();
+        renderPickerList();
+      });
+      document.getElementById("pickerMinPrice").addEventListener("input", (e) => {
+        let v = Number(e.target.value);
+        if (v > pickerFilters.maxPrice) pickerFilters.maxPrice = v;
+        pickerFilters.minPrice = v;
+        updatePickerFilterUI();
+        renderPickerList();
+      });
+      document.getElementById("pickerMaxPrice").addEventListener("input", (e) => {
+        let v = Number(e.target.value);
+        if (v < pickerFilters.minPrice) pickerFilters.minPrice = v;
+        pickerFilters.maxPrice = v;
+        updatePickerFilterUI();
+        renderPickerList();
+      });
+      document.getElementById("pickerIncludeUnpriced").addEventListener("change", (e) => {
+        pickerFilters.includeUnpriced = e.target.checked;
+        updatePickerFilterUI();
+        renderPickerList();
+      });
+      document.getElementById("pickerApplianceChips").addEventListener("click", (e) => {
+        const chip = e.target.closest("[data-picker-app-filter]");
+        if (!chip) return;
+        const id = chip.dataset.pickerAppFilter;
+        if (pickerFilters.appliances.has(id)) pickerFilters.appliances.delete(id);
+        else pickerFilters.appliances.add(id);
+        updatePickerFilterUI();
+        renderPickerList();
+      });
+      document.getElementById("pickerFilterPopover").addEventListener("toggle", (e) => {
+        const btn = document.getElementById("btnPickerFilters");
+        if (btn) btn.setAttribute("aria-expanded", e.newState === "open" ? "true" : "false");
+      });
+      document.getElementById("pickerDialog").addEventListener("close", closePickerFilterPopover);
       document.getElementById("pickerChips").addEventListener("click", (e) => {
         const chip = e.target.closest("[data-pick-cat]");
         if (!chip) return;
@@ -6273,13 +6714,24 @@
           if (data.fiber_g !== undefined) document.getElementById("recFiber").value = Math.round(Number(data.fiber_g) || 0);
           if (data.ingredients_csv) itemsEl.value = data.ingredients_csv;
           if (data.steps) document.getElementById("recSteps").value = formatStepsText(data.steps);
-          if (!dialogRecipeAppliances.length && (data.method || data.steps)) {
-            const inferred = getRecipeEquipment({ method: `${data.method || ""} ${data.steps || ""}`, name: data.name || dishName });
-            if (inferred.appliances.length) {
-              dialogRecipeAppliances = [...inferred.appliances];
-              dialogRecipeAccessories = JSON.parse(JSON.stringify(inferred.accessories || {}));
-              renderRecipeAppliancesPicker();
+          const aiPossible = Array.isArray(data.possible_appliances) ? data.possible_appliances.filter(Boolean) : [];
+          const aiRecommended = Array.isArray(data.recommended_appliances) ? data.recommended_appliances.filter(Boolean) : [];
+          if (aiPossible.length) {
+            dialogPossibleAppliances = [...new Set([...(dialogPossibleAppliances || []), ...aiPossible, ...aiRecommended])];
+          }
+          if (!dialogRecipeAppliances.length) {
+            if (aiRecommended.length) {
+              dialogRecipeAppliances = [...aiRecommended];
+            } else if (data.method || data.steps) {
+              const inferred = getRecipeEquipment({ method: `${data.method || ""} ${data.steps || ""}`, name: data.name || dishName });
+              if (inferred.appliances.length) {
+                dialogRecipeAppliances = [...inferred.appliances];
+                dialogRecipeAccessories = JSON.parse(JSON.stringify(inferred.accessories || {}));
+              }
             }
+          }
+          if (aiPossible.length || dialogRecipeAppliances.length) {
+            renderRecipeAppliancesPicker();
           }
 
           statusEl.textContent = t("ai.filled_status", { entity: data._ai_entity || "AI" });
@@ -6390,6 +6842,7 @@
         const image_url = document.getElementById("recImageUrl").value.trim();
         const steps = document.getElementById("recSteps").value.trim();
         const appliances = [...dialogRecipeAppliances];
+        const possible_appliances = [...new Set([...(dialogPossibleAppliances || []), ...appliances])];
         const accessories = JSON.parse(JSON.stringify(dialogRecipeAccessories || {}));
         const nutrition = {
           kcal: Number(document.getElementById("recKcal").value) || 0,
@@ -6416,6 +6869,7 @@
             created_by,
             method,
             appliances,
+            possible_appliances,
             accessories,
             prepTime,
             cookTime,
@@ -6442,6 +6896,7 @@
           created_by,
           method,
           appliances,
+          possible_appliances,
           accessories,
           prepTime,
           cookTime,

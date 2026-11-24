@@ -398,6 +398,23 @@
     "no_price_hint": "Run \"Search prices\" in Shopping Options to fetch current supermarket prices.",
     "view_prices_hint": "View prices"
   },
+  "picker_filters": {
+    "btn": "🎛️ Filters",
+    "btn_active": "🎛️ Filters ({count})",
+    "title": "Search Filters",
+    "price_range_label": "Average cost per person",
+    "price_any": "Any price",
+    "price_range_val": "{min}€ – {max}€ / person",
+    "price_up_to": "Up to {max}€ / person",
+    "price_from": "From {min}€ / person",
+    "include_unpriced": "Include recipes without calculated price yet",
+    "appliances_label": "Available appliances",
+    "appliances_hint": "Shows recipes that can be cooked with the selected appliances.",
+    "clear_btn": "Clear filters",
+    "apply_btn": "Apply",
+    "per_person_tag": "{price}/person",
+    "possible_badge": "compatible"
+  },
   "common": {
     "close": "Close"
   }

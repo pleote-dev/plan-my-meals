@@ -295,9 +295,10 @@ class PlanMyMealsDB:
         priced: int,
         mode: str = "supermarkets",
         updated_by: str = "Automation",
+        base_servings: int = DEFAULT_BASE_SERVINGS,
     ) -> dict[str, Any]:
         with self._lock:
-            state = self.get_state()
+            state = self.get_state(base_servings=base_servings)
             stats = self.get_price_stats()
             meta = {
                 "last_run_at": utc_now_iso(),
@@ -316,6 +317,7 @@ class PlanMyMealsDB:
         self,
         ttl_days: int = DEFAULT_PRICE_TTL_DAYS,
         currency: str = DEFAULT_CURRENCY,
+        base_servings: int = DEFAULT_BASE_SERVINGS,
     ) -> dict[str, Any]:
         with self._lock:
             row = self._conn.execute("SELECT value FROM state_kv WHERE key = 'main'").fetchone()
@@ -326,6 +328,14 @@ class PlanMyMealsDB:
             merged_prices = dict(state.get("ingredientPrices") or {})
             merged_prices.update(prices)
             state["ingredientPrices"] = merged_prices
+            recipe_costs = self.compute_recipe_costs(state, merged_prices, base_servings=base_servings)
+            state["recipeCosts"] = recipe_costs
+            for rec in state.get("recipes") or []:
+                if isinstance(rec, dict) and rec.get("id") in recipe_costs:
+                    rc = recipe_costs[rec["id"]]
+                    rec["avg_cost_eur"] = rc["avg_cost_eur"]
+                    rec["cost_per_person_eur"] = rc["cost_per_person_eur"]
+                    rec["min_cost_per_person_eur"] = rc["min_cost_per_person_eur"]
             costs = self.compute_meal_costs(state, merged_prices)
             state["costSummary"] = costs
             stats = self.get_price_stats(ttl_days=ttl_days)
@@ -419,6 +429,11 @@ class PlanMyMealsDB:
 
             raw_appliances = recipe_data.get("appliances") if recipe_data.get("appliances") is not None else existing.get("appliances", [])
             appliances = [str(a).strip() for a in (raw_appliances or []) if str(a).strip()]
+            raw_possible = recipe_data.get("possible_appliances") if recipe_data.get("possible_appliances") is not None else existing.get("possible_appliances", [])
+            possible_appliances = [str(a).strip() for a in (raw_possible or []) if str(a).strip()]
+            for a in appliances:
+                if a not in possible_appliances:
+                    possible_appliances.append(a)
             raw_accessories = recipe_data.get("accessories") if recipe_data.get("accessories") is not None else existing.get("accessories", {})
             accessories: dict[str, list[str]] = {}
             if isinstance(raw_accessories, dict):
@@ -440,6 +455,7 @@ class PlanMyMealsDB:
                 "cookTime": recipe_data.get("cookTime") or recipe_data.get("cook_time") or existing.get("cookTime") or "",
                 "method": recipe_data.get("method") if recipe_data.get("method") is not None else existing.get("method", ""),
                 "appliances": appliances,
+                "possible_appliances": possible_appliances,
                 "accessories": accessories,
                 "steps": recipe_data.get("steps") if recipe_data.get("steps") is not None else existing.get("steps", ""),
                 "items": recipe_data.get("items") if recipe_data.get("items") is not None else existing.get("items", []),
@@ -702,6 +718,99 @@ class PlanMyMealsDB:
         }
 
     # ------------------------------------------------------------------ Aggregation & Costs
+
+    @staticmethod
+    def _parse_qty_to_base(qty: float | None, unit: str) -> tuple[float, str] | None:
+        if qty is None or qty <= 0:
+            return None
+        u = str(unit or "").strip().lower()
+        if u in ("g", "gr"):
+            return float(qty), "mass"
+        if u == "kg":
+            return float(qty) * 1000.0, "mass"
+        if u == "ml":
+            return float(qty), "vol"
+        if u == "cl":
+            return float(qty) * 10.0, "vol"
+        if u == "dl":
+            return float(qty) * 100.0, "vol"
+        if u in ("l", "lt"):
+            return float(qty) * 1000.0, "vol"
+        if u in ("un", "unid", "unidade", "unidades"):
+            return float(qty), "count"
+        if u in ("dúzia", "duzia"):
+            return float(qty) * 12.0, "count"
+        return None
+
+    @classmethod
+    def _parse_pack_unit_to_base(cls, unit_str: str) -> tuple[float, str] | None:
+        import re as _re
+
+        s = str(unit_str or "").strip().lower()
+        if not s:
+            return None
+        m_multi = _re.match(r"^(\d+)\s*[x×]\s*(\d+(?:[.,]\d+)?)\s*(kg|g|gr|ml|cl|dl|l|lt|un|unid)$", s)
+        if m_multi:
+            qty = float(m_multi.group(1)) * float(m_multi.group(2).replace(",", "."))
+            return cls._parse_qty_to_base(qty, m_multi.group(3))
+        m = _re.match(r"^(\d+(?:[.,]\d+)?)\s*(kg|g|gr|ml|cl|dl|l|lt|un|unid|dúzia|duzia)$", s)
+        if not m:
+            return None
+        qty = float(m.group(1).replace(",", "."))
+        return cls._parse_qty_to_base(qty, m.group(2))
+
+    def compute_recipe_costs(
+        self,
+        state: dict[str, Any],
+        price_map: dict[str, dict[str, Any]],
+        base_servings: int = DEFAULT_BASE_SERVINGS,
+    ) -> dict[str, dict[str, Any]]:
+        """Estimate total and per-person average/min cost for every recipe based on ingredient prices."""
+        denom = max(1, int(base_servings or DEFAULT_BASE_SERVINGS))
+        out: dict[str, dict[str, Any]] = {}
+        for rec in state.get("recipes") or []:
+            if not isinstance(rec, dict) or not rec.get("id"):
+                continue
+            rid = str(rec["id"])
+            seen: set[str] = set()
+            r_avg = 0.0
+            r_min = 0.0
+            priced = 0
+            for raw in rec.get("items") or []:
+                if isinstance(raw, str):
+                    name, qty, unit = raw.strip(), None, ""
+                elif isinstance(raw, dict):
+                    name = str(raw.get("name") or "").strip()
+                    qty = raw.get("qty") if isinstance(raw.get("qty"), (int, float)) else None
+                    unit = str(raw.get("unit") or "").strip()
+                else:
+                    continue
+                nk = normalize_text(name)
+                if not nk or nk in seen:
+                    continue
+                seen.add(nk)
+                p = price_map.get(nk)
+                if not p or p.get("avg_price") is None:
+                    continue
+                avg_pr = float(p["avg_price"])
+                min_pr = float(p.get("min_price") if p.get("min_price") is not None else avg_pr)
+                ratio = 1.0
+                rec_base = self._parse_qty_to_base(qty, unit)
+                pack_base = self._parse_pack_unit_to_base(str(p.get("min_unit") or ""))
+                if rec_base and pack_base and rec_base[1] == pack_base[1] and pack_base[0] > 0:
+                    ratio = max(0.05, min(10.0, rec_base[0] / pack_base[0]))
+                r_avg += avg_pr * ratio
+                r_min += min_pr * ratio
+                priced += 1
+            out[rid] = {
+                "avg_cost_eur": round(r_avg, 2) if priced else None,
+                "min_cost_eur": round(r_min, 2) if priced else None,
+                "cost_per_person_eur": round(r_avg / denom, 2) if priced else None,
+                "min_cost_per_person_eur": round(r_min / denom, 2) if priced else None,
+                "priced_ingredients": priced,
+                "total_ingredients": len(seen),
+            }
+        return out
 
     def compute_meal_costs(
         self,
